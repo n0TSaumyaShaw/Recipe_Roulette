@@ -1,0 +1,863 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --yellow: #FFDE00;
+  --yellow-light: #FFF480;
+  --red: #FF3B30;
+  --red-dark: #C91D13;
+  --blue: #00B4D8;
+  --blue-dark: #0077B6;
+  --green: #2EC4B6;
+  --black: #111111;
+  --white: #FFFFFF;
+  --bg-dots: rgba(0, 0, 0, 0.08);
+  --border-thick: 3px solid var(--black);
+  --border-heavy: 4px solid var(--black);
+  --shadow-comic: 4px 4px 0 var(--black);
+  --shadow-comic-lg: 6px 6px 0 var(--black);
+  --radius-comic: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Comic Neue', cursive, sans-serif;
+  background-color: var(--yellow);
+  background-image: radial-gradient(var(--bg-dots) 20%, transparent 20%),
+                    radial-gradient(var(--bg-dots) 20%, transparent 20%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  color: var(--black);
+  min-height: 100vh;
+  padding: 16px 12px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease;
+}
+
+/* Shake and Red Flash Animations for Angry Shinchan */
+body.angry-shake {
+  animation: screenShake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+#angry-flash-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(255, 0, 0, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
+  transition: opacity 0.1s ease;
+}
+
+#angry-flash-overlay.active {
+  animation: flashRed 1s ease-out forwards;
+}
+
+@keyframes screenShake {
+  10%, 90% { transform: translate3d(-4px, 0, 0) rotate(-1deg); }
+  20%, 80% { transform: translate3d(6px, 0, 0) rotate(1.5deg); }
+  30%, 50%, 70% { transform: translate3d(-8px, 0, 0) rotate(-2deg); }
+  40%, 60% { transform: translate3d(8px, 0, 0) rotate(2deg); }
+}
+
+@keyframes flashRed {
+  0% { opacity: 0.85; }
+  30% { opacity: 0.6; }
+  60% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+.app-wrapper {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header Section */
+.comic-header {
+  background: var(--white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic-lg);
+  border-radius: var(--radius-comic);
+  padding: 16px;
+  text-align: center;
+  position: relative;
+  transform: rotate(-0.5deg);
+}
+
+.header-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.header-badge {
+  display: inline-block;
+  background: var(--red);
+  color: var(--white);
+  font-family: 'Bangers', cursive;
+  letter-spacing: 1.5px;
+  font-size: 0.95rem;
+  padding: 4px 14px;
+  border: var(--border-thick);
+  border-radius: 20px;
+  box-shadow: 2px 2px 0 var(--black);
+  transform: rotate(-2deg);
+}
+
+.btn-sound-toggle {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--yellow);
+  border: var(--border-thick);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--black);
+  transition: transform 0.15s ease;
+}
+
+.btn-sound-toggle:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.app-title {
+  font-family: 'Bangers', cursive;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  color: var(--red);
+  letter-spacing: 1.5px;
+  text-shadow: 2px 2px 0 var(--black), -1px -1px 0 var(--black);
+  margin-bottom: 4px;
+}
+
+.app-title span {
+  color: var(--yellow);
+  -webkit-text-stroke: 1.5px var(--black);
+}
+
+.app-tagline {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+/* Misae / Shinchan Speech Bubble */
+.speech-bubble-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+
+.avatar-badge {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  background: var(--white);
+  border: var(--border-heavy);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: var(--shadow-comic);
+  transform: rotate(-3deg);
+  user-select: none;
+}
+
+.speech-bubble {
+  flex: 1;
+  background: var(--white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic);
+  border-radius: 18px;
+  padding: 12px 16px;
+  position: relative;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  transition: all 0.25s ease;
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 14px 10px 0;
+  border-color: transparent var(--black) transparent transparent;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 10px 8px 0;
+  border-color: transparent var(--white) transparent transparent;
+}
+
+.speech-bubble.angry {
+  background: #FFEBEA;
+  border-color: var(--red-dark);
+  color: var(--red-dark);
+  animation: bubblePop 0.3s ease;
+}
+
+.speech-bubble.angry::before {
+  border-color: transparent var(--red-dark) transparent transparent;
+}
+
+.speech-bubble.angry::after {
+  border-color: transparent #FFEBEA transparent transparent;
+}
+
+@keyframes bubblePop {
+  0% { transform: scale(0.92); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Pantry Staples Box */
+.pantry-strip {
+  background: #E8F8F5;
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #145A32;
+  box-shadow: 2px 2px 0 var(--black);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pantry-strip span.pill {
+  background: #A3E4D7;
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1.5px solid var(--black);
+}
+
+/* Main Card */
+.comic-panel {
+  background: var(--white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic-lg);
+  border-radius: var(--radius-comic);
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px dashed #DDD;
+  padding-bottom: 8px;
+}
+
+.panel-title {
+  font-family: 'Bangers', cursive;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-counter {
+  background: var(--yellow);
+  border: var(--border-thick);
+  padding: 2px 10px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+/* Chips Grid */
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.chip {
+  background: #F8F9FA;
+  border: var(--border-thick);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--black);
+  user-select: none;
+  transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0 var(--black);
+  background: #FFF;
+}
+
+.chip:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+.chip.selected {
+  background: var(--yellow);
+  border-color: var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+  transform: scale(1.04);
+}
+
+.chip.hated.selected {
+  background: #FF6B6B;
+  color: var(--white);
+  border-color: var(--black);
+  text-shadow: 1px 1px 0 var(--black);
+}
+
+.chip-custom-delete {
+  margin-left: 4px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.chip-custom-delete:hover {
+  opacity: 1;
+}
+
+/* Custom Ingredient Input */
+.custom-input-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.comic-input {
+  flex: 1;
+  font-family: 'Comic Neue', cursive, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 10px 14px;
+  border: var(--border-thick);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0 var(--black);
+  outline: none;
+  background: #FAFAFA;
+}
+
+.comic-input:focus {
+  background: #FFF;
+  border-color: var(--blue-dark);
+}
+
+.btn-add {
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.8px;
+  background: var(--blue);
+  color: var(--white);
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 0 16px;
+  box-shadow: 2px 2px 0 var(--black);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-add:hover {
+  background: var(--blue-dark);
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.btn-add:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+/* Action Buttons */
+.btn-cook {
+  font-family: 'Bangers', cursive;
+  font-size: 1.7rem;
+  letter-spacing: 1.5px;
+  background: var(--red);
+  color: var(--white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic-lg);
+  border-radius: 18px;
+  padding: 14px 20px;
+  cursor: pointer;
+  text-transform: uppercase;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cook:hover:not(:disabled) {
+  background: var(--red-dark);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 8px 8px 0 var(--black);
+}
+
+.btn-cook:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.btn-cook:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Roulette Spinner Overlay / Section */
+#roulette-container {
+  display: none;
+  background: var(--white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic-lg);
+  border-radius: var(--radius-comic);
+  padding: 24px 16px;
+  text-align: center;
+}
+
+#roulette-container.spinning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  animation: popIn 0.3s ease;
+}
+
+.dice-icon {
+  font-size: 3.5rem;
+  display: inline-block;
+  animation: diceRoll 0.4s infinite alternate;
+}
+
+@keyframes diceRoll {
+  0% { transform: rotate(-25deg) scale(0.9); }
+  100% { transform: rotate(25deg) scale(1.15); }
+}
+
+.roulette-slot-window {
+  width: 100%;
+  max-width: 440px;
+  background: var(--yellow-light);
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.15), 2px 2px 0 var(--black);
+}
+
+.roulette-slot-text {
+  font-family: 'Bangers', cursive;
+  font-size: 1.8rem;
+  color: var(--red);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.roulette-subtext {
+  font-family: 'Comic Neue', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Recipe Card Display */
+#recipe-display {
+  display: none;
+}
+
+#recipe-display.active {
+  display: block;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.recipe-card {
+  background: var(--white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic-lg);
+  border-radius: var(--radius-comic);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.recipe-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.recipe-title {
+  font-family: 'Bangers', cursive;
+  font-size: 2.1rem;
+  color: var(--black);
+  letter-spacing: 1px;
+  line-height: 1.15;
+}
+
+.recipe-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge-tag {
+  font-family: 'Bangers', cursive;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border: var(--border-thick);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.badge-time {
+  background: var(--yellow);
+  color: var(--black);
+}
+
+.badge-difficulty {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.badge-match {
+  background: #2ECC71;
+  color: var(--white);
+}
+
+/* Grumpy Note if hated ingredient was picked */
+.grumpy-banner {
+  background: #FFD2D2;
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #900C3F;
+  box-shadow: 2px 2px 0 var(--black);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Smart Swaps Box */
+.smart-swap-box {
+  background: #FFF9DB;
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 2px 2px 0 var(--black);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.swap-header {
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.8px;
+  color: #D35400;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swap-list {
+  list-style: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #5D4037;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.swap-list li {
+  padding-left: 14px;
+  position: relative;
+}
+
+.swap-list li::before {
+  content: "✨";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* Ingredients Section in Card */
+.section-subtitle {
+  font-family: 'Bangers', cursive;
+  font-size: 1.3rem;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recipe-ingredients-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ing-badge {
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--black);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 1.5px 1.5px 0 var(--black);
+}
+
+.ing-badge.has-it {
+  background: #D4EFDF;
+  color: #145A32;
+}
+
+.ing-badge.pantry {
+  background: #E8F8F5;
+  color: #196F3D;
+}
+
+.ing-badge.missing {
+  background: #FADBD8;
+  color: #78281F;
+}
+
+.ing-badge.swapped {
+  background: #FCF3CF;
+  color: #7D6608;
+}
+
+/* Steps List */
+.recipe-steps-list {
+  list-style: none;
+  counter-reset: step-counter;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recipe-steps-list li {
+  counter-increment: step-counter;
+  position: relative;
+  padding-left: 36px;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.recipe-steps-list li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 26px;
+  height: 26px;
+  background: var(--yellow);
+  color: var(--black);
+  border: var(--border-thick);
+  border-radius: 50%;
+  font-family: 'Bangers', cursive;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1.5px 1.5px 0 var(--black);
+}
+
+/* Shinchan Quote in Card */
+.shinchan-card-quote {
+  background: #F0F4FF;
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1B263B;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+/* Card Action Buttons */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-secondary {
+  flex: 1;
+  font-family: 'Bangers', cursive;
+  font-size: 1.35rem;
+  letter-spacing: 1px;
+  background: var(--yellow);
+  color: var(--black);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic);
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-secondary:hover {
+  background: #FFED4A;
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 var(--black);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+/* Fallback Container */
+#fallback-display {
+  display: none;
+  background: var(--white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic-lg);
+  border-radius: var(--radius-comic);
+  padding: 24px 18px;
+  text-align: center;
+  animation: popIn 0.3s ease;
+}
+
+#fallback-display.active {
+  display: block;
+}
+
+.fallback-emoji {
+  font-size: 4rem;
+  margin-bottom: 8px;
+}
+
+.fallback-title {
+  font-family: 'Bangers', cursive;
+  font-size: 1.9rem;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+
+.fallback-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* Quick Select Presets */
+.preset-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.btn-preset-reset {
+  background: #E0E0E0;
+  border: var(--border-thick);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-family: 'Comic Neue', cursive;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* Responsiveness */
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 2rem;
+  }
+  .comic-panel {
+    padding: 14px 12px;
+  }
+  .btn-cook {
+    font-size: 1.4rem;
+    padding: 12px 16px;
+  }
+  .card-actions {
+    flex-direction: column;
+  }
+}
+

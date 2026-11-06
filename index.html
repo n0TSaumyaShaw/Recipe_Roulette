@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Roulette: Shinchan Edition</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Screen Flash for Angry Shinchan -->
+  <div id="angry-flash-overlay"></div>
+
+  <main class="app-wrapper">
+    <!-- Header -->
+    <header class="comic-header">
+      <div class="header-top-row">
+        <div class="header-badge">⭐ ACTION BASTARD CERTIFIED ⭐</div>
+        <button type="button" class="btn-sound-toggle" id="btn-sound-toggle" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
+          <span id="sound-icon">🔊</span>
+        </button>
+      </div>
+      <h1 class="app-title">RECIPE ROULETTE <span>SHINCHAN EDITION</span></h1>
+      <p class="app-tagline">Survival cooking for college kids, lazy bachelors, and 5-year-old geniuses!</p>
+    </header>
+
+    <!-- Misae / Shinchan Speech Bubble -->
+    <section class="speech-bubble-container" aria-live="polite">
+      <div class="avatar-badge" id="misae-avatar" title="Nohara Family">👦</div>
+      <div class="speech-bubble" id="misae-speech">
+        Mama, I'm hungry! What do we have in the fridge?
+      </div>
+    </section>
+
+    <!-- Pantry Staples Notice -->
+    <div class="pantry-strip">
+      <span>🧂 Pantry Staples:</span>
+      <span class="pill">Salt</span>
+      <span class="pill">Oil</span>
+      <span class="pill">Water</span>
+      <span class="pill">Basic Spices</span>
+      <span style="font-size:0.8rem; margin-left:auto; color:#666;">(Always available!)</span>
+    </div>
+
+    <!-- Ingredient Picker Panel -->
+    <section class="comic-panel" id="ingredients-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <span>🥕</span> Pick Your Ingredients
+        </h2>
+        <div class="preset-bar">
+          <span class="selected-counter" id="selected-count">0 picked</span>
+          <button type="button" class="btn-preset-reset" id="btn-clear" title="Clear all selections">Clear</button>
+        </div>
+      </div>
+
+      <!-- Chips Container -->
+      <div class="chips-container" id="chips-container">
+        <!-- Dynamically populated or static with data-tags -->
+      </div>
+
+      <!-- Custom Ingredient Input -->
+      <form class="custom-input-group" id="custom-ingredient-form" onsubmit="return false;">
+        <input 
+          type="text" 
+          id="custom-input" 
+          class="comic-input" 
+          placeholder="Got something else? (e.g. corn, oats)..." 
+          maxlength="25"
+          autocomplete="off"
+        >
+        <button type="submit" class="btn-add" id="btn-add-custom">+ ADD</button>
+      </form>
+
+      <!-- Cook Trigger Button -->
+      <button type="button" class="btn-cook" id="btn-cook">
+        <span>🎲</span> COOK SOMETHING! <span>🍳</span>
+      </button>
+    </section>
+
+    <!-- Roulette Spin Window -->
+    <section id="roulette-container" aria-hidden="true">
+      <div class="dice-icon">🎲</div>
+      <div class="roulette-slot-window">
+        <div class="roulette-slot-text" id="slot-reel-text">Shuffling Recipes...</div>
+      </div>
+      <p class="roulette-subtext">Shinchan is rummaging through the kitchen cabinets...</p>
+    </section>
+
+    <!-- Recipe Result Card -->
+    <section id="recipe-display" aria-live="polite">
+      <article class="recipe-card">
+        <div class="recipe-meta-strip">
+          <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
+          <div class="recipe-badges">
+            <span class="badge-tag badge-time" id="card-recipe-time">⏱️ 5 mins</span>
+            <span class="badge-tag badge-difficulty" id="card-recipe-diff">⚡ Super Easy</span>
+            <span class="badge-tag badge-match" id="card-recipe-match">🎯 3 Matched</span>
+          </div>
+        </div>
+
+        <!-- Grumpy Banner if hated ingredient was selected -->
+        <div class="grumpy-banner" id="card-grumpy-banner" style="display:none;">
+          <span>😡</span>
+          <span id="grumpy-text">Shinchan is staring with intense disappointment because of the green pepper.</span>
+        </div>
+
+        <!-- Smart Swaps Banner -->
+        <div class="smart-swap-box" id="card-swap-box" style="display:none;">
+          <div class="swap-header">💡 SMART SURVIVAL SWAP!</div>
+          <ul class="swap-list" id="card-swap-list">
+            <!-- Populated via JS -->
+          </ul>
+        </div>
+
+        <!-- Ingredients Checklist -->
+        <div class="recipe-section">
+          <h3 class="section-subtitle">🛒 What You Need:</h3>
+          <div class="recipe-ingredients-list" id="card-ingredients-list">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- Recipe Steps -->
+        <div class="recipe-section">
+          <h3 class="section-subtitle">🔥 Easy Steps:</h3>
+          <ol class="recipe-steps-list" id="card-steps-list">
+            <!-- Injected via JS -->
+          </ol>
+        </div>
+
+        <!-- Shinchan Card Quote -->
+        <div class="shinchan-card-quote" id="card-shinchan-quote">
+          "Action Bastard power breakfast! Eggs make you strong like me!"
+        </div>
+
+        <!-- Card Action Buttons -->
+        <div class="card-actions">
+          <button type="button" class="btn-secondary" id="btn-spin-again">
+            <span>🎲</span> Spin Again (Next Match)
+          </button>
+          <button type="button" class="btn-secondary" id="btn-change-ingredients" style="background:var(--white);">
+            <span>✏️</span> Edit Ingredients
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <!-- Fallback Funny Card -->
+    <section id="fallback-display">
+      <div class="fallback-emoji">🤷‍♂️</div>
+      <h2 class="fallback-title">THE FRIDGE IS AS EMPTY AS HIROSHI'S WALLET!</h2>
+      <p class="fallback-text" id="fallback-message">
+        Pick at least one or two ingredients like eggs, bread, or noodles, or we're eating instant noodles with plain air!
+      </p>
+      <button type="button" class="btn-secondary" id="btn-fallback-retry" style="max-width:280px; margin:0 auto;">
+        <span>👈</span> Pick Some Ingredients!
+      </button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

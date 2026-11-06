@@ -1,0 +1,528 @@
+[
+  {
+    "id": "masala_omelette",
+    "name": "Speedy Masala Omelette",
+    "time": "5 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["eggs", "onion", "chilli", "tomato"],
+    "optional_ingredients": ["cheese"],
+    "steps": [
+      "Whisk 2 eggs with a pinch of salt and turmeric in a mug.",
+      "Finely chop onion, chilli, and tomato, then stir them right into the eggs.",
+      "Heat oil or butter in a pan and pour the mixture evenly.",
+      "Cook for 2 minutes, fold in half (throw cheese inside if you have it!), and flip once."
+    ],
+    "shinchan_comment": "Action Bastard power breakfast! Eggs make you strong like me!"
+  },
+  {
+    "id": "french_toast",
+    "name": "Sweet Comic French Toast",
+    "time": "7 mins",
+    "difficulty": "Easy",
+    "ingredients": ["bread", "eggs", "milk"],
+    "optional_ingredients": ["banana", "cheese"],
+    "steps": [
+      "Beat 1 egg with a splash of milk and a spoonful of sugar in a shallow dish.",
+      "Dip bread slices on both sides until soaked but not soggy.",
+      "Sizzle in a hot buttered pan until both sides are golden brown.",
+      "Top with sliced banana or a cheeky pinch of cinnamon."
+    ],
+    "shinchan_comment": "Ooh lala! So soft and fluffy, just like Shiro's belly!"
+  },
+  {
+    "id": "egg_fried_rice",
+    "name": "Midnight Egg Fried Rice",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": ["rice", "eggs", "onion", "chilli"],
+    "optional_ingredients": ["tomato", "cheese"],
+    "steps": [
+      "Scramble eggs in a hot pan with oil, then set aside in a bowl.",
+      "Toss diced onions and chilli into the pan until fragrant and slightly crispy.",
+      "Dump in cooked rice with soy sauce or salt, pepper, and chili powder.",
+      "Toss the scrambled eggs back in over high heat for 1 minute."
+    ],
+    "shinchan_comment": "Wok hei mastered by 5-year-old prodigy Nohara Shinnosuke!"
+  },
+  {
+    "id": "cheesy_bread_pizza",
+    "name": "Tawa Bread Pizza",
+    "time": "6 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["bread", "cheese", "tomato", "onion"],
+    "optional_ingredients": ["chilli", "paneer"],
+    "steps": [
+      "Lightly toast one side of the bread on a dry tawa/pan.",
+      "Flip over and spread tomato ketchup or crushed tomato with salt on the warm side.",
+      "Scatter chopped onions, tomatoes, and generous cheese on top.",
+      "Cover with a lid on low flame for 3 minutes until the cheese gets all melty."
+    ],
+    "shinchan_comment": "Pizza without waiting for delivery! Even Misae can't nag about this!"
+  },
+  {
+    "id": "jeera_aloo",
+    "name": "Crispy Spiced Jeera Aloo",
+    "time": "10 mins",
+    "difficulty": "Easy",
+    "ingredients": ["potato", "chilli"],
+    "optional_ingredients": ["onion", "tomato"],
+    "steps": [
+      "Boil or microwave diced potatoes until tender (3 mins in microwave with water).",
+      "Heat 1 tbsp oil in a pan, toss in cumin seeds and slit chillies until crackling.",
+      "Add potatoes, turmeric, red chilli powder, and salt.",
+      "Pan-fry on medium-high until the potato edges turn golden and super crunchy."
+    ],
+    "shinchan_comment": "Potatoes are the best vegetable in the whole world! 100% better than green peppers!"
+  },
+  {
+    "id": "curd_rice",
+    "name": "Soothing Comfort Curd Rice",
+    "time": "4 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["rice", "curd"],
+    "optional_ingredients": ["chilli", "onion"],
+    "steps": [
+      "Mash cooked warm or leftover rice lightly with a fork.",
+      "Mix thoroughly with fresh curd, a splash of water, and salt until creamy.",
+      "For extra kick, quickly heat a teaspoon of oil with mustard seeds and chopped chilli.",
+      "Pour the hot tempering over the cool curd rice and enjoy!"
+    ],
+    "shinchan_comment": "Cool down cool down! Perfect when Misae gives you the knuckle punch!"
+  },
+  {
+    "id": "garlic_butter_noodles",
+    "name": "Chilli Garlic Maggi/Noodles",
+    "time": "6 mins",
+    "difficulty": "Easy",
+    "ingredients": ["noodles", "onion", "chilli"],
+    "optional_ingredients": ["eggs", "cheese"],
+    "steps": [
+      "Boil noodles according to package and drain, reserving 3 spoons of noodle water.",
+      "Sauté chopped onion and lots of chilli in butter or oil.",
+      "Add tastemaker/seasoning powder with the reserved water to make a glossy sauce.",
+      "Toss the noodles in and optionally melt a cheese cube on top."
+    ],
+    "shinchan_comment": "Slurrrrrrrp! Master noodle slurper Shinchan approves!"
+  },
+  {
+    "id": "paneer_bhurji",
+    "name": "5-Minute Paneer Bhurji",
+    "time": "7 mins",
+    "difficulty": "Easy",
+    "ingredients": ["paneer", "onion", "tomato", "chilli"],
+    "optional_ingredients": ["bread"],
+    "steps": [
+      "Crumble fresh paneer with your hands.",
+      "Heat oil in a skillet, sauté chopped onions and green chilli until golden.",
+      "Stir in chopped tomatoes, turmeric, and chilli powder until soft.",
+      "Dump in crumbled paneer, stir gently for 2 minutes, and serve with bread."
+    ],
+    "shinchan_comment": "Rich and delicious! Makes me feel like a rich prince!"
+  },
+  {
+    "id": "banana_pancake",
+    "name": "2-Ingredient Banana Pancakes",
+    "time": "6 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["banana", "eggs"],
+    "optional_ingredients": ["milk", "cheese"],
+    "steps": [
+      "Mash 1 ripe banana in a bowl until smooth.",
+      "Crack in 2 eggs and whisk vigorously until a batter forms.",
+      "Pour small palm-sized rounds into a lightly buttered pan on medium-low.",
+      "Flip carefully after 2 minutes once bubbles appear, cook 1 more minute."
+    ],
+    "shinchan_comment": "Sweet and bouncy! Almost as good as Chocobi!"
+  },
+  {
+    "id": "egg_bhurji_toast",
+    "name": "Street-Style Anda Bhurji Toast",
+    "time": "6 mins",
+    "difficulty": "Easy",
+    "ingredients": ["eggs", "bread", "onion", "tomato"],
+    "optional_ingredients": ["chilli", "cheese"],
+    "steps": [
+      "Sauté chopped onion, tomato, and chilli in 1 tbsp butter/oil.",
+      "Crack 2 eggs directly into the pan and stir vigorously on medium heat.",
+      "Season with salt and pepper until fluffy and softly cooked.",
+      "Butter and toast the bread slices, then pile the bhurji high on top."
+    ],
+    "shinchan_comment": "Bhurji explosion! Keeps Shinchan energized for prank patrol!"
+  },
+  {
+    "id": "tomato_rice",
+    "name": "Tangy Spicy Tomato Rice",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": ["rice", "tomato", "onion", "chilli"],
+    "optional_ingredients": ["potato"],
+    "steps": [
+      "Finely chop or crush tomatoes into a juicy pulp.",
+      "Sauté onions and green chillies in oil until soft, then stir in the tomato pulp.",
+      "Add salt, turmeric, and red chilli powder; simmer until oil glistens on top.",
+      "Toss in cooked rice and gently fold together until bright ruby red."
+    ],
+    "shinchan_comment": "Bright red just like Action Bastard's cape! Hai-yaaa!"
+  },
+  {
+    "id": "cheesy_potato_mash",
+    "name": "Survival Cheesy Mashed Potatoes",
+    "time": "8 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["potato", "cheese", "milk"],
+    "optional_ingredients": ["onion", "chilli"],
+    "steps": [
+      "Peel, cube, and microwave potatoes in water for 5 minutes until fork-tender.",
+      "Drain water, mash hot potatoes with a fork or spoon.",
+      "Stir in warm milk, salt, pepper, and grate in as much cheese as you have.",
+      "Whisk until velvety smooth and gooey."
+    ],
+    "shinchan_comment": "Warm potato hug! Misae won't let me eat only this, but nobody is watching!"
+  },
+  {
+    "id": "egg_drop_soup",
+    "name": "Dorm Egg Drop Noodle Soup",
+    "time": "6 mins",
+    "difficulty": "Easy",
+    "ingredients": ["noodles", "eggs", "onion"],
+    "optional_ingredients": ["chilli", "tomato"],
+    "steps": [
+      "Bring 2 cups of water to a rolling boil with noodle seasoning.",
+      "Drop in noodles and sliced onions, cooking for 2 minutes.",
+      "Lightly beat an egg in a small cup.",
+      "Slowly drizzle the beaten egg into the simmering soup while swirling with chopsticks."
+    ],
+    "shinchan_comment": "Silky egg ribbons! Warms the tummy on cold Kasukabe nights!"
+  },
+  {
+    "id": "chilli_cheese_toast",
+    "name": "Crispy Chilli Cheese Toast",
+    "time": "5 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["bread", "cheese", "chilli"],
+    "optional_ingredients": ["onion", "tomato"],
+    "steps": [
+      "Mix grated cheese with finely chopped chillies and a tiny pinch of salt.",
+      "Pile the cheesy chilli mix thickly onto bread slices.",
+      "Place on a heated pan, cover with a steel plate or lid on low heat.",
+      "Remove when cheese is bubbling and the bread bottom is golden and crunchy."
+    ],
+    "shinchan_comment": "Spicy cheesy crunch! Better than Hiroshi's smelly socks!"
+  },
+  {
+    "id": "potato_onion_hash",
+    "name": "Crispy Skillet Potato & Onion Hash",
+    "time": "9 mins",
+    "difficulty": "Easy",
+    "ingredients": ["potato", "onion"],
+    "optional_ingredients": ["eggs", "cheese"],
+    "steps": [
+      "Grate or finely slice raw potatoes and squeeze out excess moisture.",
+      "Thinly slice onions and mix with potatoes, salt, and pepper.",
+      "Press the mixture flat into a hot oiled skillet like a giant pancake.",
+      "Cook for 4-5 mins per side on medium flame until deep golden brown."
+    ],
+    "shinchan_comment": "Crunch crunch crunch! Music to my naughty ears!"
+  },
+  {
+    "id": "curd_bread_toast",
+    "name": "Dahi Bread Toast (Curd Sandwich)",
+    "time": "6 mins",
+    "difficulty": "Easy",
+    "ingredients": ["bread", "curd", "onion", "tomato"],
+    "optional_ingredients": ["chilli"],
+    "steps": [
+      "Whisk thick curd with salt, black pepper, diced onions, and tomatoes.",
+      "Spread the seasoned curd mixture generously between two bread slices.",
+      "Toast in a pan with a smear of butter or oil until both sides are crisp.",
+      "Cut diagonally and enjoy the warm creamy center!"
+    ],
+    "shinchan_comment": "Creamy on the inside, crunchy on the outside! Like a ninja disguise!"
+  },
+  {
+    "id": "egg_salad_roll",
+    "name": "Lazy Boiled Egg Spread & Toast",
+    "time": "7 mins",
+    "difficulty": "Easy",
+    "ingredients": ["eggs", "bread", "onion"],
+    "optional_ingredients": ["curd", "cheese"],
+    "steps": [
+      "Boil 2 eggs for 7 minutes, cool in water, and peel.",
+      "Mash eggs roughly with a fork, pinch of salt, pepper, and finely diced onion.",
+      "(Pro tip: mix in a spoon of thick curd if you have no mayo!)",
+      "Spread over toasted bread slices or roll inside bread."
+    ],
+    "shinchan_comment": "Egg power activate! Ready to dance with beautiful older sisters!"
+  },
+  {
+    "id": "onion_tomato_cheela",
+    "name": "Quick Onion Tomato Cheela / Crêpe",
+    "time": "7 mins",
+    "difficulty": "Easy",
+    "ingredients": ["onion", "tomato", "chilli"],
+    "optional_ingredients": ["eggs", "paneer"],
+    "steps": [
+      "Chop onions, tomatoes, and chillies finely.",
+      "Mix with flour/gram flour or whisk with 2 eggs and water to form a pourable batter.",
+      "Season with salt, cumin, and red chilli powder.",
+      "Pour a ladle into a greased hot pan and cook on both sides until browned."
+    ],
+    "shinchan_comment": "Quick flip in the pan! Wheeeee!"
+  },
+  {
+    "id": "paneer_tikka_tawa",
+    "name": "Quick Pan Paneer Bites",
+    "time": "6 mins",
+    "difficulty": "Easy",
+    "ingredients": ["paneer", "curd", "chilli"],
+    "optional_ingredients": ["onion", "tomato"],
+    "steps": [
+      "Cut paneer into bite-sized cubes.",
+      "Toss with 1 spoon curd, red chilli powder, turmeric, and salt.",
+      "Sear in a hot pan with oil for 3-4 minutes, turning sides.",
+      "Serve piping hot with sliced onions on the side."
+    ],
+    "shinchan_comment": "Restaurant style in pajama pants! Misae would charge 500 yen for this!"
+  },
+  {
+    "id": "banana_milkshake",
+    "name": "Thick Energy Banana Shake",
+    "time": "3 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["banana", "milk"],
+    "optional_ingredients": ["curd"],
+    "steps": [
+      "Peel and slice 1 ripe banana into a cup or blender.",
+      "Pour in 1 cup chilled milk and a pinch of sugar.",
+      "Blend or mash vigorously with a fork/whisk until frothy and thick.",
+      "Drink immediately for instant mischievous energy!"
+    ],
+    "shinchan_comment": "Gulp gulp gulp! Banana mustache mode unlocked!"
+  },
+  {
+    "id": "spicy_boiled_egg_fry",
+    "name": "Masala Boiled Egg Tawa Fry",
+    "time": "6 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["eggs", "onion", "chilli"],
+    "optional_ingredients": ["tomato"],
+    "steps": [
+      "Slice hard-boiled eggs in half.",
+      "In a shallow pan, heat oil, throw in sliced onions and green chillies.",
+      "Add turmeric, red chilli powder, and salt to create a spicy oil paste.",
+      "Place egg halves cut-side down, sear for 2 mins, and baste with masala."
+    ],
+    "shinchan_comment": "Spicy sizzle! Even Hiroshi's beer would be jealous!"
+  },
+  {
+    "id": "cheesy_fried_noodles",
+    "name": "Creamy Cheesy Ramen Bake",
+    "time": "7 mins",
+    "difficulty": "Easy",
+    "ingredients": ["noodles", "cheese", "milk"],
+    "optional_ingredients": ["chilli", "onion"],
+    "steps": [
+      "Boil noodles in 1 cup of water and 1/2 cup of milk with the seasoning packet.",
+      "Cook until noodles are tender and liquid reduces into a creamy gravy.",
+      "Stir in chopped chilli and top with cheese slices.",
+      "Turn off the heat, cover for 1 minute to let the cheese melt completely."
+    ],
+    "shinchan_comment": "Cheesy heaven! Goodbye diet, hello nap time!"
+  },
+  {
+    "id": "onion_poha_rice",
+    "name": "Quick Tadka Fried Rice",
+    "time": "6 mins",
+    "difficulty": "Easy",
+    "ingredients": ["rice", "onion", "chilli"],
+    "optional_ingredients": ["potato", "tomato"],
+    "steps": [
+      "Heat 1 tbsp oil, add mustard seeds, slit chillies, and sliced onions.",
+      "Fry until onions are sweet and translucent.",
+      "Add turmeric, salt, and toss in day-old cooked rice.",
+      "Cover and steam for 2 minutes on low flame."
+    ],
+    "shinchan_comment": "Simple yellow rice that looks like sunshine! Yummy!"
+  },
+  {
+    "id": "potato_egg_scramble",
+    "name": "Spanish-Style Potato & Egg Scramble",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": ["potato", "eggs", "onion"],
+    "optional_ingredients": ["cheese", "chilli"],
+    "steps": [
+      "Finely cube potato and fry in oil with sliced onion until tender and browned.",
+      "Beat 2 eggs with salt and pepper.",
+      "Pour eggs directly over the potatoes in the pan.",
+      "Gently stir into big soft curds until eggs are just set."
+    ],
+    "shinchan_comment": "Eggs + potatoes = best friends forever! Like me and Kazama!"
+  },
+  {
+    "id": "tomato_onion_salsa_toast",
+    "name": "Desi Bruschetta (Spiced Tomato Toast)",
+    "time": "5 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["bread", "tomato", "onion", "chilli"],
+    "optional_ingredients": ["cheese"],
+    "steps": [
+      "Finely dice tomatoes and onions; toss with chillies, salt, and pepper.",
+      "Toast bread slices till super crisp in butter or oil.",
+      "Spoon the juicy tomato-onion mix over the toasted bread.",
+      "Top with cheese shavings if available and bite into the crunch!"
+    ],
+    "shinchan_comment": "Fancy Italian style for Kasukabe royalty! Bellissimo!"
+  },
+  {
+    "id": "banana_curd_sweet_bowl",
+    "name": "Sweet Banana Shrikhand Bowl",
+    "time": "3 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["banana", "curd"],
+    "optional_ingredients": ["milk"],
+    "steps": [
+      "Whisk cold curd in a bowl with a spoon of sugar until glossy.",
+      "Slice banana into rounds and gently fold into the curd.",
+      "Add a pinch of cardamom or cinnamon if available in spices.",
+      "Eat chilled for an instant healthy dessert."
+    ],
+    "shinchan_comment": "Sweet and cool! Mom can't say I didn't eat my fruits!"
+  },
+  {
+    "id": "paneer_chilli_stirfry",
+    "name": "Speedy Desi Chilli Paneer",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": ["paneer", "onion", "chilli", "tomato"],
+    "optional_ingredients": ["green pepper"],
+    "steps": [
+      "Cut paneer into cubes and onions into thick petals.",
+      "Sear paneer in a hot pan for 2 mins, set aside.",
+      "Toss onions and chillies on high flame for a charred aroma.",
+      "Add tomato ketchup or purée, splash of water, toss paneer back in and glaze."
+    ],
+    "shinchan_comment": "Fire in the mouth! Need water! Quick!"
+  },
+  {
+    "id": "egg_noodle_stirfry",
+    "name": "Street Hakka Egg Noodles",
+    "time": "7 mins",
+    "difficulty": "Easy",
+    "ingredients": ["noodles", "eggs", "onion", "chilli"],
+    "optional_ingredients": ["tomato"],
+    "steps": [
+      "Boil and drain noodles, rinsing with cold water.",
+      "Scramble 1 egg in oil, remove onto a plate.",
+      "Stir-fry sliced onions and chilli on high flame.",
+      "Add noodles, seasoning, scrambled egg, and toss dynamically."
+    ],
+    "shinchan_comment": "Tossing noodles like a pro chef! Don't drop them on Shiro!"
+  },
+  {
+    "id": "aloo_sandwich",
+    "name": "Mumbai Aloo Masala Toast",
+    "time": "7 mins",
+    "difficulty": "Easy",
+    "ingredients": ["bread", "potato", "onion", "chilli"],
+    "optional_ingredients": ["cheese"],
+    "steps": [
+      "Mash boiled potato with chopped onion, chilli, salt, and turmeric.",
+      "Spread the aloo mixture generously onto bread slices.",
+      "Assemble sandwich, smear butter/oil on both outer sides.",
+      "Grill on tawa until both sides are reddish-gold and extra crispy."
+    ],
+    "shinchan_comment": "Ultimate carb-on-carb delight! Gives me power to escape evening study!"
+  },
+  {
+    "id": "creamy_curd_pasta_noodles",
+    "name": "White-Sauce Style Curd Noodles",
+    "time": "6 mins",
+    "difficulty": "Easy",
+    "ingredients": ["noodles", "curd", "onion"],
+    "optional_ingredients": ["cheese", "chilli"],
+    "steps": [
+      "Boil noodles till al dente and drain.",
+      "Whisk curd with salt, black pepper, and 2 tbsp warm water.",
+      "Sauté onions in butter or oil, turn off the flame.",
+      "Toss hot noodles with the whisked curd sauce and cheese until velvety."
+    ],
+    "shinchan_comment": "Creamy pasta hack! No fancy cream needed!"
+  },
+  {
+    "id": "tomato_egg_drop_rice",
+    "name": "Chinese Tomato Egg Over Rice",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": ["rice", "tomato", "eggs", "onion"],
+    "optional_ingredients": ["chilli"],
+    "steps": [
+      "Scramble 2 eggs softly and remove from pan.",
+      "Cook diced tomatoes with chopped onion and salt until saucy and jammy.",
+      "Stir the soft eggs back into the hot tomato gravy for 30 seconds.",
+      "Ladle the luscious tomato egg sauce over warm steamed rice."
+    ],
+    "shinchan_comment": "Classic comfort food! So juicy and delicious!"
+  },
+  {
+    "id": "spicy_potato_bites",
+    "name": "Crispy Chilli Aloo Pops",
+    "time": "9 mins",
+    "difficulty": "Easy",
+    "ingredients": ["potato", "chilli", "onion"],
+    "optional_ingredients": ["cheese"],
+    "steps": [
+      "Parboil or microwave potato cubes until 80% tender.",
+      "In hot oil, sear potatoes until a crisp outer skin forms.",
+      "Toss with finely diced onions, green chillies, salt, and chilli flakes.",
+      "Finish with a squeeze of lemon or pinch of chaat masala."
+    ],
+    "shinchan_comment": "Pop one, pop two, oops the whole bowl is empty!"
+  },
+  {
+    "id": "banana_egg_custard",
+    "name": "Mug Banana Pudding / Custard",
+    "time": "4 mins",
+    "difficulty": "Super Easy",
+    "ingredients": ["banana", "eggs", "milk"],
+    "optional_ingredients": ["cheese"],
+    "steps": [
+      "Mash 1 banana with 1 egg and 2 tablespoons of milk inside a microwave-safe mug.",
+      "Add a teaspoon of sugar and whisk well with a fork.",
+      "Microwave for 90 seconds until puffed up and set like custard.",
+      "Let cool for 1 minute before digging in."
+    ],
+    "shinchan_comment": "Warm banana cake in a mug! Perfect snack before television!"
+  },
+  {
+    "id": "hated_piman_curry",
+    "name": "Misae's Revenge Green Pepper Stirfry",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": ["green pepper", "onion", "potato"],
+    "optional_ingredients": ["tomato", "paneer"],
+    "steps": [
+      "Chop onions, potatoes, and... groan... the green peppers.",
+      "Sauté onions and potatoes in oil until potato is halfway cooked.",
+      "Toss in the green peppers with turmeric, chilli powder, and salt.",
+      "Cover and cook until softened, pretending it's actually delicious."
+    ],
+    "shinchan_comment": "BLEEEHH! Why did you pick green pepper?! Shiro, come eat this for me!"
+  },
+  {
+    "id": "eggplant_masala",
+    "name": "Shinchan's Grumpy Eggplant Roast",
+    "time": "9 mins",
+    "difficulty": "Easy",
+    "ingredients": ["eggplant", "onion", "tomato"],
+    "optional_ingredients": ["chilli"],
+    "steps": [
+      "Slice eggplant into discs and onions into strips.",
+      "Shallow fry eggplant discs in hot oil with salt and turmeric until tender.",
+      "Add sliced onions and tomatoes; cook down into a thick coating.",
+      "Serve while crying dramatic anime tears."
+    ],
+    "shinchan_comment": "EGGPLANT?! Even Kazama wouldn't eat this! Who made this decision?!"
+  }
+]
+
