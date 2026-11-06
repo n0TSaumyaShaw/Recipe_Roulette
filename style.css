@@ -861,3 +861,712 @@ body.angry-shake {
   }
 }
 
+/* =========================================
+   LANDING / SMARTPHONE INTRO SCREEN
+   ========================================= */
+
+#landing-screen {
+  width: 100%;
+  max-width: 680px;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10px 0;
+  z-index: 10;
+}
+
+#landing-screen.screen-fade-out {
+  animation: screenFadeOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#app-screen.screen-fade-in {
+  animation: screenFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes screenFadeOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.92) translateY(-20px); pointer-events: none; }
+}
+
+@keyframes screenFadeIn {
+  0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Floating Emojis in Background */
+.floating-emojis {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.float-emoji {
+  position: absolute;
+  font-size: 2.2rem;
+  opacity: 0.6;
+  bottom: -50px;
+  animation: floatDrift 7s linear infinite;
+}
+
+.float-emoji.e1 { left: 8%; animation-delay: 0s; animation-duration: 6.5s; }
+.float-emoji.e2 { left: 24%; animation-delay: 1.5s; animation-duration: 7.2s; font-size: 2.5rem; }
+.float-emoji.e3 { left: 45%; animation-delay: 3s; animation-duration: 6s; }
+.float-emoji.e4 { left: 62%; animation-delay: 0.8s; animation-duration: 7.5s; font-size: 2.4rem; }
+.float-emoji.e5 { left: 78%; animation-delay: 2.2s; animation-duration: 6.8s; }
+.float-emoji.e6 { left: 88%; animation-delay: 3.8s; animation-duration: 8s; font-size: 2.6rem; }
+.float-emoji.e7 { left: 15%; animation-delay: 4.5s; animation-duration: 7s; }
+.float-emoji.e8 { left: 70%; animation-delay: 5s; animation-duration: 6.2s; }
+
+@keyframes floatDrift {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Skip Intro Link */
+.btn-skip-intro {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: 50;
+  background: var(--yellow);
+  color: var(--black);
+  border: var(--border-thick);
+  box-shadow: 2.5px 2.5px 0 var(--black);
+  border-radius: 20px;
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-skip-intro:hover {
+  background: #FFF;
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+.btn-skip-intro:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+/* Smartphone Frame */
+.phone-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comic-phone {
+  width: min(340px, 92vw);
+  height: min(580px, 86vh);
+  background: #EFE7DE;
+  border: var(--border-heavy);
+  border-radius: 38px;
+  box-shadow: 8px 8px 0 var(--black);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transform: rotate(-1.5deg);
+  animation: phoneWiggle 4s ease-in-out infinite alternate;
+}
+
+@keyframes phoneWiggle {
+  0% { transform: rotate(-2deg); }
+  50% { transform: rotate(1deg) translateY(-4px); }
+  100% { transform: rotate(-1.5deg); }
+}
+
+.phone-notch {
+  width: 80px;
+  height: 14px;
+  background: var(--black);
+  border-radius: 0 0 10px 10px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+.phone-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 16px 2px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.15);
+  z-index: 20;
+}
+
+.phone-status-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.phone-battery {
+  color: #D90429;
+  font-weight: 700;
+  background: #FFD6D9;
+  padding: 1px 5px;
+  border-radius: 6px;
+  border: 1px solid #D90429;
+}
+
+/* Action Kamen Notification */
+.phone-notification {
+  position: absolute;
+  top: 26px;
+  left: 10px;
+  right: 10px;
+  background: #FFF380;
+  border: 2.5px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+  border-radius: 12px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 40;
+  transform: translateY(-90px);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.phone-notification.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.notif-icon {
+  font-size: 1.4rem;
+}
+
+.notif-title {
+  font-family: 'Bangers', cursive;
+  font-size: 0.95rem;
+  color: #D32F2F;
+  line-height: 1.1;
+}
+
+.notif-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Chat App Header */
+.chat-header {
+  background: #075E54;
+  color: var(--white);
+  border-bottom: 2.5px solid var(--black);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 20;
+}
+
+.chat-header-avatar {
+  width: 36px;
+  height: 36px;
+  background: #FFF;
+  border-radius: 50%;
+  border: 2px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.chat-header-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.chat-contact-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-contact-status {
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+.chat-header-actions {
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: default;
+}
+
+/* Chat Body */
+.chat-body {
+  flex: 1;
+  padding: 12px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  background-color: #EFE7DE;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 15%, transparent 15%);
+  background-size: 14px 14px;
+}
+
+.chat-bubble {
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.3;
+  border: 2px solid var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+  position: relative;
+  word-break: break-word;
+}
+
+.chat-bubble.pop-in {
+  animation: chatBubblePop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes chatBubblePop {
+  0% { transform: scale(0.7) translateY(8px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.chat-bubble.outgoing {
+  align-self: flex-end;
+  background: #DCF8C6;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.incoming {
+  align-self: flex-start;
+  background: #FFFFFF;
+  border-bottom-left-radius: 4px;
+}
+
+.bubble-time {
+  display: block;
+  font-size: 0.65rem;
+  color: #666;
+  text-align: right;
+  margin-top: 3px;
+}
+
+/* Typing Indicator */
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #FFFFFF;
+}
+
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: #666;
+  border-radius: 50%;
+  display: inline-block;
+  animation: typingBounce 1.2s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+.typing-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1.15); opacity: 1; }
+}
+
+.typing-label {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #666;
+}
+
+/* Phone Footer & Open Fridge CTA */
+.phone-footer {
+  padding: 8px 10px;
+  background: #F0F0F0;
+  border-top: 2px solid var(--black);
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-open-fridge {
+  width: 100%;
+  font-family: 'Bangers', cursive;
+  font-size: 1.35rem;
+  letter-spacing: 1px;
+  background: var(--red);
+  color: var(--white);
+  border: var(--border-thick);
+  box-shadow: 3px 3px 0 var(--black);
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: fridgePulse 1.2s infinite alternate;
+  transition: all 0.15s ease;
+}
+
+@keyframes fridgePulse {
+  0% { transform: scale(0.98); box-shadow: 3px 3px 0 var(--black); }
+  100% { transform: scale(1.02); box-shadow: 5px 5px 0 var(--black); }
+}
+
+.btn-open-fridge:hover {
+  background: var(--red-dark);
+  transform: scale(1.04);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Responsiveness for Smaller Phones */
+@media (max-height: 640px) {
+  .comic-phone {
+    height: 94vh;
+  }
+  .chat-body {
+    padding: 6px 8px;
+    gap: 5px;
+  }
+  .chat-bubble {
+    font-size: 0.82rem;
+    padding: 6px 9px;
+  }
+}
+
+/* =========================================
+   ACTION KAMEN HERO BADGE & MASCOT VISUALS
+   ========================================= */
+
+.action-kamen-badge {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(-4deg);
+  background: #FF0054;
+  color: var(--white);
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 2px 2px 0 var(--black);
+  user-select: none;
+}
+
+.kamen-star {
+  color: var(--yellow);
+  font-size: 0.95rem;
+  text-shadow: 1px 1px 0 var(--black);
+}
+
+.kamen-text {
+  font-family: 'Bangers', cursive;
+  font-size: 0.75rem;
+  letter-spacing: 0.8px;
+}
+
+/* Original SVG Mascot Styling & Moods */
+.mascot-container {
+  overflow: visible;
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mascot-svg {
+  display: block;
+  overflow: visible;
+}
+
+/* Eyebrow parts display by mood */
+.eyebrow-part { display: none; }
+.eye-part { display: none; }
+.mouth-part { display: none; }
+.steam-part { display: none; }
+
+/* 1. Mood Happy (Default) */
+.mascot-container.mood-happy .eb-left-normal,
+.mascot-container.mood-happy .eb-right-normal { display: block; }
+.mascot-container.mood-happy .eye-dot { display: block; }
+.mascot-container.mood-happy .mouth-happy { display: block; }
+
+/* 2. Mood Hungry */
+.mascot-container.mood-hungry {
+  animation: hungryBounce 0.8s infinite alternate ease-in-out;
+}
+.mascot-container.mood-hungry .eb-left-normal,
+.mascot-container.mood-hungry .eb-right-normal { display: block; }
+.mascot-container.mood-hungry .eye-sparkle { display: block; }
+.mascot-container.mood-hungry .mouth-hungry { display: block; }
+
+@keyframes hungryBounce {
+  0% { transform: scale(1) rotate(-3deg); }
+  100% { transform: scale(1.08) rotate(2deg) translateY(-3px); }
+}
+
+/* 3. Mood Angry (Eggplant / Green pepper) */
+.mascot-container.mood-angry {
+  animation: angryVibrate 0.15s infinite alternate;
+}
+.mascot-container.mood-angry .eb-left-angry,
+.mascot-container.mood-angry .eb-right-angry { display: block; }
+.mascot-container.mood-angry .eye-dot { display: block; }
+.mascot-container.mood-angry .mouth-angry { display: block; }
+.mascot-container.mood-angry .steam-angry { display: block; }
+
+@keyframes angryVibrate {
+  0% { transform: translate(-2px, 1px) rotate(-4deg); }
+  100% { transform: translate(2px, -1px) rotate(4deg); }
+}
+
+/* 4. Mood Celebrating (Recipe result found) */
+.mascot-container.mood-celebrating {
+  animation: mascotCelebrate 0.6s infinite alternate ease-in-out;
+}
+.mascot-container.mood-celebrating .eb-left-normal,
+.mascot-container.mood-celebrating .eb-right-normal { display: block; }
+.mascot-container.mood-celebrating .eye-wink { display: block; }
+.mascot-container.mood-celebrating .mouth-celebrating { display: block; }
+
+@keyframes mascotCelebrate {
+  0% { transform: scale(0.95) rotate(-6deg); }
+  100% { transform: scale(1.15) rotate(6deg) translateY(-6px); }
+}
+
+/* =========================================
+   KITCHEN MODE TOGGLE (LOCAL VS WORLD)
+   ========================================= */
+
+.kitchen-mode-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFF9DB;
+  border: var(--border-thick);
+  border-radius: 14px;
+  padding: 6px 10px;
+  box-shadow: 2px 2px 0 var(--black);
+  margin-bottom: 8px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kitchen-mode-title {
+  font-family: 'Bangers', cursive;
+  font-size: 1rem;
+  letter-spacing: 0.8px;
+  color: var(--black);
+}
+
+.kitchen-toggle-group {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-kitchen-mode {
+  font-family: 'Bangers', cursive;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  padding: 5px 12px;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  background: var(--white);
+  color: #555;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--black);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-kitchen-mode:hover {
+  transform: translateY(-1px);
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.btn-kitchen-mode.active {
+  background: var(--yellow);
+  color: var(--black);
+  border-color: var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+  transform: scale(1.04);
+}
+
+.badge-source {
+  background: #E8DAEF;
+  color: #4A235A;
+}
+
+/* =========================================
+   GOOFY VISUALS & BUTT-DANCE CELEBRATION
+   ========================================= */
+
+.butt-dance-banner {
+  background: #FFF0F5;
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 2px 2px 0 var(--black);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.butt-dancer {
+  font-size: 2.4rem;
+  display: inline-block;
+  animation: buttWiggle 0.4s infinite ease-in-out alternate;
+  transform-origin: center bottom;
+}
+
+@keyframes buttWiggle {
+  0% { transform: rotate(-25deg) scaleX(0.85); }
+  50% { transform: rotate(0deg) scaleX(1.15) translateY(-4px); }
+  100% { transform: rotate(25deg) scaleX(0.85); }
+}
+
+.butt-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.butt-text strong {
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.8px;
+  color: #C2185B;
+}
+
+.butt-text span {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #444;
+}
+
+/* Mummy's Verdict Seal */
+.mummy-verdict-stamp {
+  background: #FFF3CD;
+  border: 2.5px dashed #856404;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.8px;
+  color: #856404;
+  text-align: center;
+  transform: rotate(-1.2deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.recipe-thumb-container {
+  width: 100%;
+  border: var(--border-thick);
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 var(--black);
+  overflow: hidden;
+  max-height: 220px;
+  margin-top: 4px;
+}
+
+.recipe-dish-thumb {
+  width: 100%;
+  height: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Confetti Canvas */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Comic Word Popups */
+#comic-popups-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.comic-word-popup {
+  position: absolute;
+  font-family: 'Bangers', cursive;
+  font-size: 2.2rem;
+  letter-spacing: 1.5px;
+  color: var(--yellow);
+  -webkit-text-stroke: 2px var(--black);
+  text-shadow: 3px 3px 0 var(--black);
+  pointer-events: none;
+  animation: comicFloatPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  user-select: none;
+}
+
+@keyframes comicFloatPop {
+  0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  25% { transform: scale(1.25) rotate(5deg); opacity: 1; }
+  75% { transform: scale(1) translateY(-35px) rotate(-5deg); opacity: 0.9; }
+  100% { transform: scale(0.8) translateY(-70px) rotate(10deg); opacity: 0; }
+}
+

@@ -42,13 +42,18 @@ const QUIPS = {
     "Eggplant alert! Quick, call Action Bastard for emergency evacuation!"
   ],
   specific: {
-    eggs: "Only eggs? Even Shiro eats better than this! But omelettes rule!",
+    eggs: "Ande ka funda! Even Shiro eats better than this, but omelette toh mast hai!",
     bread: "Bread again? Are we feeding the pigeons or Nohara Shinnosuke?!",
-    noodles: "Ooh noodles! Can I slurp them from three feet away like Action Bastard?!",
-    banana: "Bananas! High potassium for maximum butt-dance velocity!",
-    cheese: "Cheese! Melty and gooey, just like Kazama when he gets a compliment!",
-    potato: "Potatoes! 100 times better than green peppers! Let's fry 'em!",
-    paneer: "Ooh paneer! Did dad get a bonus this month or what?!"
+    noodles: "Maggi toh 2 minute mein banti hai, yeh chef kitna time lega?!",
+    banana: "Kela power! High potassium for maximum butt-dance velocity!",
+    cheese: "Cheese! Melting like Kazama when he gets a compliment from teacher!",
+    potato: "Aloo is love, aloo is life! 100 times better than piman!",
+    paneer: "Paneer? Aaj toh party hai! Dad ko bonus mil gaya kya?!",
+    curd: "Dahi chawal khake mast 4 ghante so jaunga!",
+    rice: "Chawal bina pet nahi bharta! Mummy, jaldi serve karo!",
+    tomato: "Tamatar jaisa laal gaal ho jayega mera!",
+    onion: "Pyaaz kaat te huye Shinchan rone ka natak karega!",
+    chilli: "Mirchi lag gayi toh Shiro ke bowl ka paani pi jaunga!"
   },
   general: [
     "Chocobi counts as an ingredient, right? Put Chocobi in it!",
@@ -58,8 +63,21 @@ const QUIPS = {
     "Action Bastard power cooking in session! Hai-yaaa!",
     "Don't worry, 5-year-old culinary genius Nohara Shinnosuke is on the case!",
     "Hey hey, beautiful big sister, want to share this meal with Shinchan?",
-    "If this turns out bad, we blame Hiroshi's smelly socks!"
-  ]
+    "If this turns out bad, we blame Hiroshi's smelly socks!",
+    "Mummy ko mat batana maine extra cheese daal diya!",
+    "Buri Buri Zaemon is watching our cooking technique!",
+    "Aaj khane mein kuch aisa banao jo restaurant wale bhi sharma jayein!",
+    "Himawari ke doodh ki bottle se pehle mera khana aana chahiye!",
+    "Kazama ke tiffin se accha khana banana hai aaj!",
+    "Masato aur Bo-chan ko bula lo, party shuru karte hain!",
+    "Principal sir ke gusse jaisa spicy khana ban raha hai kya?!",
+    "Kitna wait karwaoge? Chocobi ka packet khol raha hoon main!",
+    "Pait mein chuhe wrestling kar rahe hain, jaldi karo!",
+    "Action Kamen diet plan: 1 plate now, 3 plates later!",
+    "Agar khana jal gaya toh Yoshinaga ma'am ko treat denge!",
+    "Kasukabe Defense Force, dinner operation commence!"
+  ],
+  offlineMisae: "Internet gaya chhutti pe! Mummy's local survival cookbook to the rescue!"
 };
 
 // Sound Effects using Web Audio API (No external assets required)
@@ -674,6 +692,115 @@ let currentMatchIndex = 0;
 let isSpinning = false;
 let spinInterval = null;
 
+// TheMealDB Integration & Cache
+const THEMEALDB_MAP = {
+  'eggs': 'Eggs',
+  'egg': 'Eggs',
+  'onion': 'Onion',
+  'bread': 'Bread',
+  'rice': 'Rice',
+  'tomato': 'Tomato',
+  'potato': 'Potatoes',
+  'cheese': 'Cheese',
+  'milk': 'Milk',
+  'curd': 'Yogurt',
+  'paneer': 'Paneer',
+  'noodles': 'Noodles',
+  'chilli': 'Chilli',
+  'banana': 'Banana',
+  'green pepper': 'Green Pepper',
+  'eggplant': 'Aubergine',
+  'garlic': 'Garlic',
+  'butter': 'Butter'
+};
+
+const mealCache = new Map();
+let kitchenMode = 'local'; // 'local' or 'world'
+
+// Mascot Mood Controller (4 moods: happy, hungry, angry, celebrating)
+function setMascotMood(mood) {
+  const avatar = document.getElementById('misae-avatar');
+  if (!avatar) return;
+  avatar.classList.remove('mood-happy', 'mood-hungry', 'mood-angry', 'mood-celebrating');
+  avatar.classList.add(`mood-${mood}`);
+}
+
+// Comic Sound Popups
+const COMIC_WORDS = ["POW!", "BOING!", "BURI BURI!", "SLURP!", "CRUNCH!", "ACTION!"];
+
+function triggerComicPopup(x, y, word) {
+  const layer = document.getElementById('comic-popups-layer');
+  if (!layer) return;
+
+  const text = word || COMIC_WORDS[Math.floor(Math.random() * COMIC_WORDS.length)];
+  const el = document.createElement('div');
+  el.className = 'comic-word-popup';
+  el.textContent = text;
+
+  const posX = (typeof x === 'number' && !isNaN(x)) ? Math.max(20, Math.min(window.innerWidth - 120, x - 40)) : (window.innerWidth / 2 - 40);
+  const posY = (typeof y === 'number' && !isNaN(y)) ? Math.max(40, y - 40) : (window.innerHeight / 2 - 40);
+
+  el.style.left = `${posX}px`;
+  el.style.top = `${posY}px`;
+  layer.appendChild(el);
+
+  setTimeout(() => {
+    if (el.parentNode) el.parentNode.removeChild(el);
+  }, 850);
+}
+
+// Confetti Rain (Chocobi boxes, stars, and food emojis)
+function triggerConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const confettiItems = ['🍫', '🍪', '⭐', '🥟', '🍙', '🍳', '✨'];
+  const particles = [];
+  for (let i = 0; i < 35; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      size: 20 + Math.random() * 16,
+      char: confettiItems[Math.floor(Math.random() * confettiItems.length)],
+      speedY: 3 + Math.random() * 4,
+      speedX: (Math.random() - 0.5) * 3,
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 6
+    });
+  }
+
+  const startTime = Date.now();
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.y += p.speedY;
+      p.x += p.speedX;
+      p.rotation += p.rotSpeed;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.font = `${p.size}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.char, 0, 0);
+      ctx.restore();
+    });
+
+    if (Date.now() - startTime < 2600) {
+      requestAnimationFrame(animate);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
 // DOM Elements
 const chipsContainer = document.getElementById('chips-container');
 const selectedCountEl = document.getElementById('selected-count');
@@ -685,6 +812,9 @@ const misaeSpeech = document.getElementById('misae-speech');
 const misaeAvatar = document.getElementById('misae-avatar');
 const flashOverlay = document.getElementById('angry-flash-overlay');
 
+const btnModeLocal = document.getElementById('btn-mode-local');
+const btnModeWorld = document.getElementById('btn-mode-world');
+
 const rouletteContainer = document.getElementById('roulette-container');
 const slotReelText = document.getElementById('slot-reel-text');
 
@@ -693,6 +823,10 @@ const cardTitle = document.getElementById('card-recipe-title');
 const cardTime = document.getElementById('card-recipe-time');
 const cardDiff = document.getElementById('card-recipe-diff');
 const cardMatch = document.getElementById('card-recipe-match');
+const cardSource = document.getElementById('card-recipe-source');
+const cardImageWrap = document.getElementById('card-image-wrap');
+const cardRecipeImage = document.getElementById('card-recipe-image');
+const cardButtDance = document.getElementById('card-butt-dance');
 const cardGrumpy = document.getElementById('card-grumpy-banner');
 const grumpyText = document.getElementById('grumpy-text');
 const cardSwapBox = document.getElementById('card-swap-box');
@@ -707,8 +841,111 @@ const fallbackDisplay = document.getElementById('fallback-display');
 const fallbackMsg = document.getElementById('fallback-message');
 const btnFallbackRetry = document.getElementById('btn-fallback-retry');
 
+// Landing Screen & Intro Animation
+let introTimers = [];
+
+function clearIntroTimers() {
+  introTimers.forEach(t => clearTimeout(t));
+  introTimers = [];
+}
+
+function transitionToApp() {
+  clearIntroTimers();
+  const landingScreen = document.getElementById('landing-screen');
+  const appScreen = document.getElementById('app-screen');
+  if (!landingScreen || !appScreen) return;
+
+  landingScreen.classList.add('screen-fade-out');
+  setTimeout(() => {
+    landingScreen.style.display = 'none';
+    appScreen.style.display = 'flex';
+    appScreen.classList.add('screen-fade-in');
+  }, 320);
+}
+
+function initIntroScreen() {
+  const landingScreen = document.getElementById('landing-screen');
+  if (!landingScreen) return;
+
+  const msg1 = document.getElementById('msg-1');
+  const msg2 = document.getElementById('msg-2');
+  const msg3 = document.getElementById('msg-3');
+  const msgTyping = document.getElementById('msg-typing');
+  const msg4 = document.getElementById('msg-4');
+  const notif = document.getElementById('phone-notif');
+  const btnOpenFridge = document.getElementById('btn-open-fridge');
+  const btnSkip = document.getElementById('btn-skip-intro');
+
+  // Skip button click
+  if (btnSkip) {
+    btnSkip.addEventListener('click', () => {
+      playSound('pop');
+      transitionToApp();
+    });
+  }
+
+  // Open fridge CTA click
+  if (btnOpenFridge) {
+    btnOpenFridge.addEventListener('click', () => {
+      playSound('fanfare');
+      transitionToApp();
+    });
+  }
+
+  // Sequence: finishes in ~6.5 seconds total (< 8 seconds)
+  introTimers.push(setTimeout(() => {
+    if (msg1) {
+      msg1.classList.remove('hidden');
+      msg1.classList.add('pop-in');
+      playSound('pop');
+    }
+  }, 500));
+
+  introTimers.push(setTimeout(() => {
+    if (msg2) {
+      msg2.classList.remove('hidden');
+      msg2.classList.add('pop-in');
+      playSound('pop');
+    }
+  }, 1800));
+
+  introTimers.push(setTimeout(() => {
+    if (msg3) {
+      msg3.classList.remove('hidden');
+      msg3.classList.add('pop-in');
+      playSound('pop');
+    }
+  }, 3200));
+
+  introTimers.push(setTimeout(() => {
+    if (notif) notif.classList.add('show');
+    if (msgTyping) {
+      msgTyping.classList.remove('hidden');
+      msgTyping.classList.add('pop-in');
+    }
+  }, 4400));
+
+  introTimers.push(setTimeout(() => {
+    if (msgTyping) msgTyping.classList.add('hidden');
+    if (msg4) {
+      msg4.classList.remove('hidden');
+      msg4.classList.add('pop-in');
+      playSound('pop');
+    }
+  }, 5800));
+
+  introTimers.push(setTimeout(() => {
+    if (btnOpenFridge) {
+      btnOpenFridge.classList.remove('hidden');
+      btnOpenFridge.classList.add('pop-in');
+      playSound('pop');
+    }
+  }, 6500));
+}
+
 // Initialize
 async function init() {
+  initIntroScreen();
   renderChips();
   attachEvents();
   await loadRecipes();
@@ -748,7 +985,7 @@ function triggerAngryShinchan(ingredientName) {
   setTimeout(() => flashOverlay.classList.remove('active'), 1000);
 
   // Avatar and Speech
-  misaeAvatar.textContent = "😡";
+  setMascotMood('angry');
   misaeSpeech.classList.add('angry');
 
   const norm = ingredientName.toLowerCase();
@@ -762,7 +999,11 @@ function triggerAngryShinchan(ingredientName) {
   misaeSpeech.textContent = quote;
 
   setTimeout(() => {
-    misaeAvatar.textContent = "👦";
+    const stillHasHated = Array.from(selectedIngredients).some(i => isHated(i));
+    if (!stillHasHated) {
+      if (selectedIngredients.size >= 2) setMascotMood('hungry');
+      else setMascotMood('happy');
+    }
   }, 4000);
 }
 
@@ -816,7 +1057,7 @@ function renderChips() {
     chipEl.className = `chip ${isSelected ? 'selected' : ''} ${hatedClass}`;
     chipEl.dataset.name = chip.name;
     chipEl.innerHTML = `<span>${chip.emoji}</span><span>${chip.label}</span>`;
-    chipEl.addEventListener('click', () => toggleIngredient(chip.name));
+    chipEl.addEventListener('click', (e) => toggleIngredient(chip.name, e));
     chipsContainer.appendChild(chipEl);
   });
 
@@ -838,7 +1079,7 @@ function renderChips() {
         e.stopPropagation();
         removeCustomIngredient(name);
       } else {
-        toggleIngredient(name);
+        toggleIngredient(name, e);
       }
     });
     chipsContainer.appendChild(chipEl);
@@ -853,7 +1094,7 @@ function updateSelectedCount() {
 }
 
 // Toggle an ingredient on/off
-function toggleIngredient(name) {
+function toggleIngredient(name, event) {
   let wasAdded = false;
   if (selectedIngredients.has(name)) {
     selectedIngredients.delete(name);
@@ -864,7 +1105,16 @@ function toggleIngredient(name) {
       triggerAngryShinchan(name);
     } else {
       playSound('pop');
+      if (selectedIngredients.size >= 2) {
+        setMascotMood('hungry');
+      } else {
+        setMascotMood('happy');
+      }
     }
+  }
+
+  if (event && typeof event.clientX === 'number') {
+    triggerComicPopup(event.clientX, event.clientY);
   }
 
   renderChips();
@@ -907,6 +1157,7 @@ function clearSelections() {
   isSpinning = false;
   btnCook.disabled = false;
   selectedIngredients.clear();
+  setMascotMood('happy');
   renderChips();
   recipeDisplay.classList.remove('active');
   fallbackDisplay.classList.remove('active');
@@ -1097,10 +1348,132 @@ function rankRecipes() {
 }
 
 /**
+ * TheMealDB Integration: Multi-ingredient intersection fetcher
+ */
+async function fetchWorldKitchenMeals(userSelectedList) {
+  const mappedIngs = [];
+  userSelectedList.forEach(raw => {
+    const key = raw.toLowerCase().trim();
+    if (THEMEALDB_MAP[key]) {
+      mappedIngs.push(THEMEALDB_MAP[key]);
+    } else {
+      mappedIngs.push(raw.trim());
+    }
+  });
+
+  if (mappedIngs.length === 0) return null;
+
+  // 5-second timeout using AbortController
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const mealCounts = new Map(); // idMeal -> { idMeal, strMeal, strMealThumb, count }
+
+    // Query filter.php once per mapped ingredient concurrently
+    const promises = mappedIngs.map(async (ing) => {
+      try {
+        const url = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(ing)}`;
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) return;
+        const data = await res.json();
+        const meals = (data && Array.isArray(data.meals)) ? data.meals : [];
+        meals.forEach(m => {
+          if (!m || !m.idMeal) return;
+          if (mealCounts.has(m.idMeal)) {
+            mealCounts.get(m.idMeal).count++;
+          } else {
+            mealCounts.set(m.idMeal, {
+              idMeal: m.idMeal,
+              strMeal: m.strMeal,
+              strMealThumb: m.strMealThumb,
+              count: 1
+            });
+          }
+        });
+      } catch (e) {
+        // Safe null handling for failed / aborted calls
+      }
+    });
+
+    await Promise.all(promises);
+    clearTimeout(timeoutId);
+
+    if (mealCounts.size === 0) return null;
+
+    // Rank meals by frequency count descending
+    const ranked = Array.from(mealCounts.values()).sort((a, b) => b.count - a.count);
+    const topCandidates = ranked.slice(0, 6);
+
+    // Lookup top candidate recipes in parallel (check in-memory cache first)
+    const lookupPromises = topCandidates.map(async (cand) => {
+      if (mealCache.has(cand.idMeal)) {
+        return mealCache.get(cand.idMeal);
+      }
+      try {
+        const detailUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${cand.idMeal}`;
+        const detailRes = await fetch(detailUrl, { signal: controller.signal });
+        if (detailRes.ok) {
+          const detailData = await detailRes.json();
+          if (detailData && Array.isArray(detailData.meals) && detailData.meals[0]) {
+            const rawMeal = detailData.meals[0];
+            const parsedIngredients = [];
+            for (let i = 1; i <= 20; i++) {
+              const ingName = rawMeal[`strIngredient${i}`];
+              if (ingName && ingName.trim()) {
+                parsedIngredients.push(ingName.trim().toLowerCase());
+              }
+            }
+
+            const rawSteps = (rawMeal.strInstructions || '')
+              .split(/\r?\n+/)
+              .map(s => s.trim())
+              .filter(s => s.length > 10);
+            const steps = rawSteps.length > 0 ? rawSteps.slice(0, 5) : [rawMeal.strInstructions.trim()];
+
+            const parsedRecipe = {
+              id: `world_${rawMeal.idMeal}`,
+              name: rawMeal.strMeal,
+              time: "15 mins",
+              difficulty: rawMeal.strArea ? `${rawMeal.strArea} Special` : "World Recipe",
+              ingredients: parsedIngredients.slice(0, 6),
+              optional_ingredients: parsedIngredients.slice(6, 10),
+              steps: steps,
+              shinchan_comment: `World Kitchen discovery: ${rawMeal.strMeal}! Action Kamen would approve!`,
+              source: "world",
+              image: rawMeal.strMealThumb,
+              matchCount: cand.count
+            };
+
+            mealCache.set(cand.idMeal, parsedRecipe);
+            return parsedRecipe;
+          }
+        }
+      } catch (e) {
+        // Continue gracefully
+      }
+      return null;
+    });
+
+    const detailedMeals = (await Promise.all(lookupPromises)).filter(Boolean);
+    return detailedMeals.length > 0 ? detailedMeals : null;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    return null;
+  }
+}
+
+/**
  * Roulette Spin Animation (1.5 seconds)
  */
-function cookSomething() {
+async function cookSomething(event) {
   if (isSpinning) return;
+
+  if (event && typeof event.clientX === 'number') {
+    triggerComicPopup(event.clientX, event.clientY);
+  } else {
+    triggerComicPopup();
+  }
 
   // Case 0: No ingredients picked
   if (selectedIngredients.size === 0) {
@@ -1109,17 +1482,54 @@ function cookSomething() {
     fallbackMsg.textContent = "You haven't picked anything! Shinchan can't cook on thin air, even with Action Bastard's help!";
     misaeSpeech.classList.remove('angry');
     misaeSpeech.textContent = "Mama! The fridge is completely empty! Are we ordering pizza?!";
+    setMascotMood('hungry');
     return;
   }
 
-  const scoredMatches = rankRecipes();
+  let scoredMatches = [];
+
+  // Check if World Kitchen toggle is enabled
+  if (kitchenMode === 'world') {
+    btnCook.disabled = true;
+    isSpinning = true;
+    recipeDisplay.classList.remove('active');
+    fallbackDisplay.classList.remove('active');
+    rouletteContainer.classList.add('spinning');
+    slotReelText.textContent = "Mummy is cooking...";
+
+    const worldMatches = await fetchWorldKitchenMeals(Array.from(selectedIngredients));
+    if (worldMatches && worldMatches.length > 0) {
+      scoredMatches = worldMatches.map(m => ({
+        recipe: m,
+        matchCount: m.matchCount || 1,
+        effectiveMatchCount: m.matchCount || 1,
+        totalScore: (m.matchCount || 1) * 3,
+        matchedList: m.ingredients,
+        missingList: [],
+        swaps: []
+      }));
+    } else {
+      // Silently fall back to recipes.json with Misae quip
+      misaeSpeech.textContent = QUIPS.offlineMisae;
+      scoredMatches = rankRecipes().map(m => ({
+        ...m,
+        recipe: { ...m.recipe, isOfflineFallback: true }
+      }));
+    }
+  } else {
+    scoredMatches = rankRecipes();
+  }
 
   // Case: No viable matches found
   if (scoredMatches.length === 0) {
+    rouletteContainer.classList.remove('spinning');
+    btnCook.disabled = false;
+    isSpinning = false;
     recipeDisplay.classList.remove('active');
     fallbackDisplay.classList.add('active');
     fallbackMsg.textContent = `Even with ${Array.from(selectedIngredients).join(', ')}, Shinchan's survival cookbook is baffled! Try adding eggs, bread, noodles, or rice!`;
     misaeSpeech.textContent = "Hmm... that's a weird combo! Shiro wouldn't even smell that!";
+    setMascotMood('hungry');
     return;
   }
 
@@ -1138,13 +1548,13 @@ function cookSomething() {
   rouletteContainer.classList.add('spinning');
 
   // Reel through random recipe names
-  const reelTitles = allRecipes.map(r => r.name);
+  const reelTitles = currentMatches.map(m => m.recipe.name);
   const startTime = Date.now();
   const spinDuration = 1500; // ~1.5s as specified
 
   spinInterval = setInterval(() => {
     const elapsed = Date.now() - startTime;
-    const randomTitle = reelTitles[Math.floor(Math.random() * reelTitles.length)];
+    const randomTitle = reelTitles[Math.floor(Math.random() * reelTitles.length)] || "Mummy is cooking...";
     slotReelText.textContent = randomTitle;
     playSound('tick');
 
@@ -1173,12 +1583,43 @@ function displayRecipe(matchData) {
   cardDiff.textContent = `⚡ ${recipe.difficulty}`;
   cardMatch.textContent = `🎯 ${matchCount} of ${recipe.ingredients.length} matched`;
 
-  // Grumpy banner check
+  // Kitchen Source badge
+  if (cardSource) {
+    if (recipe.source === 'world') {
+      cardSource.textContent = '🌍 World Kitchen';
+      cardSource.className = 'badge-tag badge-source badge-world';
+    } else {
+      cardSource.textContent = '🏠 Local Kitchen';
+      cardSource.className = 'badge-tag badge-source badge-local';
+    }
+  }
+
+  // Dish photo if available
+  if (cardImageWrap && cardRecipeImage) {
+    if (recipe.image) {
+      cardImageWrap.style.display = 'block';
+      cardRecipeImage.src = recipe.image;
+    } else {
+      cardImageWrap.style.display = 'none';
+    }
+  }
+
+  // Butt-dance celebration
+  if (cardButtDance) {
+    cardButtDance.style.display = 'flex';
+  }
+
+  // Confetti rain
+  triggerConfetti();
+
+  // Mascot celebratory mood
   const pickedHated = Array.from(selectedIngredients).filter(i => isHated(i));
   if (pickedHated.length > 0) {
+    setMascotMood('angry');
     cardGrumpy.style.display = 'flex';
     grumpyText.textContent = `Shinchan is eating with tears in his eyes because you picked: ${pickedHated.join(', ')}! Misae made him do it!`;
   } else {
+    setMascotMood('celebrating');
     cardGrumpy.style.display = 'none';
   }
 
@@ -1248,7 +1689,10 @@ function displayRecipe(matchData) {
   cardQuote.textContent = `"${recipe.shinchan_comment || 'Action Bastard approved survival food!'}"`;
 
   // Update Misae speech bubble
-  if (pickedHated.length > 0) {
+  if (recipe.isOfflineFallback) {
+    misaeSpeech.classList.remove('angry');
+    misaeSpeech.textContent = QUIPS.offlineMisae;
+  } else if (pickedHated.length > 0) {
     misaeSpeech.classList.add('angry');
     misaeSpeech.textContent = `BLEEEHH! Shinchan is forced to eat ${recipe.name}! Misae, save me!`;
   } else {
@@ -1299,21 +1743,82 @@ function attachEvents() {
   const soundToggleBtn = document.getElementById('btn-sound-toggle');
   const soundIcon = document.getElementById('sound-icon');
   if (soundToggleBtn && soundIcon) {
-    soundToggleBtn.addEventListener('click', () => {
+    soundToggleBtn.addEventListener('click', (e) => {
       soundEnabled = !soundEnabled;
       soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
-      if (soundEnabled) playSound('pop');
+      if (soundEnabled) {
+        playSound('pop');
+        triggerComicPopup(e.clientX, e.clientY, "AUDIO ON!");
+      } else {
+        triggerComicPopup(e.clientX, e.clientY, "MUTED!");
+      }
+    });
+  }
+
+  // Kitchen Mode Selection (Local vs World)
+  const btnLocal = document.getElementById('btn-mode-local');
+  const btnWorld = document.getElementById('btn-mode-world');
+  if (btnLocal && btnWorld) {
+    btnLocal.addEventListener('click', (e) => {
+      kitchenMode = 'local';
+      btnLocal.classList.add('active');
+      btnWorld.classList.remove('active');
+      playSound('pop');
+      triggerComicPopup(e.clientX, e.clientY, "DESI TADKA!");
+      misaeSpeech.textContent = "Local survival kitchen active! Mummy ke secret desi nuskhe!";
+    });
+
+    btnWorld.addEventListener('click', (e) => {
+      kitchenMode = 'world';
+      btnWorld.classList.add('active');
+      btnLocal.classList.remove('active');
+      playSound('pop');
+      triggerComicPopup(e.clientX, e.clientY, "WORLD TOUR!");
+      misaeSpeech.textContent = "World Kitchen active! Foreign recipes with desi tadka!";
     });
   }
 
   // Clear button
-  btnClear.addEventListener('click', clearSelections);
+  btnClear.addEventListener('click', (e) => {
+    triggerComicPopup(e.clientX, e.clientY, "CLEARED!");
+    clearSelections();
+  });
 
   // Cook button
   btnCook.addEventListener('click', cookSomething);
 
   // Spin again
-  btnSpinAgain.addEventListener('click', spinAgain);
+  btnSpinAgain.addEventListener('click', (e) => {
+    triggerComicPopup(e.clientX, e.clientY, "SPINNING!");
+    spinAgain();
+  });
+
+  // Copy recipe to clipboard
+  const btnCopy = document.getElementById('btn-copy-recipe');
+  const copyText = document.getElementById('copy-text');
+  if (btnCopy && copyText) {
+    btnCopy.addEventListener('click', () => {
+      const match = currentMatches[currentMatchIndex];
+      if (!match) return;
+      const r = match.recipe;
+      const text = [
+        `🍳 ${r.name} (${r.time} • ${r.difficulty})`,
+        `🛒 Ingredients: ${r.ingredients.join(', ')}`,
+        `🔥 Steps:`,
+        ...r.steps.map((s, i) => `${i + 1}. ${s}`),
+        `\n"${r.shinchan_comment || 'Action Bastard approved!'}"`
+      ].join('\n');
+
+      navigator.clipboard.writeText(text).then(() => {
+        copyText.textContent = 'Copied!';
+        playSound('pop');
+        setTimeout(() => { copyText.textContent = 'Copy Recipe'; }, 2000);
+      }).catch(() => {
+        copyText.textContent = 'Done!';
+        setTimeout(() => { copyText.textContent = 'Copy Recipe'; }, 2000);
+      });
+    });
+  }
 
   // Edit ingredients (scroll back up)
   btnChangeIngredients.addEventListener('click', () => {

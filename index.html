@@ -11,10 +11,118 @@
   <!-- Screen Flash for Angry Shinchan -->
   <div id="angry-flash-overlay"></div>
 
-  <main class="app-wrapper">
+  <!-- Confetti Canvas & Comic Word Popups -->
+  <canvas id="confetti-canvas"></canvas>
+  <div id="comic-popups-layer"></div>
+
+  <!-- Landing / Smartphone Intro Screen -->
+  <section id="landing-screen">
+    <!-- Floating Background Emojis -->
+    <div class="floating-emojis" aria-hidden="true">
+      <span class="float-emoji e1">🍳</span>
+      <span class="float-emoji e2">🍫</span>
+      <span class="float-emoji e3">🍙</span>
+      <span class="float-emoji e4">🍛</span>
+      <span class="float-emoji e5">🍳</span>
+      <span class="float-emoji e6">🍫</span>
+      <span class="float-emoji e7">🍙</span>
+      <span class="float-emoji e8">🍛</span>
+    </div>
+
+    <!-- Skip Link for Judges -->
+    <button type="button" class="btn-skip-intro" id="btn-skip-intro" title="Skip intro and open fridge">
+      Skip ⏩
+    </button>
+
+    <!-- CSS-Drawn Smartphone -->
+    <div class="phone-wrapper">
+      <div class="comic-phone" id="comic-phone">
+        <!-- Phone Camera Notch -->
+        <div class="phone-notch"></div>
+
+        <!-- Phone Status Bar -->
+        <div class="phone-status-bar">
+          <span class="phone-time" id="phone-clock">17:45</span>
+          <div class="phone-status-right">
+            <span class="phone-wifi">📶</span>
+            <span class="phone-battery" title="Mummy, charger dedo!">🪫 1%</span>
+          </div>
+        </div>
+
+        <!-- Notification Toast (Action Kamen) -->
+        <div class="phone-notification" id="phone-notif">
+          <span class="notif-icon">⚡</span>
+          <div class="notif-content">
+            <div class="notif-title">Action Kamen Alert!</div>
+            <div class="notif-text">Naya episode TV par shuru ho gaya!</div>
+          </div>
+        </div>
+
+        <!-- Chat App Header -->
+        <div class="chat-header">
+          <div class="chat-header-avatar">👩</div>
+          <div class="chat-header-info">
+            <div class="chat-contact-name">Mummy ❤️ (Misae)</div>
+            <div class="chat-contact-status" id="chat-header-status">online</div>
+          </div>
+          <div class="chat-header-actions">⋮</div>
+        </div>
+
+        <!-- Chat Feed -->
+        <div class="chat-body" id="chat-messages">
+          <!-- Shinchan Msg 1 -->
+          <div class="chat-bubble outgoing hidden" id="msg-1">
+            <div class="bubble-text">Mummy, aaj khane mein kya hai? 🥺</div>
+            <span class="bubble-time">17:44 ✓✓</span>
+          </div>
+
+          <!-- Shinchan Msg 2 -->
+          <div class="chat-bubble outgoing hidden" id="msg-2">
+            <div class="bubble-text">Bhook se mera pet chuhe daud raha hai! 🐭</div>
+            <span class="bubble-time">17:44 ✓✓</span>
+          </div>
+
+          <!-- Shinchan Msg 3 -->
+          <div class="chat-bubble outgoing hidden" id="msg-3">
+            <div class="bubble-text">Chocobi mil sakti hai kya? Please please please! 🍫</div>
+            <span class="bubble-time">17:45 ✓✓</span>
+          </div>
+
+          <!-- Misae Typing Indicator -->
+          <div class="chat-bubble incoming typing-bubble hidden" id="msg-typing">
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="typing-label">Mummy is typing...</span>
+          </div>
+
+          <!-- Misae Msg 4 (Reply) -->
+          <div class="chat-bubble incoming hidden" id="msg-4">
+            <div class="bubble-text">Fridge mein jo bacha hai wohi bana lete hain! 😾</div>
+            <span class="bubble-time">17:45</span>
+          </div>
+        </div>
+
+        <!-- Bottom Action CTA -->
+        <div class="phone-footer">
+          <button type="button" class="btn-open-fridge hidden" id="btn-open-fridge">
+            <span>🧊</span> OPEN THE FRIDGE! <span>🍳</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main App Screen (Preserved Existing UI) -->
+  <main class="app-wrapper" id="app-screen" style="display: none;">
     <!-- Header -->
     <header class="comic-header">
       <div class="header-top-row">
+        <!-- Action Kamen Hero Badge (CSS-drawn) -->
+        <div class="action-kamen-badge" title="Action Kamen Hero Badge">
+          <span class="kamen-star">★</span>
+          <span class="kamen-text">ACTION HERO</span>
+        </div>
         <div class="header-badge">⭐ ACTION BASTARD CERTIFIED ⭐</div>
         <button type="button" class="btn-sound-toggle" id="btn-sound-toggle" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
           <span id="sound-icon">🔊</span>
@@ -24,9 +132,53 @@
       <p class="app-tagline">Survival cooking for college kids, lazy bachelors, and 5-year-old geniuses!</p>
     </header>
 
-    <!-- Misae / Shinchan Speech Bubble -->
+    <!-- Misae / Shinchan Speech Bubble with Original Inline SVG Mascot -->
     <section class="speech-bubble-container" aria-live="polite">
-      <div class="avatar-badge" id="misae-avatar" title="Nohara Family">👦</div>
+      <div class="avatar-badge mascot-container mood-happy" id="misae-avatar" title="Nohara Shinnosuke Mascot">
+        <!-- Original Shinchan-inspired Character SVG (No copyrighted assets) -->
+        <svg id="shinchan-mascot-svg" class="mascot-svg" viewBox="0 0 100 110" width="56" height="62" aria-hidden="true">
+          <!-- Shorts -->
+          <rect x="36" y="82" width="28" height="18" rx="4" fill="#FFDE00" stroke="#111" stroke-width="2.5" />
+          <line x1="50" y1="88" x2="50" y2="100" stroke="#111" stroke-width="2.5" />
+          <!-- Shirt -->
+          <rect x="30" y="60" width="40" height="25" rx="5" fill="#FF3B30" stroke="#111" stroke-width="2.5" />
+          <!-- Cheeks / Face Shape -->
+          <path d="M 22,46 C 16,30 30,12 50,12 C 70,12 84,30 78,46 C 85,55 76,64 68,64 C 60,65 40,65 32,64 C 24,64 15,55 22,46 Z" fill="#FFDCB6" stroke="#111" stroke-width="2.5" />
+          <!-- Signature Blocky Black Hair on Top -->
+          <path d="M 28,26 C 30,16 42,12 50,12 C 58,12 70,16 72,26 C 66,20 54,18 50,18 C 46,18 34,20 28,26 Z" fill="#111" />
+          <!-- Eyebrows (Dynamic 4 moods) -->
+          <g id="mascot-eyebrows">
+            <rect class="eyebrow-part eb-left-normal" x="29" y="24" width="15" height="6.5" rx="2" fill="#111" transform="rotate(-6 36 27)" />
+            <rect class="eyebrow-part eb-right-normal" x="56" y="24" width="15" height="6.5" rx="2" fill="#111" transform="rotate(6 63 27)" />
+            <rect class="eyebrow-part eb-left-angry" x="29" y="27" width="15" height="6.5" rx="2" fill="#111" transform="rotate(22 36 30)" />
+            <rect class="eyebrow-part eb-right-angry" x="56" y="27" width="15" height="6.5" rx="2" fill="#111" transform="rotate(-22 63 30)" />
+          </g>
+          <!-- Eyes -->
+          <g id="mascot-eyes">
+            <circle class="eye-part eye-dot" cx="37" cy="37" r="3.2" fill="#111" />
+            <circle class="eye-part eye-dot" cx="63" cy="37" r="3.2" fill="#111" />
+            <path class="eye-part eye-sparkle" d="M 37,33 L 38.5,36 L 41,37 L 38.5,38 L 37,41 L 35.5,38 L 33,37 L 35.5,36 Z" fill="#111" />
+            <path class="eye-part eye-sparkle" d="M 63,33 L 64.5,36 L 67,37 L 64.5,38 L 63,41 L 61.5,38 L 59,37 L 61.5,36 Z" fill="#111" />
+            <path class="eye-part eye-wink" d="M 33,35 L 38,38 L 33,41" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <path class="eye-part eye-wink" d="M 67,35 L 62,38 L 67,41" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round" />
+          </g>
+          <!-- Blush -->
+          <ellipse cx="26" cy="47" rx="4" ry="2.5" fill="#FF8A80" opacity="0.6" />
+          <ellipse cx="74" cy="47" rx="4" ry="2.5" fill="#FF8A80" opacity="0.6" />
+          <!-- Mouth (Dynamic) -->
+          <g id="mascot-mouth">
+            <path class="mouth-part mouth-happy" d="M 45,47 Q 50,53 55,47" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <ellipse class="mouth-part mouth-hungry" cx="50" cy="49" rx="5" ry="6" fill="#C91D13" stroke="#111" stroke-width="2" />
+            <path class="mouth-part mouth-angry" d="M 44,51 Q 50,45 56,51" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <path class="mouth-part mouth-celebrating" d="M 43,46 Q 50,57 57,46 Z" fill="#C91D13" stroke="#111" stroke-width="2" />
+          </g>
+          <!-- Steam Puffs for Angry Mood -->
+          <g class="steam-part steam-angry">
+            <path d="M 76,20 Q 82,15 80,10" stroke="#FF3B30" stroke-width="2.5" fill="none" stroke-linecap="round" />
+            <path d="M 83,24 Q 90,20 88,14" stroke="#FF3B30" stroke-width="2" fill="none" stroke-linecap="round" />
+          </g>
+        </svg>
+      </div>
       <div class="speech-bubble" id="misae-speech">
         Mama, I'm hungry! What do we have in the fridge?
       </div>
@@ -44,6 +196,19 @@
 
     <!-- Ingredient Picker Panel -->
     <section class="comic-panel" id="ingredients-panel">
+      <!-- Kitchen Mode Toggle: Local vs World Kitchen -->
+      <div class="kitchen-mode-bar">
+        <span class="kitchen-mode-title">🌍 RECIPE SOURCE:</span>
+        <div class="kitchen-toggle-group" role="group" aria-label="Kitchen Source Selection">
+          <button type="button" class="btn-kitchen-mode active" id="btn-mode-local" data-mode="local" title="Survival recipes from local recipes.json">
+            <span>🏠</span> Local Kitchen
+          </button>
+          <button type="button" class="btn-kitchen-mode" id="btn-mode-world" data-mode="world" title="Discover recipes across the globe via TheMealDB">
+            <span>🌍</span> World Kitchen
+          </button>
+        </div>
+      </div>
+
       <div class="panel-header">
         <h2 class="panel-title">
           <span>🥕</span> Pick Your Ingredients
@@ -93,10 +258,16 @@
         <div class="recipe-meta-strip">
           <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
           <div class="recipe-badges">
+            <span class="badge-tag badge-source" id="card-recipe-source">🏠 Local Kitchen</span>
             <span class="badge-tag badge-time" id="card-recipe-time">⏱️ 5 mins</span>
             <span class="badge-tag badge-difficulty" id="card-recipe-diff">⚡ Super Easy</span>
             <span class="badge-tag badge-match" id="card-recipe-match">🎯 3 Matched</span>
           </div>
+        </div>
+
+        <!-- Dish Photo (for World Kitchen / rich recipes) -->
+        <div class="recipe-thumb-container" id="card-image-wrap" style="display:none;">
+          <img id="card-recipe-image" class="recipe-dish-thumb" src="" alt="Dish Photo" loading="lazy" />
         </div>
 
         <!-- Grumpy Banner if hated ingredient was selected -->
@@ -134,10 +305,28 @@
           "Action Bastard power breakfast! Eggs make you strong like me!"
         </div>
 
+        <!-- Shinchan Butt-Wiggle Celebratory Dance -->
+        <div class="butt-dance-banner" id="card-butt-dance">
+          <div class="butt-dancer" aria-hidden="true">🍑</div>
+          <div class="butt-text">
+            <strong>BURI BURI CELEBRATION!</strong>
+            <span>Shinchan is doing his victory butt-wiggle dance!</span>
+          </div>
+        </div>
+
+        <!-- Mummy's Verdict Seal -->
+        <div class="mummy-verdict-stamp" id="card-mummy-verdict">
+          <span class="verdict-icon">🎖️</span>
+          <span>Mummy's Verdict: 10/10, Shiro also approves! 🐾</span>
+        </div>
+
         <!-- Card Action Buttons -->
         <div class="card-actions">
           <button type="button" class="btn-secondary" id="btn-spin-again">
             <span>🎲</span> Spin Again (Next Match)
+          </button>
+          <button type="button" class="btn-secondary" id="btn-copy-recipe" style="background:#A3E4D7;">
+            <span>📋</span> <span id="copy-text">Copy Recipe</span>
           </button>
           <button type="button" class="btn-secondary" id="btn-change-ingredients" style="background:var(--white);">
             <span>✏️</span> Edit Ingredients
