@@ -725,6 +725,20 @@ function setMascotMood(mood) {
   avatar.classList.add(`mood-${mood}`);
 }
 
+// Character Avatar PFP Switcher (Shinchan vs Mummy Misae)
+function showPfp(character) {
+  const shinchanImg = document.getElementById('avatar-shinchan-pfp');
+  const misaeImg = document.getElementById('avatar-misae-pfp');
+  if (!shinchanImg || !misaeImg) return;
+  if (character === 'misae') {
+    shinchanImg.style.display = 'none';
+    misaeImg.style.display = 'block';
+  } else {
+    shinchanImg.style.display = 'block';
+    misaeImg.style.display = 'none';
+  }
+}
+
 // Comic Sound Popups
 const COMIC_WORDS = ["POW!", "BOING!", "BURI BURI!", "SLURP!", "CRUNCH!", "ACTION!"];
 
@@ -926,6 +940,7 @@ function initIntroScreen() {
   }, 4400));
 
   introTimers.push(setTimeout(() => {
+    if (notif) notif.classList.remove('show');
     if (msgTyping) msgTyping.classList.add('hidden');
     if (msg4) {
       msg4.classList.remove('hidden');
@@ -985,6 +1000,7 @@ function triggerAngryShinchan(ingredientName) {
   setTimeout(() => flashOverlay.classList.remove('active'), 1000);
 
   // Avatar and Speech
+  showPfp('shinchan');
   setMascotMood('angry');
   misaeSpeech.classList.add('angry');
 
@@ -1010,6 +1026,7 @@ function triggerAngryShinchan(ingredientName) {
 // Update Misae speech bubble based on active selections
 function updateSpeechBubble(lastSelected, wasAdded) {
   if (selectedIngredients.size === 0) {
+    showPfp('shinchan');
     misaeSpeech.classList.remove('angry');
     misaeSpeech.textContent = "Mama, I'm hungry! What do we have in the fridge?";
     return;
@@ -1019,10 +1036,12 @@ function updateSpeechBubble(lastSelected, wasAdded) {
   const hatedItem = Array.from(selectedIngredients).find(item => isHated(item));
   if (hatedItem && wasAdded && isHated(lastSelected)) {
     // Already triggered via triggerAngryShinchan
+    showPfp('shinchan');
     return;
   }
 
   if (hatedItem) {
+    showPfp('shinchan');
     misaeSpeech.classList.add('angry');
     misaeSpeech.textContent = `Shinchan is sulking because '${hatedItem}' is on the counter...`;
     return;
@@ -1032,16 +1051,28 @@ function updateSpeechBubble(lastSelected, wasAdded) {
 
   // Check specific ingredient quip
   if (lastSelected && wasAdded && QUIPS.specific[lastSelected.toLowerCase()]) {
-    misaeSpeech.textContent = QUIPS.specific[lastSelected.toLowerCase()];
+    const quote = QUIPS.specific[lastSelected.toLowerCase()];
+    misaeSpeech.textContent = quote;
+    if (quote.includes('Mummy') || quote.includes('Misae') || quote.includes('Mummyji')) {
+      showPfp('misae');
+    } else {
+      showPfp('shinchan');
+    }
     return;
   }
 
   // Pick random quip based on selection size
   if (selectedIngredients.size >= 6) {
+    showPfp('misae');
     misaeSpeech.textContent = "Whoa, look at Gordon Ramsay over here raiding the whole kitchen!";
   } else {
     const randomQuip = QUIPS.general[Math.floor(Math.random() * QUIPS.general.length)];
     misaeSpeech.textContent = randomQuip;
+    if (randomQuip.includes('Mummy') || randomQuip.includes('Misae') || randomQuip.includes('Gordon')) {
+      showPfp('misae');
+    } else {
+      showPfp('shinchan');
+    }
   }
 }
 
@@ -1690,12 +1721,15 @@ function displayRecipe(matchData) {
 
   // Update Misae speech bubble
   if (recipe.isOfflineFallback) {
+    showPfp('misae');
     misaeSpeech.classList.remove('angry');
     misaeSpeech.textContent = QUIPS.offlineMisae;
   } else if (pickedHated.length > 0) {
+    showPfp('shinchan');
     misaeSpeech.classList.add('angry');
     misaeSpeech.textContent = `BLEEEHH! Shinchan is forced to eat ${recipe.name}! Misae, save me!`;
   } else {
+    showPfp('shinchan');
     misaeSpeech.classList.remove('angry');
     misaeSpeech.textContent = `Look what Shinchan made! '${recipe.name}'! Dig in before Shiro steals it!`;
   }
@@ -1765,6 +1799,7 @@ function attachEvents() {
       btnWorld.classList.remove('active');
       playSound('pop');
       triggerComicPopup(e.clientX, e.clientY, "DESI TADKA!");
+      showPfp('misae');
       misaeSpeech.textContent = "Local survival kitchen active! Mummy ke secret desi nuskhe!";
     });
 
@@ -1774,6 +1809,7 @@ function attachEvents() {
       btnLocal.classList.remove('active');
       playSound('pop');
       triggerComicPopup(e.clientX, e.clientY, "WORLD TOUR!");
+      showPfp('shinchan');
       misaeSpeech.textContent = "World Kitchen active! Foreign recipes with desi tadka!";
     });
   }

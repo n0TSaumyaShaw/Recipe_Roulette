@@ -179,10 +179,19 @@ body.angry-shake {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
   box-shadow: var(--shadow-comic);
   transform: rotate(-3deg);
   user-select: none;
+  overflow: hidden;
+  padding: 0;
+}
+
+.avatar-pfp-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .speech-bubble {
@@ -742,13 +751,44 @@ body.angry-shake {
 .shinchan-card-quote {
   background: #F0F4FF;
   border: var(--border-thick);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 10px 14px;
+  box-shadow: 2.5px 2.5px 0 var(--black);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quote-pfp {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2.5px solid var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.quote-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.quote-speaker {
+  font-family: 'Bangers', cursive;
+  font-size: 0.95rem;
+  letter-spacing: 0.8px;
+  color: var(--red);
+}
+
+.quote-text {
   font-style: italic;
   font-weight: 700;
   font-size: 0.95rem;
   color: #1B263B;
-  box-shadow: 2px 2px 0 var(--black);
+  line-height: 1.3;
 }
 
 /* Card Action Buttons */
@@ -802,6 +842,23 @@ body.angry-shake {
 
 #fallback-display.active {
   display: block;
+}
+
+.fallback-pfp-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.fallback-shinchan-pfp {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-comic);
+  object-fit: cover;
+  transform: rotate(-4deg);
+  animation: buttWiggle 1s ease-in-out infinite alternate;
 }
 
 .fallback-emoji {
@@ -1042,7 +1099,7 @@ body.angry-shake {
 /* Action Kamen Notification */
 .phone-notification {
   position: absolute;
-  top: 26px;
+  top: 56px;
   left: 10px;
   right: 10px;
   background: #FFF380;
@@ -1053,8 +1110,8 @@ body.angry-shake {
   display: flex;
   align-items: center;
   gap: 8px;
-  z-index: 40;
-  transform: translateY(-90px);
+  z-index: 30;
+  transform: translateY(-120px);
   opacity: 0;
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -1094,16 +1151,25 @@ body.angry-shake {
 }
 
 .chat-header-avatar {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   background: #FFF;
   border-radius: 50%;
   border: 2px solid var(--black);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
   flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+.chat-header-pfp {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .chat-header-info {
@@ -1502,18 +1568,45 @@ body.angry-shake {
 .mummy-verdict-stamp {
   background: #FFF3CD;
   border: 2.5px dashed #856404;
-  border-radius: 12px;
-  padding: 8px 12px;
-  font-family: 'Bangers', cursive;
-  font-size: 1.15rem;
-  letter-spacing: 0.8px;
+  border-radius: 14px;
+  padding: 8px 14px;
   color: #856404;
-  text-align: center;
-  transform: rotate(-1.2deg);
+  transform: rotate(-1deg);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+
+.verdict-pfp {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2.5px solid #856404;
+  box-shadow: 2px 2px 0 var(--black);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.verdict-text-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.verdict-label {
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.8px;
+  line-height: 1.2;
+}
+
+.verdict-sub {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #533f03;
 }
 
 .recipe-thumb-container {

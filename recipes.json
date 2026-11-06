@@ -4,8 +4,15 @@
     "name": "Speedy Masala Omelette",
     "time": "5 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["eggs", "onion", "chilli", "tomato"],
-    "optional_ingredients": ["cheese"],
+    "ingredients": [
+      "eggs",
+      "onion",
+      "chilli",
+      "tomato"
+    ],
+    "optional_ingredients": [
+      "cheese"
+    ],
     "steps": [
       "Whisk 2 eggs with a pinch of salt and turmeric in a mug.",
       "Finely chop onion, chilli, and tomato, then stir them right into the eggs.",
@@ -19,8 +26,15 @@
     "name": "Sweet Comic French Toast",
     "time": "7 mins",
     "difficulty": "Easy",
-    "ingredients": ["bread", "eggs", "milk"],
-    "optional_ingredients": ["banana", "cheese"],
+    "ingredients": [
+      "bread",
+      "eggs",
+      "milk"
+    ],
+    "optional_ingredients": [
+      "banana",
+      "cheese"
+    ],
     "steps": [
       "Beat 1 egg with a splash of milk and a spoonful of sugar in a shallow dish.",
       "Dip bread slices on both sides until soaked but not soggy.",
@@ -34,8 +48,16 @@
     "name": "Midnight Egg Fried Rice",
     "time": "8 mins",
     "difficulty": "Easy",
-    "ingredients": ["rice", "eggs", "onion", "chilli"],
-    "optional_ingredients": ["tomato", "cheese"],
+    "ingredients": [
+      "rice",
+      "eggs",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "tomato",
+      "cheese"
+    ],
     "steps": [
       "Scramble eggs in a hot pan with oil, then set aside in a bowl.",
       "Toss diced onions and chilli into the pan until fragrant and slightly crispy.",
@@ -49,8 +71,16 @@
     "name": "Tawa Bread Pizza",
     "time": "6 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["bread", "cheese", "tomato", "onion"],
-    "optional_ingredients": ["chilli", "paneer"],
+    "ingredients": [
+      "bread",
+      "cheese",
+      "tomato",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "chilli",
+      "paneer"
+    ],
     "steps": [
       "Lightly toast one side of the bread on a dry tawa/pan.",
       "Flip over and spread tomato ketchup or crushed tomato with salt on the warm side.",
@@ -64,8 +94,14 @@
     "name": "Crispy Spiced Jeera Aloo",
     "time": "10 mins",
     "difficulty": "Easy",
-    "ingredients": ["potato", "chilli"],
-    "optional_ingredients": ["onion", "tomato"],
+    "ingredients": [
+      "potato",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "onion",
+      "tomato"
+    ],
     "steps": [
       "Boil or microwave diced potatoes until tender (3 mins in microwave with water).",
       "Heat 1 tbsp oil in a pan, toss in cumin seeds and slit chillies until crackling.",
@@ -79,8 +115,14 @@
     "name": "Soothing Comfort Curd Rice",
     "time": "4 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["rice", "curd"],
-    "optional_ingredients": ["chilli", "onion"],
+    "ingredients": [
+      "rice",
+      "curd"
+    ],
+    "optional_ingredients": [
+      "chilli",
+      "onion"
+    ],
     "steps": [
       "Mash cooked warm or leftover rice lightly with a fork.",
       "Mix thoroughly with fresh curd, a splash of water, and salt until creamy.",
@@ -94,8 +136,15 @@
     "name": "Chilli Garlic Maggi/Noodles",
     "time": "6 mins",
     "difficulty": "Easy",
-    "ingredients": ["noodles", "onion", "chilli"],
-    "optional_ingredients": ["eggs", "cheese"],
+    "ingredients": [
+      "noodles",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "eggs",
+      "cheese"
+    ],
     "steps": [
       "Boil noodles according to package and drain, reserving 3 spoons of noodle water.",
       "Sauté chopped onion and lots of chilli in butter or oil.",
@@ -109,8 +158,15 @@
     "name": "5-Minute Paneer Bhurji",
     "time": "7 mins",
     "difficulty": "Easy",
-    "ingredients": ["paneer", "onion", "tomato", "chilli"],
-    "optional_ingredients": ["bread"],
+    "ingredients": [
+      "paneer",
+      "onion",
+      "tomato",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "bread"
+    ],
     "steps": [
       "Crumble fresh paneer with your hands.",
       "Heat oil in a skillet, sauté chopped onions and green chilli until golden.",
@@ -124,8 +180,14 @@
     "name": "2-Ingredient Banana Pancakes",
     "time": "6 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["banana", "eggs"],
-    "optional_ingredients": ["milk", "cheese"],
+    "ingredients": [
+      "banana",
+      "eggs"
+    ],
+    "optional_ingredients": [
+      "milk",
+      "cheese"
+    ],
     "steps": [
       "Mash 1 ripe banana in a bowl until smooth.",
       "Crack in 2 eggs and whisk vigorously until a batter forms.",
@@ -139,8 +201,16 @@
     "name": "Street-Style Anda Bhurji Toast",
     "time": "6 mins",
     "difficulty": "Easy",
-    "ingredients": ["eggs", "bread", "onion", "tomato"],
-    "optional_ingredients": ["chilli", "cheese"],
+    "ingredients": [
+      "eggs",
+      "bread",
+      "onion",
+      "tomato"
+    ],
+    "optional_ingredients": [
+      "chilli",
+      "cheese"
+    ],
     "steps": [
       "Sauté chopped onion, tomato, and chilli in 1 tbsp butter/oil.",
       "Crack 2 eggs directly into the pan and stir vigorously on medium heat.",
@@ -154,8 +224,15 @@
     "name": "Tangy Spicy Tomato Rice",
     "time": "8 mins",
     "difficulty": "Easy",
-    "ingredients": ["rice", "tomato", "onion", "chilli"],
-    "optional_ingredients": ["potato"],
+    "ingredients": [
+      "rice",
+      "tomato",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "potato"
+    ],
     "steps": [
       "Finely chop or crush tomatoes into a juicy pulp.",
       "Sauté onions and green chillies in oil until soft, then stir in the tomato pulp.",
@@ -169,8 +246,15 @@
     "name": "Survival Cheesy Mashed Potatoes",
     "time": "8 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["potato", "cheese", "milk"],
-    "optional_ingredients": ["onion", "chilli"],
+    "ingredients": [
+      "potato",
+      "cheese",
+      "milk"
+    ],
+    "optional_ingredients": [
+      "onion",
+      "chilli"
+    ],
     "steps": [
       "Peel, cube, and microwave potatoes in water for 5 minutes until fork-tender.",
       "Drain water, mash hot potatoes with a fork or spoon.",
@@ -184,8 +268,15 @@
     "name": "Dorm Egg Drop Noodle Soup",
     "time": "6 mins",
     "difficulty": "Easy",
-    "ingredients": ["noodles", "eggs", "onion"],
-    "optional_ingredients": ["chilli", "tomato"],
+    "ingredients": [
+      "noodles",
+      "eggs",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "chilli",
+      "tomato"
+    ],
     "steps": [
       "Bring 2 cups of water to a rolling boil with noodle seasoning.",
       "Drop in noodles and sliced onions, cooking for 2 minutes.",
@@ -199,8 +290,15 @@
     "name": "Crispy Chilli Cheese Toast",
     "time": "5 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["bread", "cheese", "chilli"],
-    "optional_ingredients": ["onion", "tomato"],
+    "ingredients": [
+      "bread",
+      "cheese",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "onion",
+      "tomato"
+    ],
     "steps": [
       "Mix grated cheese with finely chopped chillies and a tiny pinch of salt.",
       "Pile the cheesy chilli mix thickly onto bread slices.",
@@ -214,8 +312,14 @@
     "name": "Crispy Skillet Potato & Onion Hash",
     "time": "9 mins",
     "difficulty": "Easy",
-    "ingredients": ["potato", "onion"],
-    "optional_ingredients": ["eggs", "cheese"],
+    "ingredients": [
+      "potato",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "eggs",
+      "cheese"
+    ],
     "steps": [
       "Grate or finely slice raw potatoes and squeeze out excess moisture.",
       "Thinly slice onions and mix with potatoes, salt, and pepper.",
@@ -229,8 +333,15 @@
     "name": "Dahi Bread Toast (Curd Sandwich)",
     "time": "6 mins",
     "difficulty": "Easy",
-    "ingredients": ["bread", "curd", "onion", "tomato"],
-    "optional_ingredients": ["chilli"],
+    "ingredients": [
+      "bread",
+      "curd",
+      "onion",
+      "tomato"
+    ],
+    "optional_ingredients": [
+      "chilli"
+    ],
     "steps": [
       "Whisk thick curd with salt, black pepper, diced onions, and tomatoes.",
       "Spread the seasoned curd mixture generously between two bread slices.",
@@ -244,8 +355,15 @@
     "name": "Lazy Boiled Egg Spread & Toast",
     "time": "7 mins",
     "difficulty": "Easy",
-    "ingredients": ["eggs", "bread", "onion"],
-    "optional_ingredients": ["curd", "cheese"],
+    "ingredients": [
+      "eggs",
+      "bread",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "curd",
+      "cheese"
+    ],
     "steps": [
       "Boil 2 eggs for 7 minutes, cool in water, and peel.",
       "Mash eggs roughly with a fork, pinch of salt, pepper, and finely diced onion.",
@@ -259,8 +377,15 @@
     "name": "Quick Onion Tomato Cheela / Crêpe",
     "time": "7 mins",
     "difficulty": "Easy",
-    "ingredients": ["onion", "tomato", "chilli"],
-    "optional_ingredients": ["eggs", "paneer"],
+    "ingredients": [
+      "onion",
+      "tomato",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "eggs",
+      "paneer"
+    ],
     "steps": [
       "Chop onions, tomatoes, and chillies finely.",
       "Mix with flour/gram flour or whisk with 2 eggs and water to form a pourable batter.",
@@ -274,8 +399,15 @@
     "name": "Quick Pan Paneer Bites",
     "time": "6 mins",
     "difficulty": "Easy",
-    "ingredients": ["paneer", "curd", "chilli"],
-    "optional_ingredients": ["onion", "tomato"],
+    "ingredients": [
+      "paneer",
+      "curd",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "onion",
+      "tomato"
+    ],
     "steps": [
       "Cut paneer into bite-sized cubes.",
       "Toss with 1 spoon curd, red chilli powder, turmeric, and salt.",
@@ -289,8 +421,13 @@
     "name": "Thick Energy Banana Shake",
     "time": "3 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["banana", "milk"],
-    "optional_ingredients": ["curd"],
+    "ingredients": [
+      "banana",
+      "milk"
+    ],
+    "optional_ingredients": [
+      "curd"
+    ],
     "steps": [
       "Peel and slice 1 ripe banana into a cup or blender.",
       "Pour in 1 cup chilled milk and a pinch of sugar.",
@@ -304,8 +441,14 @@
     "name": "Masala Boiled Egg Tawa Fry",
     "time": "6 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["eggs", "onion", "chilli"],
-    "optional_ingredients": ["tomato"],
+    "ingredients": [
+      "eggs",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "tomato"
+    ],
     "steps": [
       "Slice hard-boiled eggs in half.",
       "In a shallow pan, heat oil, throw in sliced onions and green chillies.",
@@ -319,8 +462,15 @@
     "name": "Creamy Cheesy Ramen Bake",
     "time": "7 mins",
     "difficulty": "Easy",
-    "ingredients": ["noodles", "cheese", "milk"],
-    "optional_ingredients": ["chilli", "onion"],
+    "ingredients": [
+      "noodles",
+      "cheese",
+      "milk"
+    ],
+    "optional_ingredients": [
+      "chilli",
+      "onion"
+    ],
     "steps": [
       "Boil noodles in 1 cup of water and 1/2 cup of milk with the seasoning packet.",
       "Cook until noodles are tender and liquid reduces into a creamy gravy.",
@@ -334,8 +484,15 @@
     "name": "Quick Tadka Fried Rice",
     "time": "6 mins",
     "difficulty": "Easy",
-    "ingredients": ["rice", "onion", "chilli"],
-    "optional_ingredients": ["potato", "tomato"],
+    "ingredients": [
+      "rice",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "potato",
+      "tomato"
+    ],
     "steps": [
       "Heat 1 tbsp oil, add mustard seeds, slit chillies, and sliced onions.",
       "Fry until onions are sweet and translucent.",
@@ -349,8 +506,15 @@
     "name": "Spanish-Style Potato & Egg Scramble",
     "time": "8 mins",
     "difficulty": "Easy",
-    "ingredients": ["potato", "eggs", "onion"],
-    "optional_ingredients": ["cheese", "chilli"],
+    "ingredients": [
+      "potato",
+      "eggs",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "cheese",
+      "chilli"
+    ],
     "steps": [
       "Finely cube potato and fry in oil with sliced onion until tender and browned.",
       "Beat 2 eggs with salt and pepper.",
@@ -364,8 +528,15 @@
     "name": "Desi Bruschetta (Spiced Tomato Toast)",
     "time": "5 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["bread", "tomato", "onion", "chilli"],
-    "optional_ingredients": ["cheese"],
+    "ingredients": [
+      "bread",
+      "tomato",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "cheese"
+    ],
     "steps": [
       "Finely dice tomatoes and onions; toss with chillies, salt, and pepper.",
       "Toast bread slices till super crisp in butter or oil.",
@@ -379,8 +550,13 @@
     "name": "Sweet Banana Shrikhand Bowl",
     "time": "3 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["banana", "curd"],
-    "optional_ingredients": ["milk"],
+    "ingredients": [
+      "banana",
+      "curd"
+    ],
+    "optional_ingredients": [
+      "milk"
+    ],
     "steps": [
       "Whisk cold curd in a bowl with a spoon of sugar until glossy.",
       "Slice banana into rounds and gently fold into the curd.",
@@ -394,8 +570,15 @@
     "name": "Speedy Desi Chilli Paneer",
     "time": "8 mins",
     "difficulty": "Easy",
-    "ingredients": ["paneer", "onion", "chilli", "tomato"],
-    "optional_ingredients": ["green pepper"],
+    "ingredients": [
+      "paneer",
+      "onion",
+      "chilli",
+      "tomato"
+    ],
+    "optional_ingredients": [
+      "green pepper"
+    ],
     "steps": [
       "Cut paneer into cubes and onions into thick petals.",
       "Sear paneer in a hot pan for 2 mins, set aside.",
@@ -409,8 +592,15 @@
     "name": "Street Hakka Egg Noodles",
     "time": "7 mins",
     "difficulty": "Easy",
-    "ingredients": ["noodles", "eggs", "onion", "chilli"],
-    "optional_ingredients": ["tomato"],
+    "ingredients": [
+      "noodles",
+      "eggs",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "tomato"
+    ],
     "steps": [
       "Boil and drain noodles, rinsing with cold water.",
       "Scramble 1 egg in oil, remove onto a plate.",
@@ -424,8 +614,15 @@
     "name": "Mumbai Aloo Masala Toast",
     "time": "7 mins",
     "difficulty": "Easy",
-    "ingredients": ["bread", "potato", "onion", "chilli"],
-    "optional_ingredients": ["cheese"],
+    "ingredients": [
+      "bread",
+      "potato",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "cheese"
+    ],
     "steps": [
       "Mash boiled potato with chopped onion, chilli, salt, and turmeric.",
       "Spread the aloo mixture generously onto bread slices.",
@@ -439,8 +636,15 @@
     "name": "White-Sauce Style Curd Noodles",
     "time": "6 mins",
     "difficulty": "Easy",
-    "ingredients": ["noodles", "curd", "onion"],
-    "optional_ingredients": ["cheese", "chilli"],
+    "ingredients": [
+      "noodles",
+      "curd",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "cheese",
+      "chilli"
+    ],
     "steps": [
       "Boil noodles till al dente and drain.",
       "Whisk curd with salt, black pepper, and 2 tbsp warm water.",
@@ -454,8 +658,15 @@
     "name": "Chinese Tomato Egg Over Rice",
     "time": "8 mins",
     "difficulty": "Easy",
-    "ingredients": ["rice", "tomato", "eggs", "onion"],
-    "optional_ingredients": ["chilli"],
+    "ingredients": [
+      "rice",
+      "tomato",
+      "eggs",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "chilli"
+    ],
     "steps": [
       "Scramble 2 eggs softly and remove from pan.",
       "Cook diced tomatoes with chopped onion and salt until saucy and jammy.",
@@ -469,8 +680,14 @@
     "name": "Crispy Chilli Aloo Pops",
     "time": "9 mins",
     "difficulty": "Easy",
-    "ingredients": ["potato", "chilli", "onion"],
-    "optional_ingredients": ["cheese"],
+    "ingredients": [
+      "potato",
+      "chilli",
+      "onion"
+    ],
+    "optional_ingredients": [
+      "cheese"
+    ],
     "steps": [
       "Parboil or microwave potato cubes until 80% tender.",
       "In hot oil, sear potatoes until a crisp outer skin forms.",
@@ -484,8 +701,14 @@
     "name": "Mug Banana Pudding / Custard",
     "time": "4 mins",
     "difficulty": "Super Easy",
-    "ingredients": ["banana", "eggs", "milk"],
-    "optional_ingredients": ["cheese"],
+    "ingredients": [
+      "banana",
+      "eggs",
+      "milk"
+    ],
+    "optional_ingredients": [
+      "cheese"
+    ],
     "steps": [
       "Mash 1 banana with 1 egg and 2 tablespoons of milk inside a microwave-safe mug.",
       "Add a teaspoon of sugar and whisk well with a fork.",
@@ -499,8 +722,15 @@
     "name": "Misae's Revenge Green Pepper Stirfry",
     "time": "8 mins",
     "difficulty": "Easy",
-    "ingredients": ["green pepper", "onion", "potato"],
-    "optional_ingredients": ["tomato", "paneer"],
+    "ingredients": [
+      "green pepper",
+      "onion",
+      "potato"
+    ],
+    "optional_ingredients": [
+      "tomato",
+      "paneer"
+    ],
     "steps": [
       "Chop onions, potatoes, and... groan... the green peppers.",
       "Sauté onions and potatoes in oil until potato is halfway cooked.",
@@ -514,8 +744,14 @@
     "name": "Shinchan's Grumpy Eggplant Roast",
     "time": "9 mins",
     "difficulty": "Easy",
-    "ingredients": ["eggplant", "onion", "tomato"],
-    "optional_ingredients": ["chilli"],
+    "ingredients": [
+      "eggplant",
+      "onion",
+      "tomato"
+    ],
+    "optional_ingredients": [
+      "chilli"
+    ],
     "steps": [
       "Slice eggplant into discs and onions into strips.",
       "Shallow fry eggplant discs in hot oil with salt and turmeric until tender.",
@@ -523,6 +759,346 @@
       "Serve while crying dramatic anime tears."
     ],
     "shinchan_comment": "EGGPLANT?! Even Kazama wouldn't eat this! Who made this decision?!"
+  },
+  {
+    "id": "bread_upma_tadka",
+    "name": "Spiced Desi Bread Upma",
+    "time": "7 mins",
+    "difficulty": "Super Easy",
+    "ingredients": [
+      "bread",
+      "onion",
+      "tomato",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "garlic",
+      "cheese"
+    ],
+    "steps": [
+      "Tear or cube 3 slices of bread into bite-sized pieces.",
+      "Heat oil in a pan, saute chopped onion, green chilli, and garlic until translucent.",
+      "Add chopped tomato, turmeric, salt, and red chilli powder; cook till soft and pulpy.",
+      "Toss the bread cubes into the spiced masala with a splash of water, stirring until evenly coated and toasted."
+    ],
+    "shinchan_comment": "Bread upma is the king of bachelor breakfasts! Even Kazama would be jealous!"
+  },
+  {
+    "id": "tawa_anda_curry",
+    "name": "Dhaba Tawa Anda Curry",
+    "time": "12 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "eggs",
+      "onion",
+      "tomato",
+      "garlic",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "potato"
+    ],
+    "steps": [
+      "Boil 2 eggs, peel and slit slightly, then shallow-fry in oil with a pinch of turmeric until golden.",
+      "In the same pan, fry chopped onions and minced garlic till golden brown.",
+      "Add finely chopped tomatoes, salt, chilli, and garam masala; cook down until oil separates.",
+      "Pour 1/2 cup water to create a luscious spicy gravy, add the fried eggs, and simmer for 3 minutes."
+    ],
+    "shinchan_comment": "Dhaba style egg curry! I feel as heroic as Action Kamen after eating this!"
+  },
+  {
+    "id": "tawa_paneer_tikka",
+    "name": "Quick Tawa Paneer Tikka",
+    "time": "10 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "paneer",
+      "curd",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "tomato",
+      "garlic"
+    ],
+    "steps": [
+      "In a bowl, mix 2 tbsp thick curd with red chilli powder, turmeric, salt, and garlic paste.",
+      "Cut paneer and onions into chunks, and coat thoroughly in the spiced curd marinade.",
+      "Heat 1 tsp oil in a flat tawa or skillet on high heat.",
+      "Sear the paneer and onion pieces for 2-3 minutes per side until charred and smoky."
+    ],
+    "shinchan_comment": "Smoky paneer tikka without a tandoor! Shinchan's stomach is doing the happy dance!"
+  },
+  {
+    "id": "dahi_tadka_rice",
+    "name": "Viral Punjabi Dahi Tadka",
+    "time": "6 mins",
+    "difficulty": "Super Easy",
+    "ingredients": [
+      "curd",
+      "onion",
+      "garlic",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "rice"
+    ],
+    "steps": [
+      "Whisk 1 cup fresh curd in a bowl with a pinch of salt until smooth.",
+      "Heat 1 tbsp oil in a tadka pan; sizzle finely chopped garlic, onions, and slit green chilli.",
+      "Add red chilli powder and turmeric right at the end for an aromatic ruby-red tadka.",
+      "Pour the sizzling tadka straight over the cool curd and serve with warm rice or bread!"
+    ],
+    "shinchan_comment": "Sizzling dahi tadka! Hot spices meet cool dahi--just like Mummy's fiery anger and sweet smile!"
+  },
+  {
+    "id": "dahi_aloo_curry",
+    "name": "Desi Dahi Aloo Curry",
+    "time": "10 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "potato",
+      "curd",
+      "chilli",
+      "garlic"
+    ],
+    "optional_ingredients": [
+      "onion",
+      "tomato"
+    ],
+    "steps": [
+      "Boil or cube 2 potatoes and shallow fry until crispy golden edges form.",
+      "Whisk 1/2 cup curd with turmeric, coriander, and chilli powder so it doesn't split while cooking.",
+      "Lower heat, saute garlic and green chilli in 1 tsp oil, then pour in the whisked spiced curd while stirring continuously.",
+      "Toss in the crispy potatoes, simmer on low heat for 3-4 minutes until thick and flavorful."
+    ],
+    "shinchan_comment": "Melt-in-mouth potatoes in tangy dahi gravy! 100 times better than boiled broccoli!"
+  },
+  {
+    "id": "mumbai_masala_pav_toast",
+    "name": "Street-Style Masala Bread Pav",
+    "time": "8 mins",
+    "difficulty": "Super Easy",
+    "ingredients": [
+      "bread",
+      "tomato",
+      "onion",
+      "chilli",
+      "garlic"
+    ],
+    "optional_ingredients": [
+      "cheese",
+      "potato"
+    ],
+    "steps": [
+      "Finely dice onion, tomato, garlic, and green chilli.",
+      "Melt 1 tbsp butter or oil on a hot tawa, toss in the veggies, salt, and plenty of red chilli powder.",
+      "Mash everything together on the tawa using a spatula until a spicy, buttery paste forms.",
+      "Slather and press bread slices right into the bubbling masala on the tawa until toasty and drenched in flavor."
+    ],
+    "shinchan_comment": "Mumbai street food right on my kitchen tawa! Spicier than Mom's lectures!"
+  },
+  {
+    "id": "quick_shahi_tukda",
+    "name": "Hostel Shahi Tukda",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "bread",
+      "milk",
+      "banana"
+    ],
+    "optional_ingredients": [
+      "cheese"
+    ],
+    "steps": [
+      "Toast or shallow-fry bread triangles in butter/oil until golden and crisp.",
+      "In a small pan, simmer 1 cup milk with a spoon of sugar until it reduces into a creamy rabri consistency.",
+      "Layer the crispy toast triangles on a plate, pour the warm thickened milk over them.",
+      "Top with sweet sliced bananas for a decadent royal dessert in under 10 minutes!"
+    ],
+    "shinchan_comment": "Royal dessert for the princely Shinchan! Chocobi who? This is pure royalty!"
+  },
+  {
+    "id": "aloo_jeera_dry_fry",
+    "name": "Halwai-Style Sukhe Jeera Aloo",
+    "time": "9 mins",
+    "difficulty": "Super Easy",
+    "ingredients": [
+      "potato",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "garlic",
+      "tomato"
+    ],
+    "steps": [
+      "Cut 2 boiled or steamed potatoes into bite-sized chunky cubes.",
+      "Heat 1 tbsp oil in a pan, toss in cumin seeds and chopped green chillies until fragrant.",
+      "Add the potato cubes along with turmeric, red chilli powder, and salt.",
+      "Roast on medium heat without covering for 4-5 minutes until outer crust turns golden and crunchy."
+    ],
+    "shinchan_comment": "Crispy jeera aloo! Shinchan can finish the whole bowl before anyone even notices!"
+  },
+  {
+    "id": "paneer_butter_masala_quick",
+    "name": "10-Minute Tawa Paneer Makhani",
+    "time": "10 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "paneer",
+      "tomato",
+      "onion",
+      "milk",
+      "garlic"
+    ],
+    "optional_ingredients": [
+      "chilli",
+      "cheese"
+    ],
+    "steps": [
+      "Blend or grate 2 tomatoes and 1 onion into a quick paste with garlic.",
+      "Saute the paste in butter or oil with salt, turmeric, and chilli powder for 4 minutes until thick.",
+      "Pour in 1/4 cup milk and stir continuously to create a velvety restaurant-style orange gravy.",
+      "Drop in soft paneer cubes, cover and simmer gently for 2 minutes. Heavenly aroma guaranteed!"
+    ],
+    "shinchan_comment": "Restaurant style Paneer Makhani at home! Can we eat this every single day, Mummy?"
+  },
+  {
+    "id": "anda_kathi_roll_bread",
+    "name": "Kolkata Egg Roll on Toast",
+    "time": "7 mins",
+    "difficulty": "Super Easy",
+    "ingredients": [
+      "eggs",
+      "bread",
+      "onion",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "tomato",
+      "cheese"
+    ],
+    "steps": [
+      "Beat 1 egg with salt and chilli powder in a bowl.",
+      "Pour onto a hot greased pan, immediately place a slice of bread right on top of the wet egg.",
+      "Flip together once set so the bread gets toasted on the bottom while egg cooks on top.",
+      "Sprinkle crunchy sliced onions and green chillies, roll it tightly and devour like a street food roll!"
+    ],
+    "shinchan_comment": "Street-style egg roll magic! One hand for the roll, one hand to do the Buri Buri dance!"
+  },
+  {
+    "id": "south_indian_thayir_sadam",
+    "name": "South Indian Tempered Curd Rice",
+    "time": "5 mins",
+    "difficulty": "Super Easy",
+    "ingredients": [
+      "rice",
+      "curd",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "milk",
+      "onion"
+    ],
+    "steps": [
+      "Mash cooked warm or leftover rice slightly with a fork.",
+      "Mix in fresh curd, a splash of milk for creaminess, and salt to taste.",
+      "Heat 1 tsp oil, fry mustard seeds, cumin, and slit green chillies until crackling.",
+      "Pour the fragrant crackling tadka over the curd rice and mix thoroughly for total tummy comfort!"
+    ],
+    "shinchan_comment": "So creamy and cool! Heals Shinchan's tummy after too many spicy midnight adventures!"
+  },
+  {
+    "id": "sindhi_aloo_tuk",
+    "name": "Sindhi Crispy Smashed Aloo Tuk",
+    "time": "10 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "potato",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "garlic"
+    ],
+    "steps": [
+      "Cut potatoes into thick rounds and shallow fry on medium heat until half cooked.",
+      "Take them out, smash each piece flat gently with the bottom of a glass.",
+      "Return the smashed rounds to hot oil on high heat and fry until intensely crisp and shatteringly crunchy.",
+      "Toss immediately in red chilli powder, salt, and chaat masala."
+    ],
+    "shinchan_comment": "SMASH! Double fried crispy potato discs! Action Kamen punch approved!"
+  },
+  {
+    "id": "egg_bhurji_curry",
+    "name": "Mumbai Rasta Egg Bhurji Curry",
+    "time": "9 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "eggs",
+      "onion",
+      "tomato",
+      "chilli",
+      "garlic"
+    ],
+    "optional_ingredients": [
+      "cheese",
+      "bread"
+    ],
+    "steps": [
+      "Saute chopped onions, garlic, and chillies in oil until soft.",
+      "Add chopped tomatoes, salt, turmeric, and pav bhaji or garam masala; cook down till juicy.",
+      "Whisk 2 eggs and scramble them directly into the bubbling tomato masala on high heat.",
+      "Keep it soft and saucy rather than dry; scoop it up piping hot with buttered bread slices!"
+    ],
+    "shinchan_comment": "Saucy egg bhurji! So delicious that even Shiro is drooling under the table!"
+  },
+  {
+    "id": "desi_egg_chowmein",
+    "name": "Desi Thela Egg Chowmein",
+    "time": "8 mins",
+    "difficulty": "Easy",
+    "ingredients": [
+      "noodles",
+      "eggs",
+      "onion",
+      "chilli",
+      "garlic"
+    ],
+    "optional_ingredients": [
+      "tomato",
+      "green pepper"
+    ],
+    "steps": [
+      "Boil noodles till al dente, drain and toss in a drop of oil so they don't stick.",
+      "In a smoking hot wok or kadhai, scramble an egg with salt and set aside.",
+      "Saute sliced onions, minced garlic, and sliced green chillies on high flame for 1 minute.",
+      "Toss the noodles and scrambled eggs together with soy/tomato sauce and black pepper. Stir fry fast!"
+    ],
+    "shinchan_comment": "Thela-style street chowmein! Shinchan can slurp the whole plate in 30 seconds flat!"
+  },
+  {
+    "id": "paneer_chilli_bhurji_toast",
+    "name": "Amritsari Paneer Bhurji Toast",
+    "time": "7 mins",
+    "difficulty": "Super Easy",
+    "ingredients": [
+      "paneer",
+      "bread",
+      "onion",
+      "tomato",
+      "chilli"
+    ],
+    "optional_ingredients": [
+      "cheese",
+      "garlic"
+    ],
+    "steps": [
+      "Crumble fresh paneer with your fingers into small uneven bits.",
+      "Saute onions, tomatoes, and chillies in 1 tbsp butter with turmeric and salt until fragrant.",
+      "Stir in the crumbled paneer on medium heat for just 2 minutes so it stays juicy and tender.",
+      "Pile mountain-high on toasted buttered bread, top with cheese if you're feeling fancy!"
+    ],
+    "shinchan_comment": "Amritsari Paneer Bhurji! Creamy, buttery, and packed with superhero protein!"
   }
 ]
-
