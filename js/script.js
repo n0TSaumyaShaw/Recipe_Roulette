@@ -153,8 +153,17 @@ function playSound(type) {
   }
 }
 
-function setSoundEnabled(enabled, clientX, clientY) {
+function setSoundEnabled(enabled, clientX, clientY, persist = true) {
   soundEnabled = !!enabled;
+  if (persist) {
+    try {
+      const state = getState();
+      if (state && state.prefs) {
+        state.prefs.muted = !soundEnabled;
+        saveState();
+      }
+    } catch (e) {}
+  }
   const soundFxToggle = document.getElementById('setting-sound-fx');
   if (soundFxToggle && soundFxToggle.checked !== soundEnabled) {
     soundFxToggle.checked = soundEnabled;
@@ -867,12 +876,125 @@ const fallbackMsg = document.getElementById('fallback-message');
 const btnFallbackRetry = document.getElementById('btn-fallback-retry');
 
 // =========================================
+// CENTRAL APP STATE & STORAGE MODULE (recipeRoulette.v1)
+// =========================================
+const STORAGE_KEY = 'recipeRoulette.v1';
+
+function getDefaultState() {
+  const now = new Date().toISOString();
+  return {
+    visits: 1,
+    firstVisit: now,
+    lastVisit: now,
+    history: [],
+    favorites: [],
+    stats: {
+      cooked: 0,
+      chocobi: 0
+    },
+    prefs: {
+      muted: false,
+      source: 'local'
+    },
+    lastIngredients: []
+  };
+}
+
+let inMemoryState = null;
+
+function loadState() {
+  const defaults = getDefaultState();
+  let state = null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        state = {
+          visits: typeof parsed.visits === 'number' ? parsed.visits : defaults.visits,
+          firstVisit: parsed.firstVisit || defaults.firstVisit,
+          lastVisit: parsed.lastVisit || defaults.lastVisit,
+          history: Array.isArray(parsed.history) ? parsed.history.slice(0, 50) : [],
+          favorites: Array.isArray(parsed.favorites) ? parsed.favorites.slice(0, 50) : [],
+          stats: {
+            cooked: parsed.stats && typeof parsed.stats.cooked === 'number' ? parsed.stats.cooked : 0,
+            chocobi: parsed.stats && typeof parsed.stats.chocobi === 'number' ? parsed.stats.chocobi : 0
+          },
+          prefs: {
+            muted: parsed.prefs && typeof parsed.prefs.muted === 'boolean' ? parsed.prefs.muted : false,
+            source: parsed.prefs && (parsed.prefs.source === 'world' || parsed.prefs.source === 'local') ? parsed.prefs.source : 'local'
+          },
+          lastIngredients: Array.isArray(parsed.lastIngredients) ? parsed.lastIngredients.slice(0, 30) : []
+        };
+      }
+    }
+  } catch (err) {
+    // Storage disabled or corrupt JSON - fallback to in-memory state
+  }
+
+  if (!state) {
+    state = inMemoryState || defaults;
+  }
+  inMemoryState = state;
+  return inMemoryState;
+}
+
+function saveState(stateToSave) {
+  if (stateToSave) {
+    inMemoryState = stateToSave;
+  }
+  if (!inMemoryState) {
+    inMemoryState = getDefaultState();
+  }
+  if (inMemoryState.history && inMemoryState.history.length > 50) {
+    inMemoryState.history = inMemoryState.history.slice(0, 50);
+  }
+  if (inMemoryState.favorites && inMemoryState.favorites.length > 50) {
+    inMemoryState.favorites = inMemoryState.favorites.slice(0, 50);
+  }
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(inMemoryState));
+  } catch (err) {
+    // Quota exceeded or storage blocked
+  }
+  return inMemoryState;
+}
+
+function resetState() {
+  const fresh = getDefaultState();
+  fresh.visits = 1;
+  inMemoryState = fresh;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (err) {}
+  saveState(fresh);
+  return inMemoryState;
+}
+
+function getState() {
+  if (!inMemoryState) {
+    loadState();
+  }
+  return inMemoryState;
+}
+
+// Multi-tab sync via storage event
+window.addEventListener('storage', (e) => {
+  if (e.key === STORAGE_KEY) {
+    loadState();
+    applyStateToUI();
+  }
+});
+
+// =========================================
 // SHINCHAN PHONE OS STATE & MANAGERS
 // =========================================
 let currentPhoneScreen = 'chat';
 let batteryPercent = 85;
 let momAnger = 10;
-let sessionCookbook = [];
+let currentlyDisplayedRecipe = null;
+let currentCookbookTab = 'history';
+let sessionCookbook = []; // Backwards-compatibility alias (synced with state.history)
 
 // Screen Navigation Manager
 function showPhoneScreen(screenId) {
@@ -1031,58 +1153,271 @@ function triggerPhoneNotification(title, text, icon) {
   }, 4200);
 }
 
-// Cookbook Session Logger
+// Cookbook Persistent Logger & Favorite Management
 function recordCookedRecipe(recipe) {
   if (!recipe || !recipe.name) return;
-  const existing = sessionCookbook.find(r => r.name === recipe.name);
-  if (existing) {
+  const state = getState();
+  state.history = state.history || [];
+
+  const existingIdx = state.history.findIndex(r => r.name === recipe.name);
+  if (existingIdx >= 0) {
+    const existing = state.history[existingIdx];
     existing.count = (existing.count || 1) + 1;
+    existing.cookedAt = new Date().toISOString();
+    // Move to front so newest cooked is first
+    state.history.splice(existingIdx, 1);
+    state.history.unshift(existing);
   } else {
-    sessionCookbook.unshift({
+    state.history.unshift({
+      id: recipe.id || recipe.idMeal || recipe.name,
       name: recipe.name,
-      time: recipe.time,
-      difficulty: recipe.difficulty,
+      source: recipe.source || (kitchenMode === 'world' ? 'world' : 'local'),
+      time: recipe.time || '10 min',
+      difficulty: recipe.difficulty || 'Easy',
       comment: recipe.shinchan_comment || "Approved by Action Bastard!",
+      cookedAt: new Date().toISOString(),
       count: 1
     });
   }
-  const badge = document.getElementById('cookbook-badge');
-  if (badge) badge.textContent = sessionCookbook.length;
+
+  if (state.history.length > 50) {
+    state.history = state.history.slice(0, 50);
+  }
+
+  // Update cooked stat
+  state.stats = state.stats || { cooked: 0, chocobi: 0 };
+  state.stats.cooked = (state.stats.cooked || 0) + 1;
+
+  // Save last ingredients
+  state.lastIngredients = Array.from(selectedIngredients);
+
+  sessionCookbook = state.history;
+  saveState();
+  updateResumeIngredientsButton();
+  renderCookbook();
+}
+
+function setCookbookTab(tab) {
+  currentCookbookTab = tab;
+  const tabHistory = document.getElementById('tab-cookbook-history');
+  const tabFavorites = document.getElementById('tab-cookbook-favorites');
+  if (tabHistory) tabHistory.classList.toggle('active', tab === 'history');
+  if (tabFavorites) tabFavorites.classList.toggle('active', tab === 'favorites');
+  renderCookbook();
+}
+
+function removeFavorite(recipeIdOrName) {
+  const state = getState();
+  state.favorites = (state.favorites || []).filter(f => (f.id !== recipeIdOrName && f.name !== recipeIdOrName));
+  saveState();
+  if (currentlyDisplayedRecipe && (currentlyDisplayedRecipe.id === recipeIdOrName || currentlyDisplayedRecipe.name === recipeIdOrName)) {
+    updateFavoriteButtonState();
+  }
+  renderCookbook();
+  playSound('pop');
+}
+
+function toggleFavoriteCurrentRecipe(e) {
+  if (!currentlyDisplayedRecipe || !currentlyDisplayedRecipe.name) return;
+  const state = getState();
+  state.favorites = state.favorites || [];
+
+  const r = currentlyDisplayedRecipe;
+  const existingIdx = state.favorites.findIndex(f => (f.id && f.id === r.id) || f.name === r.name);
+
+  if (existingIdx >= 0) {
+    state.favorites.splice(existingIdx, 1);
+    saveState();
+    updateFavoriteButtonState();
+    renderCookbook();
+    playSound('pop');
+    if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "REMOVED!");
+  } else {
+    state.favorites.unshift({
+      id: r.id || r.idMeal || r.name,
+      name: r.name,
+      source: r.source || (kitchenMode === 'world' ? 'world' : 'local'),
+      time: r.time || '15 min',
+      difficulty: r.difficulty || 'Easy',
+      comment: r.shinchan_comment || 'Action Bastard approved survival food!',
+      favoritedAt: new Date().toISOString()
+    });
+    if (state.favorites.length > 50) state.favorites = state.favorites.slice(0, 50);
+    saveState();
+    updateFavoriteButtonState();
+    renderCookbook();
+    playSound('fanfare');
+    if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "SAVED! ❤️");
+  }
+}
+
+function updateFavoriteButtonState() {
+  const btn = document.getElementById('btn-favorite-recipe');
+  if (!btn || !currentlyDisplayedRecipe) return;
+  const state = getState();
+  const isFav = (state.favorites || []).some(f => (f.id && f.id === currentlyDisplayedRecipe.id) || f.name === currentlyDisplayedRecipe.name);
+  if (isFav) {
+    btn.classList.add('favorited');
+    btn.setAttribute('title', 'Remove from Favorites');
+    btn.setAttribute('aria-label', 'Remove from Favorites');
+  } else {
+    btn.classList.remove('favorited');
+    btn.setAttribute('title', 'Save to Favorites');
+    btn.setAttribute('aria-label', 'Save to Favorites');
+  }
+}
+
+function updateResumeIngredientsButton() {
+  const btnResume = document.getElementById('btn-resume-ingredients');
+  if (!btnResume) return;
+  const state = getState();
+  if (state.lastIngredients && state.lastIngredients.length > 0) {
+    btnResume.style.display = 'inline-block';
+    btnResume.textContent = `Resume Last (${state.lastIngredients.length})`;
+  } else {
+    btnResume.style.display = 'none';
+  }
+}
+
+function resumeLastIngredients(e) {
+  const state = getState();
+  if (!state.lastIngredients || state.lastIngredients.length === 0) return;
+
+  clearSelections();
+  state.lastIngredients.forEach(item => {
+    selectedIngredients.add(item.toLowerCase().trim());
+  });
+
+  renderChips();
+  updateSelectedCount();
+  playSound('pop');
+  if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "RESUMED!");
+  showPfp('shinchan');
+  misaeSpeech.textContent = `Resumed ${state.lastIngredients.length} ingredients from your last session!`;
+}
+
+function applyStateToUI() {
+  const state = getState();
+  sessionCookbook = state.history || [];
+
+  // Mute setting
+  if (typeof state.prefs?.muted === 'boolean') {
+    setSoundEnabled(!state.prefs.muted, null, null, false);
+  }
+
+  // Kitchen source
+  if (state.prefs?.source) {
+    kitchenMode = state.prefs.source;
+    const btnLocal = document.getElementById('btn-mode-local');
+    const btnWorld = document.getElementById('btn-mode-world');
+    if (btnLocal && btnWorld) {
+      if (kitchenMode === 'world') {
+        btnWorld.classList.add('active');
+        btnLocal.classList.remove('active');
+      } else {
+        btnLocal.classList.add('active');
+        btnWorld.classList.remove('active');
+      }
+    }
+  }
+
+  updateResumeIngredientsButton();
+  updateFavoriteButtonState();
+  renderCookbook();
 }
 
 function renderCookbook() {
   const list = document.getElementById('cookbook-list');
   if (!list) return;
+
+  const state = getState();
+  const historyList = state.history || [];
+  const favoritesList = state.favorites || [];
+
+  // Update counts
+  const badge = document.getElementById('cookbook-badge');
+  if (badge) badge.textContent = historyList.length;
+  const countHist = document.getElementById('cookbook-history-count');
+  if (countHist) countHist.textContent = historyList.length;
+  const countFav = document.getElementById('cookbook-favorites-count');
+  if (countFav) countFav.textContent = favoritesList.length;
+
   list.innerHTML = '';
 
-  if (sessionCookbook.length === 0) {
-    list.innerHTML = `
-      <div class="cookbook-empty-state">
-        <div class="empty-icon">🍳</div>
-        <h4>No recipes cooked yet!</h4>
-        <p>Open the Fridge, pick your ingredients, and spin the roulette to log your first delicious survival dish!</p>
-        <button type="button" class="btn-secondary" id="btn-goto-fridge" style="margin-top:12px;">
-          <span>🧊</span> Go to Fridge!
-        </button>
-      </div>
-    `;
-    const btnGo = document.getElementById('btn-goto-fridge');
-    if (btnGo) btnGo.addEventListener('click', () => showPhoneScreen('fridge'));
+  const activeItems = currentCookbookTab === 'favorites' ? favoritesList : historyList;
+
+  if (activeItems.length === 0) {
+    if (currentCookbookTab === 'favorites') {
+      list.innerHTML = `
+        <div class="cookbook-empty-state">
+          <div class="empty-icon">❤️</div>
+          <h4>No favorites saved yet!</h4>
+          <p>Tap the heart icon on any generated recipe card to save your favorite dishes here.</p>
+          <button type="button" class="btn-secondary" id="btn-fav-goto-fridge" style="margin-top:12px;">
+            <span>🧊</span> Spin A Recipe!
+          </button>
+        </div>
+      `;
+      const btnFavGo = document.getElementById('btn-fav-goto-fridge');
+      if (btnFavGo) btnFavGo.addEventListener('click', () => showPhoneScreen('fridge'));
+    } else {
+      list.innerHTML = `
+        <div class="cookbook-empty-state">
+          <div class="empty-icon">🍳</div>
+          <h4>No recipes cooked yet!</h4>
+          <p>Open the Fridge, pick your ingredients, and spin the roulette to log your first delicious survival dish!</p>
+          <button type="button" class="btn-secondary" id="btn-goto-fridge" style="margin-top:12px;">
+            <span>🧊</span> Go to Fridge!
+          </button>
+        </div>
+      `;
+      const btnGo = document.getElementById('btn-goto-fridge');
+      if (btnGo) btnGo.addEventListener('click', () => showPhoneScreen('fridge'));
+    }
     return;
   }
 
-  sessionCookbook.forEach(item => {
+  activeItems.forEach(item => {
     const card = document.createElement('div');
     card.className = 'cooked-dish-card';
+
+    const dateStr = item.cookedAt || item.favoritedAt
+      ? new Date(item.cookedAt || item.favoritedAt).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      : 'Today';
+
+    const sourceTag = item.source === 'world'
+      ? '<span class="cooked-source-badge world">🌍 World</span>'
+      : '<span class="cooked-source-badge local">🏠 Local</span>';
+
+    const isFavTab = currentCookbookTab === 'favorites';
+
     card.innerHTML = `
-      <div class="cooked-dish-title">${item.name} ${item.count > 1 ? `(x${item.count})` : ''}</div>
+      <div class="cooked-dish-top">
+        <div class="cooked-dish-title">${item.name} ${item.count && item.count > 1 ? `(x${item.count})` : ''}</div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          ${sourceTag}
+          <span class="cooked-date-badge">${dateStr}</span>
+          ${isFavTab ? `<button type="button" class="btn-remove-fav" data-id="${item.id || item.name}" title="Remove favorite" style="background:none; border:none; cursor:pointer; font-size:1rem; padding:0 2px;">❌</button>` : ''}
+        </div>
+      </div>
       <div class="cooked-dish-meta">
-        <span>⏱️ ${item.time}</span> · 
-        <span>⚡ ${item.difficulty}</span> · 
+        <span>⏱️ ${item.time || '10 min'}</span> · 
+        <span>⚡ ${item.difficulty || 'Easy'}</span> · 
         <span class="verdict-teal">⭐ Mummy's Verdict: 10/10</span>
       </div>
-      <div class="cooked-dish-comment">"${item.comment}"</div>
+      <div class="cooked-dish-comment">"${item.comment || "Approved by Action Bastard!"}"</div>
     `;
+
+    if (isFavTab) {
+      const btnRemove = card.querySelector('.btn-remove-fav');
+      if (btnRemove) {
+        btnRemove.addEventListener('click', (e) => {
+          e.stopPropagation();
+          removeFavorite(item.id || item.name);
+        });
+      }
+    }
+
     list.appendChild(card);
   });
 }
@@ -1189,11 +1524,25 @@ function initIntroScreen() {
 
 // Initialize
 async function init() {
+  const state = loadState();
+  state.visits = (state.visits || 0) + 1;
+  state.lastVisit = new Date().toISOString();
+  saveState();
+
   initIntroScreen();
   initPhoneOS();
   renderChips();
   attachEvents();
   await loadRecipes();
+
+  // If repeat visitor, greet them in Misae's speech bubble
+  if (state.visits > 1 && misaeSpeech) {
+    showPfp('misae');
+    misaeSpeech.classList.remove('angry');
+    misaeSpeech.textContent = `Welcome back! Visit #${state.visits}. Did you eat properly?`;
+  }
+
+  applyStateToUI();
 }
 
 function initPhoneOS() {
@@ -1517,9 +1866,16 @@ function triggerAngryShinchan(ingredientName) {
 // Update Misae speech bubble based on active selections
 function updateSpeechBubble(lastSelected, wasAdded) {
   if (selectedIngredients.size === 0) {
-    showPfp('shinchan');
-    misaeSpeech.classList.remove('angry');
-    misaeSpeech.textContent = "Mama, I'm hungry! What do we have in the fridge?";
+    const state = getState();
+    if (state.visits > 1) {
+      showPfp('misae');
+      misaeSpeech.classList.remove('angry');
+      misaeSpeech.textContent = `Welcome back! Visit #${state.visits}. Did you eat properly?`;
+    } else {
+      showPfp('shinchan');
+      misaeSpeech.classList.remove('angry');
+      misaeSpeech.textContent = "Mama, I'm hungry! What do we have in the fridge?";
+    }
     return;
   }
 
@@ -2102,6 +2458,7 @@ async function cookSomething(event) {
  */
 function displayRecipe(matchData) {
   const { recipe, matchCount, matchedList, missingList, swaps } = matchData;
+  currentlyDisplayedRecipe = recipe;
   const userItems = new Set(Array.from(selectedIngredients).map(i => i.toLowerCase().trim()));
 
   // Populate title & badges
@@ -2109,6 +2466,7 @@ function displayRecipe(matchData) {
   cardTime.textContent = `⏱️ ${recipe.time}`;
   cardDiff.textContent = `⚡ ${recipe.difficulty}`;
   cardMatch.textContent = `🎯 ${matchCount} of ${recipe.ingredients.length} matched`;
+  updateFavoriteButtonState();
 
   // Kitchen Source badge
   if (cardSource) {
@@ -2282,6 +2640,9 @@ function attachEvents() {
       kitchenMode = 'local';
       btnLocal.classList.add('active');
       btnWorld.classList.remove('active');
+      const state = getState();
+      state.prefs.source = 'local';
+      saveState();
       playSound('pop');
       triggerComicPopup(e.clientX, e.clientY, "DESI TADKA!");
       showPfp('misae');
@@ -2292,10 +2653,54 @@ function attachEvents() {
       kitchenMode = 'world';
       btnWorld.classList.add('active');
       btnLocal.classList.remove('active');
+      const state = getState();
+      state.prefs.source = 'world';
+      saveState();
       playSound('pop');
       triggerComicPopup(e.clientX, e.clientY, "WORLD TOUR!");
       showPfp('shinchan');
       misaeSpeech.textContent = "World Kitchen active! Foreign recipes with desi tadka!";
+    });
+  }
+
+  // Favorite Recipe Button on Result Card
+  const btnFav = document.getElementById('btn-favorite-recipe');
+  if (btnFav) {
+    btnFav.addEventListener('click', (e) => {
+      toggleFavoriteCurrentRecipe(e);
+    });
+  }
+
+  // Resume Last Ingredients Button on Fridge Screen
+  const btnResume = document.getElementById('btn-resume-ingredients');
+  if (btnResume) {
+    btnResume.addEventListener('click', (e) => {
+      resumeLastIngredients(e);
+    });
+  }
+
+  // Cookbook Tabs (History vs Favorites)
+  const tabHistory = document.getElementById('tab-cookbook-history');
+  const tabFavorites = document.getElementById('tab-cookbook-favorites');
+  if (tabHistory) {
+    tabHistory.addEventListener('click', () => setCookbookTab('history'));
+  }
+  if (tabFavorites) {
+    tabFavorites.addEventListener('click', () => setCookbookTab('favorites'));
+  }
+
+  // Settings App: Clear Saved Data with Confirmation
+  const btnClearData = document.getElementById('btn-clear-data');
+  if (btnClearData) {
+    btnClearData.addEventListener('click', (e) => {
+      const confirmed = window.confirm("Are you sure you want to clear all your saved recipe history, favorites, and preferences? Shinchan's stomach will be emptied!");
+      if (confirmed) {
+        resetState();
+        applyStateToUI();
+        playSound('pop');
+        if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "CLEARED!");
+        alert("All saved recipe data and history have been cleared!");
+      }
     });
   }
 

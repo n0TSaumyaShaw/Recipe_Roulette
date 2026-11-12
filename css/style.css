@@ -707,6 +707,45 @@ body.angry-shake {
   text-transform: uppercase;
 }
 
+.recipe-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.btn-favorite-recipe {
+  background: var(--cream);
+  border: 2px solid var(--outline);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #888;
+  box-shadow: 1.5px 1.5px 0 var(--outline);
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-favorite-recipe:hover {
+  transform: scale(1.1);
+}
+
+.btn-favorite-recipe.favorited {
+  color: var(--red);
+  background: #FFEBEA;
+  border-color: var(--red-dark);
+}
+
+.btn-favorite-recipe.favorited .heart-icon {
+  fill: var(--red);
+  stroke: var(--red);
+}
+
 .recipe-badges {
   display: flex;
   gap: 8px;
@@ -1095,7 +1134,23 @@ body.angry-shake {
   font-weight: 700;
   font-size: 0.8rem;
   cursor: pointer;
+}
+
+.btn-preset-resume {
+  background: var(--teal);
+  color: var(--ink);
+  border: var(--border-thick);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-family: 'Comic Neue', cursive;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
   margin-left: auto;
+}
+
+.btn-preset-resume:hover {
+  filter: brightness(1.08);
 }
 
 /* Responsiveness */
@@ -2396,6 +2451,78 @@ body.angry-shake {
 .cookbook-header-card p {
   font-size: 0.85rem;
   color: #FFF;
+}
+
+.cookbook-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cookbook-tab {
+  background: #FFF;
+  color: var(--card-ink, #1a1a1a);
+  border: var(--border-thick);
+  border-radius: 10px;
+  padding: 6px 8px;
+  font-family: 'Bangers', cursive;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  box-shadow: 2px 2px 0 var(--black);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.cookbook-tab:hover {
+  background: var(--yellow-light);
+}
+
+.cookbook-tab.active {
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow: 1px 1px 0 var(--black);
+  transform: translateY(1px);
+}
+
+.cooked-dish-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.cooked-date-badge {
+  font-size: 0.72rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: #555555;
+  white-space: nowrap;
+}
+
+.cooked-source-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-family: 'Bangers', cursive;
+  letter-spacing: 0.5px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  border: 1.5px solid var(--black);
+  vertical-align: middle;
+}
+
+.cooked-source-badge.local {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.cooked-source-badge.world {
+  background: var(--teal);
+  color: var(--ink);
 }
 
 .cookbook-list {

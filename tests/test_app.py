@@ -109,6 +109,37 @@ async def run_comprehensive_test():
             # Wait for load
             await asyncio.sleep(1.5)
 
+            # Check 0: Verify Favicon and Theme Color
+            print("0. Verifying Favicon and Theme Color in <head> and root /favicon.ico...")
+            fav_req = urllib.request.urlopen('http://localhost:8080/favicon.ico')
+            assert fav_req.status == 200, f"Expected 200 on /favicon.ico, got {fav_req.status}"
+            print("   ✓ Root /favicon.ico is accessible with HTTP 200")
+
+            fav_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const svg = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
+                    const png = document.querySelector('link[rel="icon"][sizes="32x32"]');
+                    const ico = document.querySelector('link[rel="shortcut icon"]');
+                    const apple = document.querySelector('link[rel="apple-touch-icon"]');
+                    const theme = document.querySelector('meta[name="theme-color"]');
+                    return {
+                        svg: svg ? svg.getAttribute('href') : null,
+                        png: png ? png.getAttribute('href') : null,
+                        ico: ico ? ico.getAttribute('href') : null,
+                        apple: apple ? apple.getAttribute('href') : null,
+                        themeColor: theme ? theme.getAttribute('content') : null
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            fc = fav_check.get('result', {}).get('value', {})
+            print("   Favicon Head Check:", fc)
+            assert fc.get('svg') == 'assets/images/icons/favicon.svg', "favicon.svg missing or incorrect!"
+            assert fc.get('png') == 'assets/images/icons/favicon-32.png', "favicon-32.png missing or incorrect!"
+            assert fc.get('ico') == 'assets/images/icons/favicon.ico', "favicon.ico missing or incorrect!"
+            assert fc.get('apple') == 'assets/images/icons/apple-touch-icon.png', "apple-touch-icon missing or incorrect!"
+            assert fc.get('themeColor') == '#0f0f1a', "theme-color should be #0f0f1a!"
+
             # Check 1: Go to Home
             print("1. Navigating from chat intro to home screen...")
             nav_eval = await send('Runtime.evaluate', {'expression': '(() => { try { showPhoneScreen("home"); return { ok: true, active: document.getElementById("screen-home").classList.contains("active") }; } catch (e) { return { error: e.message, stack: e.stack }; } })()', 'returnByValue': True})
@@ -286,6 +317,190 @@ async def run_comprehensive_test():
             bl = btn_layout.get('result', {}).get('value', {})
             print("   Action Buttons Layout:", bl)
             assert bl.get('spinRow1') and bl.get('copyAndEditSameRow') and bl.get('spinFullWidth'), "Card action buttons layout incorrect!"
+
+            # -----------------------------------------------------------------
+            # PERSISTENCE & STORAGE MODULE VERIFICATION (recipeRoulette.v1)
+            # -----------------------------------------------------------------
+            print("\n5b. Testing Persistence, Favorites, Cookbook Tabs, and Storage Module...")
+
+            # Cook 2 more recipes (total 3 cooked)
+            await send('Runtime.evaluate', {
+                'expression': '(() => { clearSelections(); [...document.querySelectorAll(".chip")].filter(c => ["potato", "onion", "butter"].includes(c.dataset.name)).forEach(c => c.click()); document.getElementById("btn-cook").click(); })()'
+            })
+            await asyncio.sleep(2.5)
+
+            await send('Runtime.evaluate', {
+                'expression': '(() => { clearSelections(); [...document.querySelectorAll(".chip")].filter(c => ["tomato", "cheese", "bread"].includes(c.dataset.name)).forEach(c => c.click()); document.getElementById("btn-cook").click(); })()'
+            })
+            await asyncio.sleep(2.5)
+
+            # Verify localStorage.getItem('recipeRoulette.v1')
+            storage_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const raw = localStorage.getItem('recipeRoulette.v1');
+                    const state = raw ? JSON.parse(raw) : null;
+                    return {
+                        exists: !!state,
+                        historyCount: state ? (state.history || []).length : 0,
+                        cookedStat: state && state.stats ? state.stats.cooked : 0,
+                        lastIngredients: state ? state.lastIngredients : [],
+                        prefs: state ? state.prefs : null
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            sc = storage_check.get('result', {}).get('value', {})
+            print("   Storage after 3 cooked recipes:", sc)
+            assert sc.get('exists') is True, "Storage key 'recipeRoulette.v1' not found!"
+            assert sc.get('historyCount') >= 3, f"Expected at least 3 history items, got {sc.get('historyCount')}"
+            assert sc.get('cookedStat') >= 3, f"Expected cooked stat >= 3, got {sc.get('cookedStat')}"
+
+            # Test Favoriting current recipe
+            fav_btn_state = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const btn = document.getElementById('btn-favorite-recipe');
+                    btn.click();
+                    const state = JSON.parse(localStorage.getItem('recipeRoulette.v1') || '{}');
+                    return {
+                        isFavoritedClass: btn.classList.contains('favorited'),
+                        favoritesCount: (state.favorites || []).length,
+                        favoriteDish: (state.favorites || [])[0] ? state.favorites[0].name : null
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            fbs = fav_btn_state.get('result', {}).get('value', {})
+            print("   Favorite Button State:", fbs)
+            assert fbs.get('isFavoritedClass') is True, "Favorite button should have 'favorited' class!"
+            assert fbs.get('favoritesCount') >= 1, "Favorites array in storage should have >= 1 item!"
+
+            # Test Cookbook Screen and Tabs
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("cookbook")'})
+            await asyncio.sleep(0.3)
+
+            cb_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const histCount = document.querySelectorAll('#cookbook-list .cooked-dish-card').length;
+                    const histBadge = document.getElementById('cookbook-history-count').textContent.trim();
+                    const favBadge = document.getElementById('cookbook-favorites-count').textContent.trim();
+                    
+                    // Switch to favorites tab
+                    document.getElementById('tab-cookbook-favorites').click();
+                    const favCount = document.querySelectorAll('#cookbook-list .cooked-dish-card').length;
+
+                    // Switch back to history tab
+                    document.getElementById('tab-cookbook-history').click();
+                    const histCountBack = document.querySelectorAll('#cookbook-list .cooked-dish-card').length;
+
+                    return {
+                        histCount,
+                        histBadge,
+                        favBadge,
+                        favCount,
+                        histCountBack
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            cbc = cb_check.get('result', {}).get('value', {})
+            print("   Cookbook Tabs Check:", cbc)
+            assert cbc.get('histCount') >= 3, f"Cookbook history should show >= 3 cards, got {cbc.get('histCount')}"
+            assert cbc.get('favCount') >= 1, f"Cookbook favorites should show >= 1 card, got {cbc.get('favCount')}"
+
+            # Test Resume Last Ingredients button on Fridge Screen
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("fridge")'})
+            await asyncio.sleep(0.2)
+
+            resume_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const btnResume = document.getElementById('btn-resume-ingredients');
+                    const initialDisplay = window.getComputedStyle(btnResume).display;
+                    clearSelections();
+                    const afterClearCount = selectedIngredients.size;
+                    btnResume.click();
+                    const afterResumeCount = selectedIngredients.size;
+                    return {
+                        initialDisplay,
+                        afterClearCount,
+                        afterResumeCount,
+                        resumedItems: Array.from(selectedIngredients)
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            rc = resume_check.get('result', {}).get('value', {})
+            print("   Resume Last Check:", rc)
+            assert rc.get('initialDisplay') != 'none', "Resume button should be visible!"
+            assert rc.get('afterClearCount') == 0, "Selected count after clear should be 0!"
+            assert rc.get('afterResumeCount') > 0, "Selected count after resume should be > 0!"
+
+            # Test Repeat Visit Greeting on Page Reload
+            print("   Testing Repeat Visit Greeting on Page Reload...")
+            await send('Page.reload')
+            await asyncio.sleep(2.0)
+            repeat_visit_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const speech = document.getElementById('misae-speech').textContent.trim();
+                    const state = getState();
+                    return {
+                        visits: state.visits,
+                        speech
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            rvc = repeat_visit_check.get('result', {}).get('value', {})
+            print("   Repeat Visit Greeting Check:", rvc)
+            assert rvc.get('visits') >= 2, "Visit counter did not increment on reload!"
+            assert "Welcome back!" in rvc.get('speech', ''), f"Repeat visit greeting missing in speech bubble! Got: {rvc.get('speech')}"
+
+            # Test Settings App: Clear Saved Data
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("settings")'})
+            await asyncio.sleep(0.2)
+
+            clear_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    resetState();
+                    applyStateToUI();
+                    const state = JSON.parse(localStorage.getItem('recipeRoulette.v1') || '{}');
+                    return {
+                        historyLen: (state.history || []).length,
+                        favLen: (state.favorites || []).length,
+                        resumeBtnDisplay: window.getComputedStyle(document.getElementById('btn-resume-ingredients')).display
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            cc = clear_check.get('result', {}).get('value', {})
+            print("   Clear Saved Data Check:", cc)
+            assert cc.get('historyLen') == 0, "History should be empty after reset!"
+            assert cc.get('favLen') == 0, "Favorites should be empty after reset!"
+            assert cc.get('resumeBtnDisplay') == 'none', "Resume button should be hidden after reset!"
+
+            # Test Storage Disabled Simulation (Fallback to in-memory state without crashing)
+            storage_disable_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    // Simulate blocked storage
+                    const originalSet = Storage.prototype.setItem;
+                    Storage.prototype.setItem = () => { throw new DOMException("QuotaExceededError or SecurityError", "QuotaExceededError"); };
+                    
+                    let memoryCheckSuccess = false;
+                    try {
+                        recordCookedRecipe({ name: "Emergency Test Noodles", time: "3 min", difficulty: "Easy" });
+                        const state = getState();
+                        memoryCheckSuccess = state.history.some(h => h.name === "Emergency Test Noodles");
+                    } catch (e) {
+                        memoryCheckSuccess = false;
+                    } finally {
+                        Storage.prototype.setItem = originalSet;
+                    }
+                    return memoryCheckSuccess;
+                })()""",
+                'returnByValue': True
+            })
+            sdc = storage_disable_check.get('result', {}).get('value')
+            print("   Storage Blocked Simulation (In-Memory Fallback):", sdc)
+            assert sdc is True, "In-memory state fallback failed when storage was blocked!"
 
             # Check 7: Contrast Ratios on Every Screen
             print("\n6. Evaluating WCAG AA Contrast Ratios (Target >= 4.5:1 for normal text)...")

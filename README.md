@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/images/icons/logo-512.png" alt="Recipe Roulette logo" width="120" />
+</p>
+
 # Recipe Roulette: Shinchan Edition 📱🍜
 
 An interactive, comic-styled survival recipe generator built as Shinchan's Phone OS, turning leftover kitchen ingredients into delicious local and global meals with authentic Shinchan humor!

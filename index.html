@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recipe Roulette: Shinchan Edition</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32.png">
+  <link rel="shortcut icon" href="assets/images/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/images/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#0f0f1a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -307,6 +312,7 @@
                     </h2>
                     <div class="preset-bar">
                       <span class="selected-counter" id="selected-count">0 picked</span>
+                      <button type="button" class="btn-preset-resume" id="btn-resume-ingredients" style="display:none;" title="Resume last picked ingredients">Resume Last</button>
                       <button type="button" class="btn-preset-reset" id="btn-clear" title="Clear all selections">Clear</button>
                     </div>
                   </div>
@@ -348,7 +354,14 @@
                 <section id="recipe-display" aria-live="polite">
                   <article class="recipe-card">
                     <div class="recipe-meta-strip">
-                      <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
+                      <div class="recipe-title-row">
+                        <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
+                        <button type="button" class="btn-favorite-recipe" id="btn-favorite-recipe" title="Save to Favorites" aria-label="Save recipe to favorites">
+                          <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </button>
+                      </div>
                       <div class="recipe-badges">
                         <span class="badge-tag badge-source" id="card-recipe-source">🏠 Local Kitchen</span>
                         <span class="badge-tag badge-time" id="card-recipe-time">⏱️ 5 mins</span>
@@ -565,8 +578,16 @@
             </div>
             <div class="screen-content cookbook-content">
               <div class="cookbook-header-card">
-                <h3>Dishes Cooked This Session 🍳</h3>
+                <h3>Kasukabe Survival Cookbook 🍳</h3>
                 <p>Track everything Shinchan and Mom prepared today!</p>
+              </div>
+              <div class="cookbook-tabs" role="tablist">
+                <button type="button" class="cookbook-tab active" id="tab-cookbook-history" data-tab="history">
+                  Cooked History (<span id="cookbook-history-count">0</span>)
+                </button>
+                <button type="button" class="cookbook-tab" id="tab-cookbook-favorites" data-tab="favorites">
+                  Favorites (<span id="cookbook-favorites-count">0</span>)
+                </button>
               </div>
               <div class="cookbook-list" id="cookbook-list">
                 <!-- Dynamically populated via script.js -->
@@ -740,6 +761,9 @@
                 </button>
                 <button type="button" class="btn-secondary" id="btn-reset-anger" style="width:100%; background:#FFEAA7;">
                   <span>🧊</span> Calm Mom's Anger (To 10%)
+                </button>
+                <button type="button" class="btn-secondary btn-clear-data" id="btn-clear-data" style="width:100%; margin-top:8px; background:#FF7675; color:#FFF;">
+                  <span>🗑️</span> Clear My Saved Data
                 </button>
               </div>
 
