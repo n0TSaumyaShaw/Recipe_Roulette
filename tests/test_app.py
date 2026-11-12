@@ -146,6 +146,34 @@ async def run_comprehensive_test():
             print("   nav_eval:", nav_eval)
             await asyncio.sleep(0.3)
 
+            # Check 1b: Verify 'Open the fridge' CTA on chat screen opens fridge screen directly
+            print("1b. Testing 'Open the fridge' CTA on chat screen opens fridge screen directly...")
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("chat")'})
+            await asyncio.sleep(0.2)
+            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-open-fridge").click()'})
+            await asyncio.sleep(0.3)
+            opened_screen = await send('Runtime.evaluate', {'expression': 'currentPhoneScreen', 'returnByValue': True})
+            print("   Current screen after 'Open the fridge':", opened_screen.get('result', {}).get('value'))
+            assert opened_screen.get('result', {}).get('value') == 'fridge', "Expected fridge screen to open!"
+
+            # Check 1c: Recipe of the day dynamically populated
+            print("1c. Testing Recipe of the Day dynamically populated per day...")
+            rotd_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const name = document.getElementById('side-recipe-name').textContent.trim();
+                    const meta = document.getElementById('side-recipe-meta').textContent.trim();
+                    return { name, meta };
+                })()""",
+                'returnByValue': True
+            })
+            rc = rotd_check.get('result', {}).get('value', {})
+            print("   Recipe of the Day:", rc)
+            assert len(rc.get('name', '')) > 0, "Recipe of the day name should not be empty!"
+
+            # Return to Home screen for app grid check
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("home")'})
+            await asyncio.sleep(0.2)
+
             # Check 2: Verify 9 Apps in Grid and No Notch
             home_state = await send('Runtime.evaluate', {
                 'expression': """(() => {
@@ -265,6 +293,94 @@ async def run_comprehensive_test():
             d_res = del_check.get('result', {}).get('value', {})
             assert d_res.get('domCount') == 0 and d_res.get('storageCount') == 0, "Note deletion failed!"
             print("   ✓ User note successfully added, persisted, and deleted")
+
+            # Check 5b: Test Shiro Pet Care System
+            print("4b. Testing Shiro Pet Care System (petting, feeding, moods, synth audio)...")
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("shiro")'})
+            await asyncio.sleep(0.3)
+
+            # Test Mood Evaluation across all 4 criteria
+            mood_eval_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    return {
+                        hungry: getShiroMood(20, 80, 12),     // hunger < 30 -> hungry
+                        sleepyHour: getShiroMood(80, 80, 23), // 11pm -> sleepy
+                        sleepyEnergy: getShiroMood(80, 20, 12), // energy < 25 -> sleepy
+                        playful: getShiroMood(80, 70, 15),    // 3pm & energy > 50 -> playful
+                        happy: getShiroMood(80, 70, 11)       // 11am -> happy
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            mc = mood_eval_check.get('result', {}).get('value', {})
+            print("   Shiro Mood Evaluation Check:", mc)
+            assert mc.get('hungry') == 'hungry', "Mood hunger < 30 failed!"
+            assert mc.get('sleepyHour') == 'sleepy', "Mood 11pm sleepy failed!"
+            assert mc.get('sleepyEnergy') == 'sleepy', "Mood low energy sleepy failed!"
+            assert mc.get('playful') == 'playful', "Mood 3pm playful failed!"
+            assert mc.get('happy') == 'happy', "Mood happy default failed!"
+
+            # Test Petting each part: head, ears, belly, tail
+            pet_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const parts = ['head', 'ears', 'belly', 'tail'];
+                    const initialPets = getShiroState().pets;
+                    parts.forEach(p => {
+                        const el = document.getElementById('shiro-' + p);
+                        if (el) el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                    });
+                    const stateAfter = getShiroState();
+                    const speechText = document.getElementById('shiro-speech').textContent;
+                    return {
+                        petsGained: stateAfter.pets - initialPets,
+                        speechText,
+                        dataMood: document.getElementById('shiro-pet-svg').getAttribute('data-mood')
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            pc = pet_check.get('result', {}).get('value', {})
+            print("   Shiro Pet Parts Check:", pc)
+            assert pc.get('petsGained') == 4, f"Expected 4 pets recorded, got {pc.get('petsGained')}"
+            assert len(pc.get('speechText', '')) > 5, "Shiro speech text should not be empty!"
+
+            # Test Feeding Shiro
+            feed_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const hungerBefore = getShiroState().hunger;
+                    document.getElementById('btn-feed-shiro').click();
+                    const hungerAfter = getShiroState().hunger;
+                    const speech = document.getElementById('shiro-speech').textContent;
+                    return {
+                        hungerBefore,
+                        hungerAfter,
+                        speech
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            fc = feed_check.get('result', {}).get('value', {})
+            print("   Shiro Feeding Check:", fc)
+            assert len(fc.get('speech', '')) > 0, "Feeding dialogue should display!"
+
+            # Test Shiro Storage Persistence
+            shiro_store_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const raw = localStorage.getItem('recipeRoulette.shiro');
+                    const parsed = JSON.parse(raw || '{}');
+                    return {
+                        exists: !!raw,
+                        hasHunger: typeof parsed.hunger === 'number',
+                        hasHappiness: typeof parsed.happiness === 'number',
+                        hasEnergy: typeof parsed.energy === 'number',
+                        pets: parsed.pets
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            ssc = shiro_store_check.get('result', {}).get('value', {})
+            print("   Shiro Storage Check:", ssc)
+            assert ssc.get('exists') is True and ssc.get('pets') >= 4, "Shiro state not persisted in localStorage!"
 
             # Check 6: Test Recipe Roulette Cooking in Fridge
             print("5. Testing Recipe Roulette in Fridge Screen...")
@@ -437,11 +553,18 @@ async def run_comprehensive_test():
             # Test Repeat Visit Greeting on Page Reload
             print("   Testing Repeat Visit Greeting on Page Reload...")
             await send('Page.reload')
-            await asyncio.sleep(2.0)
+            for _ in range(25):
+                await asyncio.sleep(0.3)
+                ready = await send('Runtime.evaluate', {'expression': 'document.readyState === "complete" && typeof getState === "function"', 'returnByValue': True})
+                if ready.get('result', {}).get('value') is True:
+                    break
+
+            await asyncio.sleep(0.5)
             repeat_visit_check = await send('Runtime.evaluate', {
                 'expression': """(() => {
-                    const speech = document.getElementById('misae-speech').textContent.trim();
-                    const state = getState();
+                    const speechEl = document.getElementById('misae-speech');
+                    const speech = speechEl ? speechEl.textContent.trim() : '';
+                    const state = typeof getState === 'function' ? getState() : {};
                     return {
                         visits: state.visits,
                         speech
@@ -449,9 +572,9 @@ async def run_comprehensive_test():
                 })()""",
                 'returnByValue': True
             })
-            rvc = repeat_visit_check.get('result', {}).get('value', {})
+            rvc = repeat_visit_check.get('result', {}).get('value') or {}
             print("   Repeat Visit Greeting Check:", rvc)
-            assert rvc.get('visits') >= 2, "Visit counter did not increment on reload!"
+            assert rvc.get('visits') is not None and rvc.get('visits') >= 2, f"Visit counter did not increment on reload! Got: {rvc}"
             assert "Welcome back!" in rvc.get('speech', ''), f"Repeat visit greeting missing in speech bubble! Got: {rvc.get('speech')}"
 
             # Test Settings App: Clear Saved Data
@@ -517,7 +640,7 @@ async def run_comprehensive_test():
                 {"screen": "cookbook", "name": "Cookbook Dish Meta", "selector": ".cooked-dish-meta span"},
                 {"screen": "cookbook", "name": "Cookbook Verdict Teal", "selector": ".cooked-dish-meta span.verdict-teal"},
                 {"screen": "action-kamen", "name": "Kamen Stats Channel", "selector": ".kamen-stats .kamen-stat-item"},
-                {"screen": "shiro", "name": "Shiro Hero Description", "selector": ".shiro-hero-desc"},
+                {"screen": "shiro", "name": "Shiro Speech Bubble", "selector": ".shiro-speech-bubble"},
                 {"screen": "shiro", "name": "Polaroid Caption", "selector": ".polaroid-caption"},
                 {"screen": "notes", "name": "Notepad Default Rule", "selector": ".notepad-list li"},
                 {"screen": "weather", "name": "Weather Condition", "selector": ".weather-condition"},

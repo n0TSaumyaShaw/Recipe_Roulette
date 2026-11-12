@@ -505,17 +505,135 @@
           <div class="phone-screen" id="screen-shiro">
             <div class="screen-app-bar">
               <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">🐶 SHIRO'S ALBUM</span>
+              <span class="app-bar-title">SHIRO'S CORNER</span>
             </div>
             <div class="screen-content shiro-content">
               <div class="shiro-hero-card">
-                <div class="shiro-dog-anim" id="shiro-avatar">🐶</div>
-                <h3 class="shiro-hero-name">Shiro (Goodest Boy)</h3>
-                <p class="shiro-hero-desc">100% Cotton-candy fur · Master of survival</p>
-                <button type="button" class="btn-pet-shiro" id="btn-pet-shiro">
-                  <span>🐾</span> Pet Shiro <span>🍖</span>
-                </button>
+                <div class="shiro-status-header">
+                  <span class="shiro-mood-badge" id="shiro-mood-badge">Mood: Happy</span>
+                  <span class="shiro-pets-badge" id="shiro-pets-count">Pets: 0</span>
+                </div>
+
+                <!-- Fluffy Original Vector Shiro Dog Stage -->
+                <div class="shiro-dog-stage" id="shiro-stage">
+                  <svg id="shiro-pet-svg" class="shiro-pet-svg" data-mood="happy" viewBox="0 0 240 200" width="220" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive pet Shiro">
+                    <!-- Interactive Tail -->
+                    <g id="shiro-tail" class="shiro-interactive-part" data-part="tail" role="button" tabindex="0" title="Pet Shiro's Tail" aria-label="Pet Shiro's Tail">
+                      <ellipse class="shiro-tail-puff" cx="195" cy="115" rx="20" ry="16" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                      <circle cx="198" cy="112" r="14" fill="#FFFFFF" />
+                    </g>
+
+                    <!-- Paws Back -->
+                    <ellipse cx="65" cy="165" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                    <ellipse cx="165" cy="165" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+
+                    <!-- Interactive Belly & Body -->
+                    <g id="shiro-belly" class="shiro-interactive-part" data-part="belly" role="button" tabindex="0" title="Pet Shiro's Fluffy Belly" aria-label="Pet Shiro's Belly">
+                      <ellipse class="shiro-body-puff" cx="120" cy="130" rx="65" ry="42" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                      <path d="M 85 145 Q 120 160 155 145" fill="none" stroke="#E2E8F0" stroke-width="2.5" stroke-linecap="round" />
+                    </g>
+
+                    <!-- Paws Front -->
+                    <ellipse cx="95" cy="170" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                    <ellipse cx="135" cy="170" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+
+                    <!-- Interactive Ears -->
+                    <g id="shiro-ears" class="shiro-interactive-part" data-part="ears" role="button" tabindex="0" title="Pet Shiro's Soft Ears" aria-label="Pet Shiro's Ears">
+                      <!-- Left Ear -->
+                      <path class="shiro-ear-left" d="M 68 75 C 45 65 35 90 55 105 C 65 110 75 95 68 75 Z" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                      <!-- Right Ear -->
+                      <path class="shiro-ear-right" d="M 132 75 C 155 65 165 90 145 105 C 135 110 125 95 132 75 Z" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                    </g>
+
+                    <!-- Interactive Head -->
+                    <g id="shiro-head" class="shiro-interactive-part" data-part="head" role="button" tabindex="0" title="Pet Shiro's Head" aria-label="Pet Shiro's Head">
+                      <ellipse class="shiro-head-puff" cx="100" cy="80" rx="46" ry="38" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                      
+                      <!-- Normal / Happy Eyes -->
+                      <g class="shiro-eyes-normal">
+                        <circle cx="86" cy="74" r="5" fill="#12122A" />
+                        <circle cx="84.5" cy="72" r="1.8" fill="#FFFFFF" />
+                        <circle cx="114" cy="74" r="5" fill="#12122A" />
+                        <circle cx="112.5" cy="72" r="1.8" fill="#FFFFFF" />
+                      </g>
+
+                      <!-- Sleepy Eyes -->
+                      <g class="shiro-eyes-sleepy">
+                        <path d="M 80 76 Q 86 71 92 76" fill="none" stroke="#12122A" stroke-width="3" stroke-linecap="round" />
+                        <path d="M 108 76 Q 114 71 120 76" fill="none" stroke="#12122A" stroke-width="3" stroke-linecap="round" />
+                      </g>
+
+                      <!-- Cute Black Nose -->
+                      <ellipse cx="100" cy="85" rx="5.5" ry="4" fill="#12122A" />
+
+                      <!-- Mouth Normal -->
+                      <g class="shiro-mouth-normal">
+                        <path d="M 94 90 Q 100 95 106 90" fill="none" stroke="#12122A" stroke-width="2.5" stroke-linecap="round" />
+                      </g>
+
+                      <!-- Mouth Hungry with Tongue -->
+                      <g class="shiro-mouth-hungry">
+                        <path d="M 94 89 Q 100 93 106 89" fill="none" stroke="#12122A" stroke-width="2.5" stroke-linecap="round" />
+                        <path class="shiro-tongue" d="M 97 91 C 97 99 103 99 103 91 Z" fill="#FF7675" stroke="#12122A" stroke-width="1.5" />
+                      </g>
+
+                      <!-- Blush Cheeks -->
+                      <ellipse cx="76" cy="84" rx="6" ry="3.5" fill="#FFB8B8" opacity="0.6" />
+                      <ellipse cx="124" cy="84" rx="6" ry="3.5" fill="#FFB8B8" opacity="0.6" />
+                    </g>
+
+                    <!-- Sleepy Zzz Floating Cloud -->
+                    <g class="shiro-zzz-cloud" aria-hidden="true">
+                      <text x="145" y="45" class="shiro-zzz z1">Z</text>
+                      <text x="158" y="32" class="shiro-zzz z2">z</text>
+                      <text x="168" y="20" class="shiro-zzz z3">z</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="shiro-speech-bubble" id="shiro-speech">
+                  Woof! Shiro is happily wagging his tail! Tap his head, ears, belly, or tail to pet him!
+                </div>
+
+                <!-- Care Status Bars -->
+                <div class="shiro-stats-panel">
+                  <div class="shiro-stat-row">
+                    <span class="shiro-stat-label">Hunger</span>
+                    <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Hunger" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80">
+                      <div class="shiro-meter-fill hunger-fill" id="shiro-bar-hunger" style="width: 80%;"></div>
+                    </div>
+                    <span class="shiro-stat-pct" id="shiro-val-hunger">80%</span>
+                  </div>
+
+                  <div class="shiro-stat-row">
+                    <span class="shiro-stat-label">Happiness</span>
+                    <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Happiness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="85">
+                      <div class="shiro-meter-fill happiness-fill" id="shiro-bar-happiness" style="width: 85%;"></div>
+                    </div>
+                    <span class="shiro-stat-pct" id="shiro-val-happiness">85%</span>
+                  </div>
+
+                  <div class="shiro-stat-row">
+                    <span class="shiro-stat-label">Energy</span>
+                    <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
+                      <div class="shiro-meter-fill energy-fill" id="shiro-bar-energy" style="width: 75%;"></div>
+                    </div>
+                    <span class="shiro-stat-pct" id="shiro-val-energy">75%</span>
+                  </div>
+                </div>
+
+                <!-- Action Button: Give Shiro a Bite (NO EMOJIS on button) -->
+                <div class="shiro-actions-row">
+                  <button type="button" class="btn-feed-shiro" id="btn-feed-shiro">
+                    Give Shiro a Bite
+                  </button>
+                </div>
+                <div class="shiro-feed-hint" id="shiro-feed-hint">
+                  Feeds Shiro a bite of your latest cooked dish from the Cookbook!
+                </div>
               </div>
+
+              <!-- Shiro Polaroid Memory Grid -->
               <div class="polaroid-grid">
                 <div class="polaroid-card">
                   <div class="polaroid-photo">☁️</div>
@@ -817,8 +935,8 @@
     <aside class="retro-side-panel side-panel-right" aria-label="Recipe of the day">
       <div class="side-panel-tag">TODAY</div>
       <h2 class="side-panel-title">RECIPE OF THE DAY</h2>
-      <div class="side-panel-recipe-name">Curd Rice Tadka</div>
-      <div class="side-panel-recipe-meta">8 min · Easy · Rice, curd, chilli</div>
+      <div class="side-panel-recipe-name" id="side-recipe-name">Curd Rice Tadka</div>
+      <div class="side-panel-recipe-meta" id="side-recipe-meta">8 min · Easy · Rice, curd, chilli</div>
       <button type="button" class="btn-side-try" id="btn-side-try">TRY IT</button>
     </aside>
   </section>

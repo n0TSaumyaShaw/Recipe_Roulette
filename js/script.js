@@ -1024,6 +1024,9 @@ function showPhoneScreen(screenId) {
     updateWeatherUI();
   } else if (screenId === 'home') {
     updateHomeClock();
+  } else if (screenId === 'shiro') {
+    if (typeof loadShiroState === 'function') loadShiroState();
+    if (typeof updateShiroUI === 'function') updateShiroUI();
   }
 
   playSound('pop');
@@ -1393,12 +1396,14 @@ function renderCookbook() {
 
     card.innerHTML = `
       <div class="cooked-dish-top">
-        <div class="cooked-dish-title">${item.name} ${item.count && item.count > 1 ? `(x${item.count})` : ''}</div>
-        <div style="display:flex; align-items:center; gap:6px;">
-          ${sourceTag}
-          <span class="cooked-date-badge">${dateStr}</span>
-          ${isFavTab ? `<button type="button" class="btn-remove-fav" data-id="${item.id || item.name}" title="Remove favorite" style="background:none; border:none; cursor:pointer; font-size:1rem; padding:0 2px;">❌</button>` : ''}
+        <div class="cooked-dish-header-row">
+          <div class="cooked-dish-title">${item.name} ${item.count && item.count > 1 ? `(x${item.count})` : ''}</div>
+          <div class="cooked-dish-actions-wrap">
+            ${sourceTag}
+            ${isFavTab ? `<button type="button" class="btn-remove-fav" data-id="${item.id || item.name}" title="Remove favorite" style="background:none; border:none; cursor:pointer; font-size:1rem; padding:0 2px;">❌</button>` : ''}
+          </div>
         </div>
+        <div class="cooked-date-badge">Cooked on ${dateStr}</div>
       </div>
       <div class="cooked-dish-meta">
         <span>⏱️ ${item.time || '10 min'}</span> · 
@@ -1446,7 +1451,7 @@ function clearIntroTimers() {
 
 function transitionToApp() {
   clearIntroTimers();
-  showPhoneScreen('home');
+  showPhoneScreen('fridge');
   playSound('fanfare');
 }
 
@@ -1619,19 +1624,371 @@ function initPhoneOS() {
     });
   }
 
-  // Pet Shiro
-  const btnPetShiro = document.getElementById('btn-pet-shiro');
-  const shiroAvatar = document.getElementById('shiro-avatar');
-  if (btnPetShiro) {
-    btnPetShiro.addEventListener('click', (e) => {
-      triggerComicPopup(e.clientX, e.clientY, "WOOF! ❤️");
-      playSound('pop');
-      if (shiroAvatar) {
-        shiroAvatar.textContent = "☁️ 🐶 ☁️";
-        setTimeout(() => { shiroAvatar.textContent = "🐶"; }, 1500);
+  // =========================================
+  // SHIRO'S CORNER - PET CARE SYSTEM
+  // =========================================
+  const SHIRO_STORAGE_KEY = 'recipeRoulette.shiro';
+  let inMemoryShiroState = null;
+
+  function getDefaultShiroState() {
+    return {
+      hunger: 80,
+      happiness: 85,
+      energy: 75,
+      updatedAt: Date.now(),
+      pets: 0
+    };
+  }
+
+  function loadShiroState() {
+    let state = null;
+    try {
+      const raw = localStorage.getItem(SHIRO_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          state = {
+            hunger: typeof parsed.hunger === 'number' ? Math.max(0, Math.min(100, parsed.hunger)) : 80,
+            happiness: typeof parsed.happiness === 'number' ? Math.max(0, Math.min(100, parsed.happiness)) : 85,
+            energy: typeof parsed.energy === 'number' ? Math.max(0, Math.min(100, parsed.energy)) : 75,
+            updatedAt: typeof parsed.updatedAt === 'number' ? parsed.updatedAt : Date.now(),
+            pets: typeof parsed.pets === 'number' ? parsed.pets : 0
+          };
+        }
       }
+    } catch (e) {
+      // In-memory fallback
+    }
+
+    if (!state) {
+      state = inMemoryShiroState || getDefaultShiroState();
+    }
+
+    // Apply time decay: hunger -0.4/min, happiness -0.2/min, energy -0.1/min (capped at 4 hours / 240 mins)
+    const now = Date.now();
+    const elapsedMinutes = Math.min(240, Math.max(0, (now - state.updatedAt) / 60000));
+    state.hunger = Math.max(0, Math.min(100, state.hunger - elapsedMinutes * 0.4));
+    state.happiness = Math.max(0, Math.min(100, state.happiness - elapsedMinutes * 0.2));
+    state.energy = Math.max(0, Math.min(100, state.energy - elapsedMinutes * 0.1));
+    state.updatedAt = now;
+
+    inMemoryShiroState = state;
+    saveShiroState(state);
+    return inMemoryShiroState;
+  }
+
+  function saveShiroState(stateToSave) {
+    if (stateToSave) inMemoryShiroState = stateToSave;
+    if (!inMemoryShiroState) inMemoryShiroState = getDefaultShiroState();
+    inMemoryShiroState.updatedAt = Date.now();
+    try {
+      localStorage.setItem(SHIRO_STORAGE_KEY, JSON.stringify(inMemoryShiroState));
+    } catch (e) {
+      // Storage blocked or quota exceeded
+    }
+    return inMemoryShiroState;
+  }
+
+  function getShiroState() {
+    if (!inMemoryShiroState) loadShiroState();
+    return inMemoryShiroState;
+  }
+
+  // Synthesized Web Audio sounds for Shiro (no external files)
+  function synthBark() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(360, now);
+      osc.frequency.exponentialRampToValueAtTime(130, now + 0.14);
+      gain.gain.setValueAtTime(0.22, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.14);
+    } catch (e) {}
+  }
+
+  function synthPant() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(190, now);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.09);
+    } catch (e) {}
+  }
+
+  function synthYawn() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.5);
+      gain.gain.setValueAtTime(0.16, now);
+      gain.gain.linearRampToValueAtTime(0.001, now + 0.5);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.5);
+    } catch (e) {}
+  }
+
+  function synthHappyBlip() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      [523.25, 659.25, 783.99].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.14, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.12);
+      });
+    } catch (e) {}
+  }
+
+  // Mood evaluation function (with testHour parameter)
+  function getShiroMood(hunger, energy, testHour = null) {
+    const hour = typeof testHour === 'number' ? testHour : new Date().getHours();
+    if (hunger < 30) {
+      return 'hungry';
+    }
+    if (hour >= 22 || hour < 6 || energy < 25) {
+      return 'sleepy';
+    }
+    if (hour >= 14 && hour < 18 && energy > 50) {
+      return 'playful';
+    }
+    return 'happy';
+  }
+
+  // Expose getShiroMood globally for automated tests
+  window.getShiroMood = getShiroMood;
+  window.getShiroState = getShiroState;
+
+  function updateShiroUI() {
+    const state = getShiroState();
+    const mood = getShiroMood(state.hunger, state.energy);
+
+    // Update Mood Label & SVG data-mood
+    const moodBadge = document.getElementById('shiro-mood-badge');
+    const moodLabels = {
+      happy: 'Mood: Happy',
+      hungry: 'Mood: Hungry',
+      sleepy: 'Mood: Sleepy',
+      playful: 'Mood: Playful'
+    };
+    if (moodBadge) {
+      moodBadge.textContent = moodLabels[mood] || 'Mood: Happy';
+      if (mood === 'hungry') moodBadge.style.background = '#FF7675';
+      else if (mood === 'sleepy') moodBadge.style.background = '#A29BFE';
+      else if (mood === 'playful') moodBadge.style.background = '#55EFC4';
+      else moodBadge.style.background = 'var(--yellow)';
+    }
+
+    const svg = document.getElementById('shiro-pet-svg');
+    if (svg) {
+      svg.setAttribute('data-mood', mood);
+    }
+
+    // Update Pets count
+    const petsBadge = document.getElementById('shiro-pets-count');
+    if (petsBadge) {
+      petsBadge.textContent = `Pets: ${state.pets}`;
+    }
+
+    // Update Bars
+    const hFill = document.getElementById('shiro-bar-hunger');
+    const hVal = document.getElementById('shiro-val-hunger');
+    if (hFill && hVal) {
+      const roundH = Math.round(state.hunger);
+      hFill.style.width = `${roundH}%`;
+      hVal.textContent = `${roundH}%`;
+    }
+
+    const hapFill = document.getElementById('shiro-bar-happiness');
+    const hapVal = document.getElementById('shiro-val-happiness');
+    if (hapFill && hapVal) {
+      const roundHap = Math.round(state.happiness);
+      hapFill.style.width = `${roundHap}%`;
+      hapVal.textContent = `${roundHap}%`;
+    }
+
+    const eFill = document.getElementById('shiro-bar-energy');
+    const eVal = document.getElementById('shiro-val-energy');
+    if (eFill && eVal) {
+      const roundE = Math.round(state.energy);
+      eFill.style.width = `${roundE}%`;
+      eVal.textContent = `${roundE}%`;
+    }
+  }
+
+  // Shiro Petting Dialogues Pool (16+ funny quotes)
+  const SHIRO_QUOTES = {
+    head: [
+      "*tail wag* Shiro leans into your gentle head pats!",
+      "Shiro's fluffy cotton candy head enjoys the scritches!",
+      "Woof! Shiro thinks you're the second best human after Shinchan!",
+      "Shiro closes his eyes in pure canine bliss. Good human!"
+    ],
+    ears: [
+      "Shiro's soft floppy ears twitch with pure joy!",
+      "Ear rubs detected! Tail wagging speed multiplied by 2x!",
+      "*pant pant* Shiro's floppy ears are softer than fresh naan!",
+      "Flap flap! Shiro shakes his ears happily!"
+    ],
+    belly: [
+      "Belly rubs! Shiro kicks his back leg with pure delight!",
+      "Shiro rolls onto his fluffy back for maximum tummy scratch access!",
+      "*happy whine* Cotton ball belly thoroughly pampered!",
+      "Shinchan says: 'Hey Shiro, don't get too spoiled by belly rubs!'"
+    ],
+    tail: [
+      "Whoa! Shiro chases his own puff-tail in a rapid fluffy circle!",
+      "Tail wag radar active! Shiro sends breezy puppy love your way!",
+      "Shiro wags his little puff tail like a helicopter rotor!",
+      "Careful with the puff-tail! It's aerodynamic survival fluff!"
+    ]
+  };
+
+  function petShiroPart(part, clientX, clientY) {
+    const state = getShiroState();
+    state.happiness = Math.min(100, state.happiness + 8);
+    state.energy = Math.max(0, state.energy - 2);
+    state.pets = (state.pets || 0) + 1;
+    saveShiroState();
+
+    const quotes = SHIRO_QUOTES[part] || SHIRO_QUOTES.head;
+    const quote = quotes[Math.floor(Math.random() * quotes.length)];
+    const speech = document.getElementById('shiro-speech');
+    if (speech) speech.textContent = quote;
+
+    const popups = ["WOOF! ❤️", "GOOD BOY! 🐾", "FLUFFY! ✨", "TAIL WAG! 🐶"];
+    const popText = popups[Math.floor(Math.random() * popups.length)];
+    if (typeof clientX === 'number' && typeof clientY === 'number') {
+      triggerComicPopup(clientX, clientY, popText);
+    }
+
+    if (part === 'ears') synthPant();
+    else if (part === 'tail') synthHappyBlip();
+    else synthBark();
+
+    updateShiroUI();
+  }
+
+  // Interactive Pet Parts on SVG
+  ['head', 'ears', 'belly', 'tail'].forEach(part => {
+    const el = document.getElementById(`shiro-${part}`);
+    if (el) {
+      el.addEventListener('click', (e) => {
+        petShiroPart(part, e.clientX, e.clientY);
+      });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          petShiroPart(part, window.innerWidth / 2, window.innerHeight / 2);
+        }
+      });
+    }
+  });
+
+  // "Give Shiro a Bite" button (No emojis on button!)
+  const btnFeed = document.getElementById('btn-feed-shiro');
+  if (btnFeed) {
+    btnFeed.addEventListener('click', (e) => {
+      const appState = getState();
+      const speech = document.getElementById('shiro-speech');
+      const shiroState = getShiroState();
+
+      if (!appState.history || appState.history.length === 0) {
+        if (speech) speech.textContent = "Cook a dish in the Fridge first so Shiro can taste-test your survival food!";
+        if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "NO FOOD YET!");
+        synthBark();
+        return;
+      }
+
+      const latestDish = appState.history[0];
+      const dishName = latestDish.name;
+      
+      // Look up ingredients
+      let ingredients = [];
+      if (allRecipes && allRecipes.length > 0) {
+        const found = allRecipes.find(r => r.name.toLowerCase() === dishName.toLowerCase());
+        if (found && found.ingredients) ingredients = found.ingredients;
+      }
+
+      const spicyKeywords = ['chilli', 'pepper', 'masala', 'spicy', 'mirch', 'jalapeno', 'schezwan', 'curry', 'tadka'];
+      const isSpicy = ingredients.some(ing => spicyKeywords.some(kw => ing.toLowerCase().includes(kw))) ||
+                      spicyKeywords.some(kw => dishName.toLowerCase().includes(kw));
+
+      if (isSpicy) {
+        if (speech) speech.textContent = `YELP! '${dishName}' is way too spicy for a puppy! Need water quick!`;
+        if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "TOO SPICY!");
+        synthBark();
+        shiroState.hunger = Math.min(100, shiroState.hunger + 25);
+      } else if (latestDish.source === 'world') {
+        if (speech) speech.textContent = `A foreign delicacy! Shiro loves international gourmet food from '${dishName}'!`;
+        if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "DELICIOUS!");
+        synthHappyBlip();
+        shiroState.hunger = Math.min(100, shiroState.hunger + 35);
+        shiroState.happiness = Math.min(100, shiroState.happiness + 10);
+      } else {
+        if (speech) speech.textContent = `*munch munch* Approved by Shiro! Two paws up for '${dishName}'!`;
+        if (e && typeof e.clientX === 'number') triggerComicPopup(e.clientX, e.clientY, "YUMMY! ❤️");
+        synthHappyBlip();
+        shiroState.hunger = Math.min(100, shiroState.hunger + 30);
+        shiroState.happiness = Math.min(100, shiroState.happiness + 8);
+      }
+
+      // Check overfeeding -> Food coma / sleepy
+      if (shiroState.hunger >= 95) {
+        if (speech) speech.textContent = `*yawn* Food coma! Stuffed like a giant cotton ball! Time for a nap... Zzz`;
+        synthYawn();
+        shiroState.energy = Math.max(0, shiroState.energy - 15);
+      }
+
+      saveShiroState();
+      updateShiroUI();
     });
   }
+
+  // Periodic refresh every 15 seconds
+  setInterval(() => {
+    loadShiroState();
+    updateShiroUI();
+  }, 15000);
+
+  // Initial load
+  loadShiroState();
+  updateShiroUI();
 
   // Notes App (LocalStorage under recipeRoulette.notes + in-memory fallback)
   const NOTES_STORAGE_KEY = 'recipeRoulette.notes';
@@ -1806,12 +2163,36 @@ function initPhoneOS() {
   setInterval(triggerRandomNotification, 15000);
 }
 
+// Recipe of the Day (Dynamically/Deterministically randomized per day)
+let recipeOfTheDay = null;
+
+function updateRecipeOfTheDay() {
+  if (!allRecipes || allRecipes.length === 0) return;
+  const now = new Date();
+  const dateSeed = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+  let hash = 0;
+  for (let i = 0; i < dateSeed.length; i++) {
+    hash = ((hash << 5) - hash + dateSeed.charCodeAt(i)) | 0;
+  }
+  const index = Math.abs(hash) % allRecipes.length;
+  recipeOfTheDay = allRecipes[index];
+
+  const nameEl = document.getElementById('side-recipe-name');
+  const metaEl = document.getElementById('side-recipe-meta');
+  if (nameEl && recipeOfTheDay) nameEl.textContent = recipeOfTheDay.name;
+  if (metaEl && recipeOfTheDay) {
+    const mainIngs = (recipeOfTheDay.ingredients || []).slice(0, 3).join(', ');
+    metaEl.textContent = `${recipeOfTheDay.time} · ${recipeOfTheDay.difficulty} · ${mainIngs}`;
+  }
+}
+
 // Load data/recipes.json
 async function loadRecipes() {
   try {
     const res = await fetch('data/recipes.json');
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     allRecipes = await res.json();
+    updateRecipeOfTheDay();
   } catch (err) {
     console.error('Could not load recipes:', err);
     misaeSpeech.textContent = "Mama! Someone stole the recipe notebook! (Failed loading data/recipes.json)";
@@ -2757,23 +3138,28 @@ function attachEvents() {
     document.getElementById('ingredients-panel').scrollIntoView({ behavior: 'smooth' });
   });
 
-  // Retro Side Panel "TRY IT" Button (Recipe of the Day: Curd Rice Tadka)
+  // Retro Side Panel "TRY IT" Button (Recipe of the Day: dynamic per day)
   const btnSideTry = document.getElementById('btn-side-try');
   if (btnSideTry) {
     btnSideTry.addEventListener('click', () => {
       showPhoneScreen('fridge');
-      // Curd Rice Tadka is a local kitchen specialty; switch to local mode
-      if (kitchenMode === 'world') {
-        const btnLocal = document.getElementById('btn-mode-local');
-        if (btnLocal) btnLocal.click();
+      const r = recipeOfTheDay || allRecipes[0];
+      if (r) {
+        if (r.source === 'world') {
+          const btnWorld = document.getElementById('btn-mode-world');
+          if (btnWorld) btnWorld.click();
+        } else {
+          const btnLocal = document.getElementById('btn-mode-local');
+          if (btnLocal) btnLocal.click();
+        }
+        clearSelections();
+        (r.ingredients || []).forEach(ing => {
+          selectedIngredients.add(ing.toLowerCase().trim());
+        });
+        renderChips();
+        updateSelectedCount();
+        cookSomething();
       }
-      clearSelections();
-      ['rice', 'curd', 'chilli'].forEach(ing => {
-        selectedIngredients.add(ing);
-      });
-      renderChips();
-      updateSelectedCount();
-      cookSomething();
     });
   }
 }

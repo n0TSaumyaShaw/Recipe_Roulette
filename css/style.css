@@ -2209,47 +2209,258 @@ body.angry-shake {
   color: var(--card-ink, #1a1a1a);
 }
 
-/* Shiro Album */
+/* Shiro Pet Care System */
 .shiro-hero-card {
   background: #FFF;
   color: var(--card-ink, #1a1a1a);
   border: var(--border-heavy);
   box-shadow: 4px 4px 0 var(--black);
   border-radius: 16px;
-  padding: 14px;
+  padding: 12px 14px 14px;
   text-align: center;
   margin-bottom: 14px;
+  box-sizing: border-box;
 }
 
-.shiro-dog-anim {
-  font-size: 4rem;
-  animation: buttWiggle 0.9s infinite alternate;
+.shiro-status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 6px;
 }
 
-.shiro-hero-name {
+.shiro-mood-badge {
   font-family: 'Bangers', cursive;
-  font-size: 1.5rem;
-  color: var(--black);
-  margin-top: 4px;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1.5px solid var(--black);
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow: 1px 1px 0 var(--black);
 }
 
-.shiro-hero-desc {
-  font-size: 0.85rem;
+.shiro-pets-badge {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
   color: #444;
-  margin-bottom: 8px;
+  background: #EDF2F7;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1.5px solid #CBD5E0;
 }
 
-.btn-pet-shiro {
+.shiro-dog-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 0;
+  position: relative;
+  min-height: 170px;
+}
+
+.shiro-pet-svg {
+  max-width: 220px;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+  transition: transform 0.2s ease;
+}
+
+/* Interactive SVG Hotspots */
+.shiro-interactive-part {
+  cursor: pointer;
+  outline: none;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.shiro-interactive-part:hover {
+  filter: drop-shadow(0 0 6px rgba(255, 212, 0, 0.9));
+}
+
+.shiro-interactive-part:active {
+  filter: brightness(0.92);
+}
+
+/* Shiro SVG Mood States */
+.shiro-eyes-sleepy,
+.shiro-mouth-hungry,
+.shiro-zzz-cloud {
+  display: none;
+}
+
+/* Sleepy Mood */
+.shiro-pet-svg[data-mood="sleepy"] .shiro-eyes-normal { display: none; }
+.shiro-pet-svg[data-mood="sleepy"] .shiro-eyes-sleepy { display: block; }
+.shiro-pet-svg[data-mood="sleepy"] .shiro-zzz-cloud { display: block; }
+.shiro-pet-svg[data-mood="sleepy"] .shiro-ear-left { transform: rotate(4deg); transform-origin: 68px 75px; }
+.shiro-pet-svg[data-mood="sleepy"] .shiro-ear-right { transform: rotate(-4deg); transform-origin: 132px 75px; }
+
+/* Hungry Mood */
+.shiro-pet-svg[data-mood="hungry"] .shiro-mouth-normal { display: none; }
+.shiro-pet-svg[data-mood="hungry"] .shiro-mouth-hungry { display: block; }
+
+/* Happy Mood: Wagging tail */
+.shiro-pet-svg[data-mood="happy"] .shiro-tail-puff {
+  animation: shiroTailWag 0.6s infinite alternate ease-in-out;
+  transform-origin: 180px 115px;
+}
+
+/* Playful Mood: Bouncing & fast wag */
+.shiro-pet-svg[data-mood="playful"] {
+  animation: shiroBounce 0.5s infinite alternate ease-in-out;
+}
+.shiro-pet-svg[data-mood="playful"] .shiro-tail-puff {
+  animation: shiroTailWag 0.35s infinite alternate ease-in-out;
+  transform-origin: 180px 115px;
+}
+
+@keyframes shiroTailWag {
+  0% { transform: rotate(-12deg); }
+  100% { transform: rotate(15deg); }
+}
+
+@keyframes shiroBounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.shiro-zzz {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  fill: #6C5CE7;
+  font-weight: bold;
+  animation: shiroFloatZzz 1.8s infinite ease-out;
+}
+.shiro-zzz.z2 { animation-delay: 0.5s; font-size: 13px; }
+.shiro-zzz.z3 { animation-delay: 1.0s; font-size: 15px; }
+
+@keyframes shiroFloatZzz {
+  0% { opacity: 0; transform: translateY(6px) scale(0.8); }
+  50% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-14px) scale(1.1); }
+}
+
+/* Speech Bubble */
+.shiro-speech-bubble {
+  background: var(--cream, #FFF6DC);
+  color: var(--card-ink, #1a1a1a);
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.35;
+  box-shadow: 2px 2px 0 var(--black);
+  margin: 6px 0 10px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Care Progress Bars */
+.shiro-stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.shiro-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.shiro-stat-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #222;
+  width: 68px;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.shiro-meter-track {
+  flex: 1;
+  height: 12px;
+  background: #E2E8F0;
+  border: 1.5px solid var(--black);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.shiro-meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.shiro-meter-fill.hunger-fill { background: linear-gradient(90deg, #E17055, #FDcb6E); }
+.shiro-meter-fill.happiness-fill { background: linear-gradient(90deg, #00B894, #55EFC4); }
+.shiro-meter-fill.energy-fill { background: linear-gradient(90deg, #0984E3, #74B9FF); }
+
+.shiro-stat-pct {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #333;
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Actions Row (NO EMOJIS ON BUTTON) */
+.shiro-actions-row {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-feed-shiro {
+  width: 100%;
+  min-height: 42px;
   font-family: 'Bangers', cursive;
   font-size: 1.15rem;
-  letter-spacing: 0.5px;
-  background: #74B9FF;
-  color: var(--black);
-  border: var(--border-thick);
+  letter-spacing: 0.6px;
+  background: var(--yellow, #FFD400);
+  color: var(--ink, #12122a);
+  border: var(--border-heavy);
+  border-radius: 10px;
   box-shadow: 2.5px 2.5px 0 var(--black);
-  border-radius: 12px;
-  padding: 6px 14px;
+  padding: 8px 12px;
   cursor: pointer;
+  transition: all 0.12s ease;
+  box-sizing: border-box;
+}
+
+.btn-feed-shiro:hover {
+  background: var(--yellow-light, #FFF480);
+  transform: translateY(-1px);
+  box-shadow: 3.5px 3.5px 0 var(--black);
+}
+
+.btn-feed-shiro:active {
+  transform: translateY(2px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+.shiro-feed-hint {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #666;
+  margin-top: 6px;
+  line-height: 1.25;
 }
 
 .polaroid-grid {
@@ -2483,17 +2694,35 @@ body.angry-shake {
 
 .cooked-dish-top {
   display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  min-width: 0;
+}
+
+.cooked-dish-header-row {
+  display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.cooked-dish-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .cooked-date-badge {
   font-size: 0.72rem;
   font-family: var(--font-body);
-  font-weight: 700;
+  font-weight: 600;
   color: #555555;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .cooked-source-badge {
