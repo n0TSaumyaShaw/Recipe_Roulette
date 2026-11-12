@@ -98,22 +98,6 @@ Now open your browser and navigate to:
 
 ---
 
-## 🚀 How to Deploy to Vercel
-
-This repository is pre-configured for zero-config Vercel deployment:
-
-1. Push your repository to GitHub.
-2. Log in to [Vercel](https://vercel.com/) and click **"Add New Project"**.
-3. Import your **`Recipe_Roulette`** GitHub repository.
-4. Configure Project Settings:
-   - **Framework Preset:** `Other`
-   - **Root Directory:** `./`
-   - **Build Command:** *(leave empty / none)*
-   - **Output Directory:** *(leave empty)*
-5. Click **Deploy**. Vercel will deploy the site statically with `cleanUrls` and long-term asset caching enabled from `vercel.json`.
-
----
-
 ## 📸 Screenshots
 
 | Phone Home Screen | Recipe Roulette (Fridge) |
