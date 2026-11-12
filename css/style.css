@@ -1,55 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=Silkscreen:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Press+Start+2P&display=swap');
 
 :root {
-  /* -------------------------------------------
-     RETRO DARK THEME PALETTE (Customizable)
-     ------------------------------------------- */
-  --bg-page: #0f0f1a;
-  --bg-page-grid: rgba(255, 255, 255, 0.04);
-  --bg-page-glow: rgba(0, 240, 255, 0.06);
+  /* Page */
+  --bg: #0f0f1a;
+  --bg-glow: #1b1b36;
+  --grid-line: #ffd40010;           /* 40px grid */
+  --scanline: #00000030;            /* 1px line every 4px, ~5% feel */
 
-  /* Shinchan Glowing Retro Accents */
+  /* Accents (Shinchan yellow and red) */
   --yellow: #FFD400;
+  --red: #E63946;
+  --teal: #A8E6D8;
+
+  /* Panels and screen */
+  --panel: #17172e;                 /* side panels, 3px yellow border */
+  --screen: #12122a;                /* phone screen background */
+  --screen-bezel: #0a0a12;          /* 6px bezel */
+  --screen-glow: #ffd40030;         /* inset glow */
+
+  /* Cards inside the screen */
+  --cream: #FFF6DC;
+  --ink: #12122a;                   /* text on yellow/cream buttons */
+  --card-ink: #1a1a1a;
+  --quote-bg: #E8EEFF;
+  --outline: #000000;               /* 2-3px outlines, hard shadows */
+
+  /* Text */
+  --text: #F4EEDC;
+  --muted: #c9c4b4;
+  --label: #9a9aa8;                 /* SHIN-TEL label */
+
+  /* Handheld body */
+  --plastic-1: #42424f;
+  --plastic-2: #24242c;
+  --plastic-edge: #0b0b10;
+  --key: #34343f;                   /* nav keys, active = --yellow + glow */
+
+  /* Type */
+  --font-heading: 'Bangers', cursive;
+  --font-body: 'Fredoka', sans-serif;
+  --font-pixel: 'Press Start 2P', monospace; /* tiny labels only, 8-9px */
+
+  /* Shape */
+  --phone-w: 360px;  --phone-h: 700px;  --phone-radius: 46px;
+  --screen-h: 470px; --screen-radius: 18px;
+  --btn-radius: 6px; --btn-shadow: 2px 2px 0 var(--outline);
+  --card-shadow: 3px 3px 0 var(--red);
+
+  /* Legacy & Helper Aliases mapped to new tokens */
+  --bg-page: var(--bg);
   --yellow-glow: 0 0 12px rgba(255, 212, 0, 0.55);
   --yellow-light: #FFF480;
-  --red: #E63946;
   --red-glow: 0 0 14px rgba(230, 57, 70, 0.6);
   --red-dark: #C91D13;
   --cyan: #00F0FF;
-  --cyan-glow: 0 0 10px rgba(0, 240, 255, 0.5);
   --blue: #00B4D8;
-  --blue-dark: #0077B6;
   --green: #2EC4B6;
-  --black: #111111;
+  --black: var(--outline);
   --white: #FFFFFF;
-
-  /* Chunky 90s Handheld Gadget Housing */
-  --gadget-shell: #252830;
-  --gadget-shell-light: #343944;
-  --gadget-shell-dark: #17181d;
-  --gadget-bezel: #121318;
-  --gadget-antenna: #1e2027;
-  --gadget-led-on: #00ff66;
-  --gadget-led-glow: 0 0 8px #00ff66, 0 0 16px rgba(0, 255, 102, 0.4);
-  --gadget-brand: #9da5b4;
-
-  /* Inside Screen & Cards */
-  --screen-bg: #141620;
-  --screen-inner-shadow: inset 0 0 18px rgba(0, 0, 0, 0.85);
-  --card-bg: #FFFDF8;
-  --card-bg-alt: #F4EFE6;
-  --status-bar-bg: #1a1c28;
-  --status-bar-text: #E2E8F0;
-
-  /* Borders & Comic Shadows */
-  --border-thick: 3px solid var(--black);
-  --border-heavy: 4px solid var(--black);
-  --shadow-comic: 4px 4px 0 var(--black);
-  --shadow-comic-lg: 6px 6px 0 var(--black);
-  --radius-comic: 16px;
-
-  /* Fonts */
-  --font-pixel: 'Silkscreen', monospace;
+  --gadget-shell: var(--plastic-2);
+  --gadget-shell-light: var(--plastic-1);
+  --gadget-shell-dark: var(--plastic-edge);
+  --gadget-bezel: var(--screen-bezel);
+  --gadget-antenna: var(--plastic-2);
+  --gadget-led-on: var(--red);
+  --gadget-led-glow: 0 0 8px var(--red), 0 0 16px rgba(230, 57, 70, 0.4);
+  --gadget-brand: var(--label);
+  --screen-bg: var(--screen);
+  --screen-inner-shadow: inset 0 0 20px var(--screen-glow), inset 0 0 10px rgba(0, 0, 0, 0.85);
+  --card-bg: var(--cream);
+  --card-bg-alt: var(--cream);
+  --status-bar-bg: transparent;
+  --status-bar-text: var(--yellow);
+  --border-thick: 2px solid var(--outline);
+  --border-heavy: 3px solid var(--outline);
+  --shadow-comic: 2px 2px 0 var(--outline);
+  --shadow-comic-lg: 3px 3px 0 var(--outline);
+  --radius-comic: var(--btn-radius);
 }
 
 * {
@@ -66,17 +93,14 @@
   inset: 0;
   pointer-events: none;
   z-index: 9990;
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  ), linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 0.03),
-    rgba(0, 255, 0, 0.01),
-    rgba(0, 0, 255, 0.03)
+  background: repeating-linear-gradient(
+    0deg,
+    var(--scanline) 0px,
+    var(--scanline) 1px,
+    transparent 1px,
+    transparent 4px
   );
-  background-size: 100% 3px, 6px 100%;
-  opacity: 0.05;
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -86,20 +110,20 @@
 }
 
 body {
-  font-family: 'Fredoka', 'Comic Neue', sans-serif;
-  background-color: var(--bg-page);
+  font-family: var(--font-body);
+  background-color: var(--bg);
   background-image: 
-    radial-gradient(circle at center, transparent 35%, rgba(5, 5, 12, 0.88) 100%),
-    linear-gradient(var(--bg-page-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--bg-page-grid) 1px, transparent 1px);
-  background-size: 100% 100%, 28px 28px, 28px 28px;
+    radial-gradient(circle at center, var(--bg-glow) 0%, transparent 70%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
   background-position: center center, 0 0, 0 0;
-  color: var(--black);
+  color: var(--text);
   min-height: 100vh;
-  padding: 16px 12px 40px;
+  padding: 20px 16px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   overflow-x: hidden;
   transition: background-color 0.2s ease;
 }
@@ -358,29 +382,30 @@ body.angry-shake {
 
 /* Main Card */
 .comic-panel {
-  background: var(--white);
-  border: var(--border-heavy);
-  box-shadow: var(--shadow-comic-lg);
-  border-radius: var(--radius-comic);
-  padding: 18px 16px;
+  background: var(--cream);
+  border: 2px solid var(--outline);
+  box-shadow: var(--card-shadow);
+  border-radius: 12px;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  color: var(--card-ink);
 }
 
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px dashed #DDD;
+  border-bottom: 2px dashed rgba(0, 0, 0, 0.15);
   padding-bottom: 8px;
 }
 
 .panel-title {
-  font-family: 'Bangers', cursive;
-  font-size: 1.6rem;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
   letter-spacing: 1px;
-  color: var(--black);
+  color: var(--card-ink);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -407,16 +432,17 @@ body.angry-shake {
 }
 
 .chip {
-  background: #F8F9FA;
-  border: var(--border-thick);
-  border-radius: 20px;
-  padding: 8px 14px;
-  font-size: 0.95rem;
-  font-weight: 700;
+  background: var(--panel);
+  color: var(--text);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  padding: 6px 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
   box-shadow: 2px 2px 0 var(--black);
   user-select: none;
-  transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.12s ease;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -425,7 +451,7 @@ body.angry-shake {
 .chip:hover {
   transform: translateY(-2px);
   box-shadow: 3px 3px 0 var(--black);
-  background: #FFF;
+  background: #23243c;
 }
 
 .chip:active {
@@ -435,9 +461,10 @@ body.angry-shake {
 
 .chip.selected {
   background: var(--yellow);
+  color: var(--ink);
   border-color: var(--black);
-  box-shadow: 3px 3px 0 var(--black);
-  transform: scale(1.04);
+  box-shadow: 2px 2px 0 var(--black);
+  transform: scale(1.02);
 }
 
 .chip.hated.selected {
@@ -509,36 +536,36 @@ body.angry-shake {
 
 /* Action Buttons */
 .btn-cook {
-  font-family: 'Bangers', cursive;
-  font-size: 1.7rem;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
   letter-spacing: 1.5px;
-  background: var(--red);
-  color: var(--white);
-  border: var(--border-heavy);
-  box-shadow: var(--shadow-comic-lg);
-  border-radius: 18px;
-  padding: 14px 20px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: 2px solid var(--outline);
+  box-shadow: 3px 3px 0 var(--red);
+  border-radius: var(--btn-radius);
+  padding: 12px 18px;
   cursor: pointer;
   text-transform: uppercase;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   transition: all 0.15s ease;
   position: relative;
   overflow: hidden;
 }
 
 .btn-cook:hover:not(:disabled) {
-  background: var(--red-dark);
-  transform: translateY(-3px) scale(1.01);
-  box-shadow: 8px 8px 0 var(--black);
+  background: var(--yellow-light);
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 var(--red);
 }
 
 .btn-cook:active:not(:disabled) {
-  transform: translateY(2px);
-  box-shadow: 2px 2px 0 var(--black);
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--red);
 }
 
 .btn-cook:disabled {
@@ -549,12 +576,13 @@ body.angry-shake {
 /* Roulette Spinner Overlay / Section */
 #roulette-container {
   display: none;
-  background: var(--white);
-  border: var(--border-heavy);
-  box-shadow: var(--shadow-comic-lg);
-  border-radius: var(--radius-comic);
+  background: var(--cream);
+  border: 2px solid var(--outline);
+  box-shadow: var(--card-shadow);
+  border-radius: 12px;
   padding: 24px 16px;
   text-align: center;
+  color: var(--card-ink);
 }
 
 #roulette-container.spinning {
@@ -620,15 +648,16 @@ body.angry-shake {
 }
 
 .recipe-card {
-  background: var(--white);
-  border: var(--border-heavy);
-  box-shadow: var(--shadow-comic-lg);
-  border-radius: var(--radius-comic);
-  padding: 20px 18px;
+  background: var(--cream);
+  border: 2px solid var(--outline);
+  box-shadow: var(--card-shadow);
+  border-radius: 12px;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   position: relative;
+  color: var(--card-ink);
 }
 
 .recipe-meta-strip {
@@ -640,11 +669,12 @@ body.angry-shake {
 }
 
 .recipe-title {
-  font-family: 'Bangers', cursive;
-  font-size: 2.1rem;
-  color: var(--black);
-  letter-spacing: 1px;
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--card-ink);
+  letter-spacing: 0.8px;
   line-height: 1.15;
+  text-transform: uppercase;
 }
 
 .recipe-badges {
@@ -825,22 +855,22 @@ body.angry-shake {
 
 /* Shinchan Quote in Card */
 .shinchan-card-quote {
-  background: #F0F4FF;
-  border: var(--border-thick);
-  border-radius: 14px;
-  padding: 10px 14px;
-  box-shadow: 2.5px 2.5px 0 var(--black);
+  background: var(--quote-bg);
+  border: 1.5px solid #b8c8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .quote-pfp {
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 2.5px solid var(--black);
-  box-shadow: 2px 2px 0 var(--black);
+  border: 2px solid var(--outline);
+  box-shadow: 1.5px 1.5px 0 var(--outline);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -853,17 +883,17 @@ body.angry-shake {
 }
 
 .quote-speaker {
-  font-family: 'Bangers', cursive;
-  font-size: 0.95rem;
-  letter-spacing: 0.8px;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.6px;
   color: var(--red);
 }
 
 .quote-text {
   font-style: italic;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #1B263B;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--card-ink);
   line-height: 1.3;
 }
 
@@ -871,12 +901,12 @@ body.angry-shake {
 .card-actions {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 6px;
   margin-top: 8px;
   width: 100%;
 }
 
-@media (max-width: 440px) {
+@media (max-width: 340px) {
   .card-actions {
     grid-template-columns: 1fr;
   }
@@ -885,15 +915,39 @@ body.angry-shake {
 .btn-secondary {
   width: 100%;
   min-width: 0;
-  font-family: 'Bangers', cursive;
-  font-size: 1.15rem;
-  letter-spacing: 0.8px;
+  font-family: var(--font-heading);
+  font-size: 13.5px;
+  letter-spacing: 0.6px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 2px solid var(--outline);
+  box-shadow: var(--btn-shadow);
+  border-radius: var(--btn-radius);
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+#btn-spin-again {
   background: var(--yellow);
-  color: var(--black);
-  border: var(--border-thick);
-  box-shadow: 3px 3px 0 var(--black);
-  border-radius: 12px;
-  padding: 10px 8px;
+  color: var(--ink);
+}
+
+#btn-copy-recipe {
+  background: var(--teal);
+  color: var(--ink);
+}
+
+#btn-change-ingredients {
+  background: var(--cream);
+  color: var(--ink);
+}
   cursor: pointer;
   transition: all 0.12s ease;
   display: flex;
@@ -1010,15 +1064,17 @@ body.angry-shake {
 
 #landing-screen {
   width: 100%;
-  max-width: 680px;
+  max-width: 1100px;
   min-height: 90vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: 40px;
   position: relative;
   padding: 10px 0;
   z-index: 10;
+  margin: 0 auto;
 }
 
 #landing-screen.screen-fade-out {
@@ -1083,78 +1139,192 @@ body.angry-shake {
   }
 }
 
+/* Neon-Yellow Retro Side Panels */
+.retro-side-panel {
+  width: 230px;
+  background: var(--panel);
+  border: 3px solid var(--yellow);
+  border-radius: 16px;
+  box-shadow: 0 0 16px rgba(255, 212, 0, 0.35);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.side-panel-tag {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--yellow);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.side-panel-title {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  color: var(--red);
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.side-panel-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.side-panel-list li {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.side-panel-list .step-num {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--yellow);
+}
+
+.side-panel-recipe-name {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.side-panel-recipe-meta {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-bottom: 18px;
+  line-height: 1.35;
+}
+
+.btn-side-try {
+  align-self: flex-start;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  letter-spacing: 0.8px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: 2px solid var(--outline);
+  border-radius: var(--btn-radius);
+  padding: 6px 18px;
+  box-shadow: 3px 3px 0 var(--red);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn-side-try:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--red);
+}
+
+.btn-side-try:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--red);
+}
+
+@media (max-width: 1024px) {
+  #landing-screen {
+    flex-direction: column;
+    gap: 0;
+  }
+  .retro-side-panel {
+    display: none !important;
+  }
+}
+
 /* Chunky 90s Handheld Gadget Housing */
 .phone-wrapper {
   position: relative;
   z-index: 10;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 18px; /* Room for antenna stub */
+  margin: 0 auto;
+  padding-top: 14px; /* Room for antenna stub */
 }
 
 /* Antenna Stub on Top Right */
 .gadget-antenna {
   position: absolute;
   top: 0;
-  right: calc(50% - min(225px, 47.5vw) + 36px);
-  width: 18px;
-  height: 24px;
-  background: linear-gradient(90deg, #181920 0%, #3a3f4d 50%, #15161c 100%);
-  border: 3px solid var(--black);
+  right: 42px;
+  width: 13px;
+  height: 18px;
+  background: var(--plastic-2);
+  border: 2px solid var(--plastic-edge);
   border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 2px 2px 0 var(--black);
+  border-radius: 4px 4px 0 0;
   z-index: 5;
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.15);
 }
 
 /* Physical Side Buttons on Left Chassis */
 .gadget-side-btn {
   position: absolute;
-  left: calc(50% - min(225px, 47.5vw) - 7px);
+  left: -7px;
   width: 8px;
-  background: linear-gradient(180deg, #323642 0%, #17181f 100%);
-  border: 2px solid var(--black);
+  border: 2px solid var(--plastic-edge);
   border-right: none;
-  border-radius: 5px 0 0 5px;
-  box-shadow: -2px 2px 0 var(--black);
+  border-radius: 4px 0 0 4px;
   z-index: 5;
 }
 
-.gadget-side-btn-top {
-  top: 170px;
-  height: 38px;
+.gadget-side-btn-top.gadget-btn-red {
+  top: 155px;
+  height: 36px;
+  background: var(--red);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-.gadget-side-btn-bottom {
-  top: 225px;
+.gadget-side-btn-bottom.gadget-btn-yellow {
+  top: 202px;
   height: 38px;
+  background: var(--yellow);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 /* The Chunky Handheld Shell */
 .comic-phone {
-  width: min(450px, 95vw);
-  height: min(850px, 94vh);
-  background: var(--gadget-shell);
-  background-image: linear-gradient(145deg, var(--gadget-shell-light) 0%, var(--gadget-shell) 35%, var(--gadget-shell-dark) 100%);
-  border: var(--border-heavy);
-  border-radius: 36px;
+  width: var(--phone-w);
+  height: var(--phone-h);
+  max-width: 95vw;
+  max-height: 96vh;
+  background: linear-gradient(180deg, var(--plastic-1) 0%, var(--plastic-2) 100%);
+  border: 3px solid var(--plastic-edge);
+  border-radius: var(--phone-radius);
   box-shadow: 
-    0 0 0 2px var(--gadget-shell-light) inset,
-    8px 10px 0 var(--black),
-    0 20px 45px rgba(0, 0, 0, 0.85);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.6),
+    0 20px 50px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  padding: 10px 10px 8px;
-  transition: transform 0.2s ease;
-  transform: rotate(-0.5deg);
+  padding: 12px 14px 14px;
+  box-sizing: border-box;
 }
 
 .comic-phone:hover {
-  transform: rotate(0deg);
+  transform: none;
 }
 
 .comic-phone.shake-intense {
@@ -1174,38 +1344,22 @@ body.angry-shake {
 .gadget-top-shell {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 2px 14px 6px;
+  justify-content: center;
+  position: relative;
+  height: 24px;
+  padding: 4px 14px 2px;
   flex-shrink: 0;
 }
 
-.gadget-speaker-grille {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-}
-
-.gadget-speaker-grille span {
-  width: 5px;
-  height: 5px;
-  background: var(--black);
-  border-radius: 50%;
-  box-shadow: inset 1px 1px 1px rgba(0,0,0,0.8), 0.5px 0.5px 0 rgba(255,255,255,0.15);
-}
-
-.gadget-led-wrap {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 .gadget-led {
+  position: absolute;
+  left: 36px;
   width: 8px;
   height: 8px;
-  background: var(--gadget-led-on);
+  background: var(--red);
   border-radius: 50%;
-  border: 1.5px solid var(--black);
-  box-shadow: var(--gadget-led-glow);
+  border: 1px solid var(--plastic-edge);
+  box-shadow: 0 0 8px var(--red), 0 0 14px rgba(230, 57, 70, 0.7);
   animation: ledBlink 2.2s infinite ease-in-out;
 }
 
@@ -1214,25 +1368,35 @@ body.angry-shake {
   50% { opacity: 0.3; filter: brightness(0.5); }
 }
 
-.gadget-led-label {
-  font-family: var(--font-pixel);
-  font-size: 0.55rem;
-  color: var(--gadget-brand);
-  letter-spacing: 0.5px;
+.gadget-speaker-grille {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.gadget-speaker-grille span {
+  width: 5px;
+  height: 5px;
+  background: #0f1016;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.9), 0 0.5px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* Inset Screen Container with Inner Glow */
 .gadget-screen-container {
-  flex: 1;
-  background: var(--screen-bg);
-  border: 3.5px solid var(--black);
-  border-radius: 20px;
-  box-shadow: var(--screen-inner-shadow), 0 0 0 1.5px var(--gadget-bezel);
+  height: var(--screen-h);
+  background: var(--screen);
+  border: var(--screen-bezel) solid var(--screen-bezel);
+  border-radius: var(--screen-radius);
+  box-shadow: 
+    inset 0 0 25px var(--screen-glow),
+    inset 0 0 12px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  min-height: 0;
+  flex-shrink: 0;
 }
 
 /* Retro Handheld Status Bar (NO NOTCH, Perfectly Centered) */
@@ -1240,16 +1404,14 @@ body.angry-shake {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 12px;
+  padding: 8px 12px 6px;
   font-family: var(--font-pixel);
-  font-size: 0.65rem;
-  background: var(--status-bar-bg);
-  color: var(--status-bar-text);
-  border-bottom: 2px solid var(--black);
+  font-size: 9px;
+  background: transparent;
+  color: var(--yellow);
   z-index: 30;
   gap: 8px;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .phone-status-left {
@@ -1260,7 +1422,7 @@ body.angry-shake {
 
 .phone-time {
   font-family: var(--font-pixel);
-  font-size: 0.68rem;
+  font-size: 9px;
   letter-spacing: 0.5px;
   color: var(--yellow);
 }
@@ -1269,11 +1431,10 @@ body.angry-shake {
   display: flex;
   align-items: center;
   gap: 5px;
-  background: #252836;
-  border: 1.5px solid var(--black);
-  padding: 2px 8px;
-  border-radius: 10px;
-  box-shadow: 1px 1px 0 var(--black);
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
   cursor: pointer;
   transition: transform 0.12s ease;
 }
@@ -1282,30 +1443,32 @@ body.angry-shake {
   transform: scale(1.05);
 }
 
-.anger-icon {
-  font-size: 0.9rem;
-  line-height: 1;
+.anger-label-text {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--yellow);
+  letter-spacing: 0.5px;
 }
 
 .anger-meter-track {
   width: 44px;
-  height: 6px;
+  height: 7px;
   background: #111218;
-  border-radius: 3px;
-  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 2px;
+  border: 1px solid var(--outline);
   overflow: hidden;
 }
 
 .anger-meter-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--yellow), var(--red));
+  background: var(--yellow);
   transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .anger-val {
   font-family: var(--font-pixel);
-  font-size: 0.62rem;
-  color: var(--red);
+  font-size: 8px;
+  color: var(--yellow);
   letter-spacing: 0.3px;
 }
 
@@ -1315,25 +1478,20 @@ body.angry-shake {
   gap: 6px;
 }
 
-.phone-wifi svg {
-  display: block;
-  stroke: var(--cyan);
-}
-
 .phone-battery {
   font-family: var(--font-pixel);
-  font-size: 0.62rem;
+  font-size: 9px;
   color: var(--yellow);
-  background: #232534;
-  padding: 2px 6px;
-  border-radius: 6px;
-  border: 1px solid var(--black);
-  box-shadow: 1px 1px 0 var(--black);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
 }
 
 .phone-battery.battery-low {
-  color: #FFF;
-  background: var(--red);
+  color: var(--red);
+  background: transparent;
   animation: batteryPulse 1s infinite alternate;
 }
 
@@ -1399,7 +1557,8 @@ body.angry-shake {
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #FFFFFF;
+  background: var(--screen);
+  color: var(--text);
 }
 
 .phone-screen.active {
@@ -1409,8 +1568,8 @@ body.angry-shake {
 
 /* App Bar inside Sub-screens */
 .screen-app-bar {
-  background: var(--yellow);
-  border-bottom: var(--border-thick);
+  background: transparent;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
   padding: 8px 12px;
   display: flex;
   align-items: center;
@@ -1421,17 +1580,21 @@ body.angry-shake {
 }
 
 .btn-screen-back {
-  font-family: 'Bangers', cursive;
-  font-size: 1.05rem;
+  font-family: var(--font-heading);
+  font-size: 14px;
   letter-spacing: 0.5px;
-  background: var(--white);
-  color: var(--black);
-  border: 2px solid var(--black);
-  box-shadow: 2px 2px 0 var(--black);
-  border-radius: 10px;
-  padding: 4px 10px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: 2px solid var(--outline);
+  box-shadow: 2px 2px 0 var(--outline);
+  border-radius: var(--btn-radius);
+  padding: 3px 10px;
   cursor: pointer;
   transition: all 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
 }
 
 .btn-screen-back:hover {
@@ -1445,12 +1608,13 @@ body.angry-shake {
 }
 
 .app-bar-title {
-  font-family: 'Bangers', cursive;
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   letter-spacing: 0.8px;
-  color: var(--black);
+  color: var(--yellow);
   flex: 1;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .screen-content {
@@ -2421,105 +2585,92 @@ body.angry-shake {
 }
 
 /* =========================================
-   CHUNKY GADGET BRAND & BOTTOM NAVIGATION BAR
+   CHUNKY GADGET PHYSICAL NAV KEYS & BRAND LABEL
    ========================================= */
-.gadget-brand-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 6px 4px 4px;
-  flex-shrink: 0;
-}
-
-.gadget-brand-line {
-  flex: 1;
-  height: 2px;
-  background: rgba(0, 0, 0, 0.45);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.gadget-brand-text {
-  font-family: var(--font-pixel);
-  font-size: 0.68rem;
-  letter-spacing: 2px;
-  color: var(--gadget-brand);
-  text-shadow: 1px 1px 0 var(--black);
-  user-select: none;
-}
-
-.gadget-brand-text span {
-  color: var(--yellow);
-  font-size: 0.62rem;
-}
-
-/* Chunky Physical Bottom Nav Buttons Under Screen */
 .phone-nav-bar {
-  height: 52px;
-  background: #181920;
-  border: var(--border-thick);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 4px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px 4px 6px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   flex-shrink: 0;
-  gap: 6px;
-  box-shadow: 0 2px 0 var(--gadget-shell-light) inset, 2px 2px 0 var(--black);
+  width: 100%;
 }
 
 .nav-item {
-  flex: 1;
-  height: 100%;
+  height: 38px;
+  background: var(--key);
+  color: var(--text);
+  border: 2px solid var(--outline);
+  border-radius: var(--btn-radius);
+  box-shadow: 0 3px 0 #1c1c24, 0 4px 2px rgba(0, 0, 0, 0.4);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #282b36;
-  border: 2px solid var(--black);
-  border-radius: 8px;
-  box-shadow: 2px 2px 0 var(--black);
   cursor: pointer;
+  padding: 0;
   transition: all 0.12s ease;
-  color: #8f97a8;
-  padding: 2px;
+}
+
+.nav-item .nav-label {
+  font-family: var(--font-heading);
+  font-size: 14.5px;
+  letter-spacing: 0.8px;
+  color: var(--text);
+  margin-top: 0;
+  line-height: 1;
+}
+
+.nav-item .nav-icon {
+  display: none !important;
 }
 
 .nav-item:hover {
-  background: #353947;
-  color: var(--white);
+  background: #3e3e4c;
   transform: translateY(-1px);
+  box-shadow: 0 4px 0 #1c1c24;
+}
+
+.nav-item:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1c1c24;
 }
 
 .nav-item.active {
   background: var(--yellow);
-  color: var(--black);
-  border-color: var(--black);
-  box-shadow: 0 0 12px rgba(255, 212, 0, 0.65), 2px 2px 0 var(--black);
+  color: var(--ink);
+  border-color: var(--outline);
+  box-shadow: 0 3px 0 #b39500, 0 0 14px rgba(255, 212, 0, 0.5);
   transform: translateY(1px);
 }
 
 .nav-item.active .nav-label {
-  color: var(--black);
-  font-weight: 700;
+  color: var(--ink);
 }
 
-.nav-item.active .nav-icon svg {
-  stroke: var(--black);
-}
-
-.nav-icon {
+/* Chunky Handheld Brand Label Under Nav Keys */
+.gadget-brand-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
+  padding: 6px 0 2px;
+  flex-shrink: 0;
 }
 
-.nav-icon svg {
-  display: block;
+.gadget-brand-line {
+  display: none;
 }
 
-.nav-label {
+.gadget-brand-text {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--label);
+  text-shadow: 1px 1px 0 #000;
+  user-select: none;
+}
   font-family: var(--font-pixel);
   font-size: 0.58rem;
   letter-spacing: 0.3px;

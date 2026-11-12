@@ -1,0 +1,51 @@
+/* Dark Retro theme tokens for Recipe Roulette: Shinchan Edition.
+   Reference only: copy these into css/style.css as the theme variables. */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;600&family=Press+Start+2P&display=swap');
+
+:root {
+  /* Page */
+  --bg: #0f0f1a;
+  --bg-glow: #1b1b36;
+  --grid-line: #ffd40010;           /* 40px grid */
+  --scanline: #00000030;            /* 1px line every 4px, ~5% feel */
+
+  /* Accents (Shinchan yellow and red) */
+  --yellow: #FFD400;
+  --red: #E63946;
+  --teal: #A8E6D8;
+
+  /* Panels and screen */
+  --panel: #17172e;                 /* side panels, 3px yellow border */
+  --screen: #12122a;                /* phone screen background */
+  --screen-bezel: #0a0a12;          /* 6px bezel */
+  --screen-glow: #ffd40030;         /* inset glow */
+
+  /* Cards inside the screen */
+  --cream: #FFF6DC;
+  --ink: #12122a;                   /* text on yellow/cream buttons */
+  --card-ink: #1a1a1a;
+  --quote-bg: #E8EEFF;
+  --outline: #000000;               /* 2-3px outlines, hard shadows */
+
+  /* Text */
+  --text: #F4EEDC;
+  --muted: #c9c4b4;
+  --label: #9a9aa8;                 /* SHIN-TEL label */
+
+  /* Handheld body */
+  --plastic-1: #42424f;
+  --plastic-2: #24242c;
+  --plastic-edge: #0b0b10;
+  --key: #34343f;                   /* nav keys, active = --yellow + glow */
+
+  /* Type */
+  --font-heading: 'Bangers', cursive;
+  --font-body: 'Fredoka', sans-serif;
+  --font-pixel: 'Press Start 2P', monospace; /* tiny labels only, 8-9px */
+
+  /* Shape */
+  --phone-w: 360px;  --phone-h: 700px;  --phone-radius: 46px;
+  --screen-h: 470px; --screen-radius: 18px;
+  --btn-radius: 6px; --btn-shadow: 2px 2px 0 var(--outline);
+  --card-shadow: 3px 3px 0 var(--red);
+}

@@ -2269,6 +2269,26 @@ function attachEvents() {
     fallbackDisplay.classList.remove('active');
     document.getElementById('ingredients-panel').scrollIntoView({ behavior: 'smooth' });
   });
+
+  // Retro Side Panel "TRY IT" Button (Recipe of the Day: Curd Rice Tadka)
+  const btnSideTry = document.getElementById('btn-side-try');
+  if (btnSideTry) {
+    btnSideTry.addEventListener('click', () => {
+      showPhoneScreen('fridge');
+      // Curd Rice Tadka is a local kitchen specialty; switch to local mode
+      if (kitchenMode === 'world') {
+        const btnLocal = document.getElementById('btn-mode-local');
+        if (btnLocal) btnLocal.click();
+      }
+      clearSelections();
+      ['rice', 'curd', 'chilli'].forEach(ing => {
+        selectedIngredients.add(ing);
+      });
+      renderChips();
+      updateSelectedCount();
+      cookSomething();
+    });
+  }
 }
 
 // Kick off when DOM is ready

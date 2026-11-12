@@ -247,22 +247,31 @@ async def run_comprehensive_test():
                 })
                 await asyncio.sleep(0.3)
                 
-                # Check for horizontal overflow on key phone elements
-                overflow_check = await send('Runtime.evaluate', {
+                # Check for horizontal overflow on key phone elements & side panel visibility
+                panel_check = await send('Runtime.evaluate', {
                     'expression': """(() => {
                         const phone = document.getElementById('comic-phone');
                         const viewport = document.getElementById('phone-screens-viewport');
                         const cardActions = document.querySelector('.card-actions');
+                        const leftPanel = document.querySelector('.side-panel-left');
+                        const rightPanel = document.querySelector('.side-panel-right');
+                        const leftDisplay = leftPanel ? window.getComputedStyle(leftPanel).display : 'none';
+                        const rightDisplay = rightPanel ? window.getComputedStyle(rightPanel).display : 'none';
                         return {
                             phoneOverflow: phone ? phone.scrollWidth > phone.clientWidth : false,
-                            cardActionsOverflow: cardActions ? cardActions.scrollWidth > cardActions.clientWidth : false
+                            cardActionsOverflow: cardActions ? cardActions.scrollWidth > cardActions.clientWidth : false,
+                            sidePanelsVisible: leftDisplay !== 'none' && rightDisplay !== 'none'
                         };
                     })()""",
                     'returnByValue': True
                 })
-                of_res = overflow_check.get('result', {}).get('value', {})
-                print(f"    Viewport [{vp['name']}]: Overflow Check:", of_res)
+                of_res = panel_check.get('result', {}).get('value', {})
+                print(f"    Viewport [{vp['name']}]: Check:", of_res)
                 assert of_res.get('phoneOverflow') is False, f"Phone overflowed horizontally at {vp['name']}!"
+                if vp['width'] >= 1024:
+                    assert of_res.get('sidePanelsVisible') is True, f"Side panels should be visible at {vp['name']}!"
+                else:
+                    assert of_res.get('sidePanelsVisible') is False, f"Side panels should be hidden at {vp['name']}!"
 
                 # Take screenshot
                 ss = await send('Page.captureScreenshot', {'format': 'png'})
@@ -271,8 +280,27 @@ async def run_comprehensive_test():
                         f.write(base64.b64decode(ss['data']))
                     print(f"    Saved screenshot: tests/preview_{vp['name']}.png")
 
-            # Check 11: Final Console & Network Error Assertions
-            print("11. Checking Console and Network Errors...")
+            # Check 11: Test Side Panel "TRY IT" Button (Curd Rice Tadka)
+            print("11. Testing Side Panel 'TRY IT' Button...")
+            await send('Emulation.setDeviceMetricsOverride', {'width': 1920, 'height': 1080, 'deviceScaleFactor': 1, 'mobile': False})
+            await asyncio.sleep(0.3)
+            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-side-try").click()'})
+            await asyncio.sleep(2.5)
+            side_try_result = await send('Runtime.evaluate', {
+                'expression': """(() => ({
+                    screen: currentPhoneScreen,
+                    title: document.getElementById('card-recipe-title').textContent.trim(),
+                    displayActive: document.getElementById('recipe-display').classList.contains('active')
+                }))()""",
+                'returnByValue': True
+            })
+            val_side_try = side_try_result.get('result', {}).get('value', {})
+            print("    Side 'TRY IT' Result:", val_side_try)
+            assert val_side_try.get('screen') == 'fridge', "Screen did not switch to fridge!"
+            assert val_side_try.get('displayActive') is True, "Recipe display not active after TRY IT!"
+
+            # Check 12: Final Console & Network Error Assertions
+            print("12. Checking Console and Network Errors...")
             print("    Console errors detected:", console_errors)
             print("    Network errors (4xx/5xx) detected:", network_errors)
             assert len(console_errors) == 0, f"Found console errors: {console_errors}"
