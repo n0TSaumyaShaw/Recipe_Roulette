@@ -116,15 +116,17 @@ This repository is pre-configured for zero-config Vercel deployment:
 
 ## 📸 Screenshots
 
-*(Replace placeholders with project screenshots)*
-
 | Phone Home Screen | Recipe Roulette (Fridge) |
 |:---:|:---:|
-| ![Home Screen Placeholder](docs/screenshots/home.png) | ![Fridge Placeholder](docs/screenshots/fridge.png) |
+| ![Phone Home Screen](docs/screenshots/home.png) | ![Recipe Roulette Fridge](docs/screenshots/fridge.png) |
 
 | World Kitchen Mode | Mom's 100% Rage Modal |
 |:---:|:---:|
-| ![World Kitchen Placeholder](docs/screenshots/world.png) | ![Rage Modal Placeholder](docs/screenshots/rage.png) |
+| ![World Kitchen Mode](docs/screenshots/world.png) | ![Mom's 100% Rage Modal](docs/screenshots/rage.png) |
+
+| Shiro's Pet Care & Gallery | Kasukabe Contacts |
+|:---:|:---:|
+| ![Shiro Pet Care and Gallery](docs/screenshots/shiro.png) | ![Kasukabe Contacts Directory](docs/screenshots/contacts.png) |
 
 ---
 

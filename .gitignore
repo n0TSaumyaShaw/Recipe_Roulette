@@ -12,7 +12,8 @@ __pycache__/
 *.pyc
 *.pyo
 tests/*.png
-screenshots/
+/screenshots/
+!docs/screenshots/
 
 # Logs & Environment
 *.log
