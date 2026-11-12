@@ -1118,25 +1118,67 @@ function calmMomAnger() {
 
 // Sliding Notification Banner (~15s recurring)
 const PHONE_NOTIFICATIONS = [
-  { title: "ACTION KAMEN ALERT!", text: "Special episode 'Action Beam vs Black Mask' is airing now!", icon: "⚡" },
-  { title: "MOM (MISAE)", text: "Shinchan! Where did you hide my chocolate cake?!", icon: "👩" },
-  { title: "SHIRO", text: "*Bark bark!* (Translation: Please feed me, Shinchan forgot again!)", icon: "🐶" },
-  { title: "DAD (HIROSHI)", text: "Only 31 years and 11 months left on the house mortgage...", icon: "💼" },
-  { title: "CHOCOBI DISPATCH", text: "Emergency! Golden dinosaur cards detected at Kasukabe mart!", icon: "🍫" },
-  { title: "KAZAMA-KUN", text: "Shinchan, stop singing Moe-P opening theme in front of my tutor!", icon: "📚" },
-  { title: "NANAKO ONEE-SAN", text: "Hi Shinchan! I baked homemade cookies today!", icon: "🥰" },
-  { title: "BURI BURI ZAEMON", text: "I am a hero on the side of justice! Rescue fee is 10,000 yen!", icon: "🐷" },
-  { title: "YOSHINAGA-SENSEI", text: "Sunflower class art supplies are NOT for face painting!", icon: "🎨" }
+  { 
+    title: "ACTION KAMEN ALERT!", 
+    text: "Special episode 'Action Beam vs Black Mask' is airing now!", 
+    image: "assets/images/avatars/action-kamen-pfp.jpg",
+    icon: "⚡" 
+  },
+  { 
+    title: "MOM (MISAE)", 
+    text: "Shinchan! Where did you hide my chocolate cake?!", 
+    image: "assets/images/avatars/misae-pfp.webp",
+    icon: "👩" 
+  },
+  { 
+    title: "SHIRO", 
+    text: "*Bark bark!* (Translation: Please feed me, Shinchan forgot again!)", 
+    image: "assets/images/avatars/shiro-pfp.jpg",
+    icon: "🐶" 
+  },
+  { 
+    title: "DAD (HIROSHI)", 
+    text: "Only 31 years and 11 months left on the house mortgage...", 
+    image: "assets/images/avatars/hiroshi-pfp.jpg",
+    icon: "👔" 
+  },
+  { 
+    title: "CHOCOBI DISPATCH", 
+    text: "Emergency! Golden dinosaur cards detected at Kasukabe mart!", 
+    icon: "🍫" 
+  },
+  { 
+    title: "KAZAMA-KUN", 
+    text: "Shinchan, stop singing Moe-P opening theme in front of my tutor!", 
+    image: "assets/images/avatars/kazama-pfp.jpg",
+    icon: "🎒" 
+  },
+  { 
+    title: "NANAKO ONEE-SAN", 
+    text: "Hi Shinchan! I baked homemade cookies today!", 
+    image: "assets/images/avatars/nanako-pfp.jpg",
+    icon: "💖" 
+  },
+  { 
+    title: "BURI BURI ZAEMON", 
+    text: "I am a hero on the side of justice! Rescue fee is 10,000 yen!", 
+    icon: "🐷" 
+  },
+  { 
+    title: "YOSHINAGA-SENSEI", 
+    text: "Sunflower class art supplies are NOT for face painting!", 
+    icon: "🎨" 
+  }
 ];
 let notifCycleIndex = 0;
 
 function triggerRandomNotification() {
   const item = PHONE_NOTIFICATIONS[notifCycleIndex % PHONE_NOTIFICATIONS.length];
   notifCycleIndex++;
-  triggerPhoneNotification(item.title, item.text, item.icon);
+  triggerPhoneNotification(item.title, item.text, item.icon, item.image);
 }
 
-function triggerPhoneNotification(title, text, icon) {
+function triggerPhoneNotification(title, text, icon, maybeImage) {
   const notif = document.getElementById('phone-notif');
   const tEl = document.getElementById('notif-title');
   const subEl = document.getElementById('notif-text');
@@ -1144,7 +1186,20 @@ function triggerPhoneNotification(title, text, icon) {
   if (!notif) return;
   if (tEl) tEl.textContent = title;
   if (subEl) subEl.textContent = text;
-  if (iEl) iEl.textContent = icon || "⚡";
+
+  // Determine if there is an image avatar
+  let imgSrc = maybeImage || null;
+  if (!imgSrc && typeof icon === 'string' && (icon.includes('/') || icon.endsWith('.jpg') || icon.endsWith('.webp') || icon.endsWith('.png'))) {
+    imgSrc = icon;
+  }
+
+  if (iEl) {
+    if (imgSrc) {
+      iEl.innerHTML = `<img src="${imgSrc}" alt="${title}" class="notif-img" />`;
+    } else {
+      iEl.textContent = icon || "⚡";
+    }
+  }
 
   notif.classList.remove('show');
   void notif.offsetWidth;

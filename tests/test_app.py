@@ -201,6 +201,59 @@ async def run_comprehensive_test():
                 assert cur.get('result', {}).get('value') == app, f"Failed navigating to app: {app}"
                 print(f"   ✓ App [{app}] navigated successfully")
 
+            # Check 3b: Test Contacts App PFPs and Pop-Down Notification Avatars
+            print("2b. Testing Contacts PFPs and Notification Avatars...")
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("contacts")'})
+            await asyncio.sleep(0.3)
+
+            contact_pfps_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const cards = Array.from(document.querySelectorAll('#contacts-list .contact-card'));
+                    return cards.map(c => {
+                        const caller = c.dataset.caller;
+                        const img = c.querySelector('img.contact-pfp');
+                        return {
+                            caller,
+                            hasImg: !!img,
+                            src: img ? img.getAttribute('src') : null,
+                            loaded: img ? (img.complete && img.naturalWidth > 0) : false
+                        };
+                    });
+                })()""",
+                'returnByValue': True
+            })
+            pfp_list = contact_pfps_check.get('result', {}).get('value', [])
+            print("   Contact Cards PFPs:", pfp_list)
+            assert len(pfp_list) == 6, f"Expected 6 contact cards, got {len(pfp_list)}"
+            for c in pfp_list:
+                assert c['hasImg'], f"Contact {c['caller']} is missing img.contact-pfp!"
+                assert c['loaded'], f"Contact {c['caller']} image failed to load: {c['src']}"
+
+            # Test Pop-Down Notification avatar rendering
+            await send('Runtime.evaluate', {
+                'expression': 'triggerPhoneNotification("DAD (HIROSHI)", "Mortgage reminder...", "👔", "assets/images/avatars/hiroshi-pfp.jpg")'
+            })
+            await asyncio.sleep(0.4)
+
+            notif_avatar_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const notif = document.getElementById('phone-notif');
+                    const img = notif ? notif.querySelector('img.notif-img') : null;
+                    return {
+                        hasShow: notif ? notif.classList.contains('show') : false,
+                        hasImg: !!img,
+                        src: img ? img.getAttribute('src') : null,
+                        loaded: img ? (img.complete && img.naturalWidth > 0) : false
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            nac = notif_avatar_check.get('result', {}).get('value', {})
+            print("   Notification Pop-Down Avatar Check:", nac)
+            assert nac.get('hasShow') is True, "Notification banner did not get .show class!"
+            assert nac.get('hasImg') is True, "Notification banner missing img.notif-img!"
+            assert nac.get('loaded') is True, f"Notification banner image failed to load: {nac.get('src')}"
+
             # Check 4: Test Sound FX in Settings App
             print("3. Testing Sound FX control via Settings toggle only...")
             await send('Runtime.evaluate', {'expression': 'showPhoneScreen("settings")'})
