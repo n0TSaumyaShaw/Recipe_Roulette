@@ -435,6 +435,38 @@ async def run_comprehensive_test():
             print("   Shiro Storage Check:", ssc)
             assert ssc.get('exists') is True and ssc.get('pets') >= 4, "Shiro state not persisted in localStorage!"
 
+            # Test Shiro Polaroid Gallery Photos
+            print("4c. Testing Shiro Polaroid Gallery photos and captions...")
+            gallery_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const cards = Array.from(document.querySelectorAll('#screen-shiro .polaroid-card'));
+                    return cards.map(c => {
+                        const img = c.querySelector('img.polaroid-img');
+                        const caption = c.querySelector('.polaroid-caption');
+                        return {
+                            caption: caption ? caption.textContent.trim() : null,
+                            hasImg: !!img,
+                            src: img ? img.getAttribute('src') : null,
+                            loaded: img ? (img.complete && img.naturalWidth > 0) : false
+                        };
+                    });
+                })()""",
+                'returnByValue': True
+            })
+            gc = gallery_check.get('result', {}).get('value', [])
+            print("   Shiro Gallery Cards Check:", gc)
+            assert len(gc) == 4, f"Expected 4 polaroid cards, got {len(gc)}"
+            expected_captions = [
+                "Shiro Cotton Candy",
+                "Bone Guardy dog",
+                "Walking himself",
+                "Nap time in dog house"
+            ]
+            for i, card in enumerate(gc):
+                assert card['caption'] == expected_captions[i], f"Expected caption {expected_captions[i]}, got {card['caption']}"
+                assert card['hasImg'], f"Card {card['caption']} missing img.polaroid-img!"
+                assert card['loaded'], f"Card image failed to load: {card['src']}"
+
             # Check 6: Test Recipe Roulette Cooking in Fridge
             print("5. Testing Recipe Roulette in Fridge Screen...")
             await send('Runtime.evaluate', {'expression': 'showPhoneScreen("fridge")'})
@@ -777,6 +809,15 @@ async def run_comprehensive_test():
                         with open(filename, 'wb') as f:
                             f.write(base64.b64decode(shot['data']))
                         print(f"   Saved: {filename}")
+
+                    if sc == 'shiro' and vp['suffix'] == '1366px':
+                        await send('Runtime.evaluate', {'expression': 'document.querySelector(".polaroid-grid").scrollIntoView({behavior: "instant", block: "center"})'})
+                        await asyncio.sleep(0.2)
+                        gal_shot = await send('Page.captureScreenshot', {'format': 'png'})
+                        if gal_shot.get('data'):
+                            with open('screenshots/shiro_gallery_1366px.png', 'wb') as f:
+                                f.write(base64.b64decode(gal_shot['data']))
+                            print("   Saved: screenshots/shiro_gallery_1366px.png")
 
             # Check 9: Final Console & Network Error Assertions
             print("\n8. Checking final Console and Network errors...")

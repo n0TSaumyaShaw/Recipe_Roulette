@@ -162,7 +162,7 @@ function setSoundEnabled(enabled, clientX, clientY, persist = true) {
         state.prefs.muted = !soundEnabled;
         saveState();
       }
-    } catch (e) {}
+    } catch (e) { }
   }
   const soundFxToggle = document.getElementById('setting-sound-fx');
   if (soundFxToggle && soundFxToggle.checked !== soundEnabled) {
@@ -966,7 +966,7 @@ function resetState() {
   inMemoryState = fresh;
   try {
     localStorage.removeItem(STORAGE_KEY);
-  } catch (err) {}
+  } catch (err) { }
   saveState(fresh);
   return inMemoryState;
 }
@@ -1118,56 +1118,56 @@ function calmMomAnger() {
 
 // Sliding Notification Banner (~15s recurring)
 const PHONE_NOTIFICATIONS = [
-  { 
-    title: "ACTION KAMEN ALERT!", 
-    text: "Special episode 'Action Beam vs Black Mask' is airing now!", 
+  {
+    title: "ACTION KAMEN ALERT!",
+    text: "Special episode 'Action Beam vs Black Mask' is airing now!",
     image: "assets/images/avatars/action-kamen-pfp.jpg",
-    icon: "⚡" 
+    icon: "⚡"
   },
-  { 
-    title: "MOM (MISAE)", 
-    text: "Shinchan! Where did you hide my chocolate cake?!", 
+  {
+    title: "MOM (MISAE)",
+    text: "Shinchan! Where did you hide my chocolate cake?!",
     image: "assets/images/avatars/misae-pfp.webp",
-    icon: "👩" 
+    icon: "👩"
   },
-  { 
-    title: "SHIRO", 
-    text: "*Bark bark!* (Translation: Please feed me, Shinchan forgot again!)", 
+  {
+    title: "SHIRO",
+    text: "*Bark bark!* (Translation: Please feed me, Shinchan forgot again!)",
     image: "assets/images/avatars/shiro-pfp.jpg",
-    icon: "🐶" 
+    icon: "🐶"
   },
-  { 
-    title: "DAD (HIROSHI)", 
-    text: "Only 31 years and 11 months left on the house mortgage...", 
+  {
+    title: "DAD (HIROSHI)",
+    text: "Only 31 years and 11 months left on the house mortgage...",
     image: "assets/images/avatars/hiroshi-pfp.jpg",
-    icon: "👔" 
+    icon: "👔"
   },
-  { 
-    title: "CHOCOBI DISPATCH", 
-    text: "Emergency! Golden dinosaur cards detected at Kasukabe mart!", 
-    icon: "🍫" 
+  {
+    title: "CHOCOBI DISPATCH",
+    text: "Emergency! Golden dinosaur cards detected at Kasukabe mart!",
+    icon: "🍫"
   },
-  { 
-    title: "KAZAMA-KUN", 
-    text: "Shinchan, stop singing Moe-P opening theme in front of my tutor!", 
+  {
+    title: "KAZAMA-KUN",
+    text: "Shinchan, stop singing Moe-P opening theme in front of my tutor!",
     image: "assets/images/avatars/kazama-pfp.jpg",
-    icon: "🎒" 
+    icon: "🎒"
   },
-  { 
-    title: "NANAKO ONEE-SAN", 
-    text: "Hi Shinchan! I baked homemade cookies today!", 
+  {
+    title: "NANAKO ONEE-SAN",
+    text: "Hi Shinchan! I baked homemade cookies today!",
     image: "assets/images/avatars/nanako-pfp.jpg",
-    icon: "💖" 
+    icon: "💖"
   },
-  { 
-    title: "BURI BURI ZAEMON", 
-    text: "I am a hero on the side of justice! Rescue fee is 10,000 yen!", 
-    icon: "🐷" 
+  {
+    title: "BURI BURI ZAEMON",
+    text: "I am a hero on the side of justice! Rescue fee is 10,000 yen!",
+    icon: "🐷"
   },
-  { 
-    title: "YOSHINAGA-SENSEI", 
-    text: "Sunflower class art supplies are NOT for face painting!", 
-    icon: "🎨" 
+  {
+    title: "YOSHINAGA-SENSEI",
+    text: "Sunflower class art supplies are NOT for face painting!",
+    icon: "🎨"
   }
 ];
 let notifCycleIndex = 0;
@@ -1767,7 +1767,7 @@ function initPhoneOS() {
       gain.connect(ctx.destination);
       osc.start(now);
       osc.stop(now + 0.14);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function synthPant() {
@@ -1786,7 +1786,7 @@ function initPhoneOS() {
       gain.connect(ctx.destination);
       osc.start(now);
       osc.stop(now + 0.09);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function synthYawn() {
@@ -1806,7 +1806,7 @@ function initPhoneOS() {
       gain.connect(ctx.destination);
       osc.start(now);
       osc.stop(now + 0.5);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function synthHappyBlip() {
@@ -1827,7 +1827,7 @@ function initPhoneOS() {
         osc.start(now + idx * 0.08);
         osc.stop(now + idx * 0.08 + 0.12);
       });
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // Mood evaluation function (with testHour parameter)
@@ -1992,7 +1992,7 @@ function initPhoneOS() {
 
       const latestDish = appState.history[0];
       const dishName = latestDish.name;
-      
+
       // Look up ingredients
       let ingredients = [];
       if (allRecipes && allRecipes.length > 0) {
@@ -2002,7 +2002,7 @@ function initPhoneOS() {
 
       const spicyKeywords = ['chilli', 'pepper', 'masala', 'spicy', 'mirch', 'jalapeno', 'schezwan', 'curry', 'tadka'];
       const isSpicy = ingredients.some(ing => spicyKeywords.some(kw => ing.toLowerCase().includes(kw))) ||
-                      spicyKeywords.some(kw => dishName.toLowerCase().includes(kw));
+        spicyKeywords.some(kw => dishName.toLowerCase().includes(kw));
 
       if (isSpicy) {
         if (speech) speech.textContent = `YELP! '${dishName}' is way too spicy for a puppy! Need water quick!`;
@@ -2387,7 +2387,7 @@ function renderChips() {
       <span>${name}</span>
       <span class="chip-custom-delete" title="Remove custom ingredient">✕</span>
     `;
-    
+
     chipEl.addEventListener('click', (e) => {
       if (e.target.classList.contains('chip-custom-delete')) {
         e.stopPropagation();
