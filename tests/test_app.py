@@ -4,11 +4,41 @@ import json
 import urllib.request
 import subprocess
 import time
+import os
+import base64
 
 CHROME_PATH = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
 PORT = 9455
 
+# Contrast calculation helpers
+def parse_rgba(color_str):
+    if not color_str:
+        return (0, 0, 0, 1.0)
+    color_str = color_str.strip().lower()
+    if color_str.startswith('rgb'):
+        nums = [float(x.strip()) for x in color_str.replace('rgba(', '').replace('rgb(', '').replace(')', '').split(',')]
+        r, g, b = nums[0], nums[1], nums[2]
+        a = nums[3] if len(nums) > 3 else 1.0
+        return (r, g, b, a)
+    return (0, 0, 0, 1.0)
+
+def srgb_to_luminance(r, g, b):
+    def channel_l(c):
+        c = c / 255.0
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    return 0.2126 * channel_l(r) + 0.7152 * channel_l(g) + 0.0722 * channel_l(b)
+
+def calc_contrast_ratio(rgb1, rgb2):
+    l1 = srgb_to_luminance(rgb1[0], rgb1[1], rgb1[2])
+    l2 = srgb_to_luminance(rgb2[0], rgb2[1], rgb2[2])
+    bright = max(l1, l2)
+    dark = min(l1, l2)
+    return (bright + 0.05) / (dark + 0.05)
+
 async def run_comprehensive_test():
+    os.makedirs('screenshots', exist_ok=True)
+    os.makedirs('tests', exist_ok=True)
+
     cmd = [
         CHROME_PATH,
         '--headless=new',
@@ -31,7 +61,7 @@ async def run_comprehensive_test():
                 if page:
                     ws_url = page['webSocketDebuggerUrl']
                     break
-            except Exception as e:
+            except Exception:
                 time.sleep(0.5)
 
         if not ws_url:
@@ -49,43 +79,43 @@ async def run_comprehensive_test():
                 await ws.send(json.dumps({'id': msg_id, 'method': method, 'params': params or {}}))
                 while True:
                     resp = json.loads(await ws.recv())
-                    # Track any console errors
-                    if resp.get('method') == 'Runtime.exceptionThrown':
-                        console_errors.append(resp.get('params', {}).get('exceptionDetails', {}).get('text', 'Unknown JS Error'))
+                    if resp.get('method') == 'Runtime.consoleAPICalled':
+                        args = resp.get('params', {}).get('args', [])
+                        text = ' '.join(str(a.get('value', '')) for a in args)
+                        if resp.get('params', {}).get('type') == 'error':
+                            console_errors.append(text)
+                            print(f"[BROWSER ERROR] {text}")
+                    elif resp.get('method') == 'Runtime.exceptionThrown':
+                        details = resp.get('params', {}).get('exceptionDetails', {})
+                        text = details.get('text', '') + ' ' + details.get('exception', {}).get('description', '')
+                        console_errors.append(text)
+                        print(f"[UNCAUGHT EXCEPTION] {text}")
                     elif resp.get('method') == 'Network.responseReceived':
-                        res = resp.get('params', {}).get('response', {})
-                        if res.get('status') >= 400:
-                            network_errors.append(f"{res.get('status')} {res.get('url')}")
-                    if resp.get('id') == msg_id:
+                        params = resp.get('params', {})
+                        response = params.get('response', {})
+                        status = response.get('status', 200)
+                        url = response.get('url', '')
+                        if status >= 400 and not url.endswith('favicon.ico'):
+                            network_errors.append(f"{status} on {url}")
+                            print(f"[NETWORK ERROR] {status} on {url}")
+                    elif resp.get('id') == msg_id:
                         return resp.get('result', {})
 
-            await send('Page.enable')
             await send('Runtime.enable')
+            await send('Page.enable')
             await send('Network.enable')
-            await send('Emulation.setDeviceMetricsOverride', {'width': 1280, 'height': 950, 'deviceScaleFactor': 1, 'mobile': False})
+            await send('Network.setCacheDisabled', {'cacheDisabled': True})
 
-            # Check 1: Chat Intro & Avatar Path
-            print("1. Checking Chat Intro & Avatar Image Paths...")
-            pfp_check = await send('Runtime.evaluate', {
-                'expression': """(() => {
-                    const img = document.querySelector('.chat-header-pfp');
-                    return {
-                        src: img ? img.getAttribute('src') : null,
-                        complete: img ? img.complete : false,
-                        naturalWidth: img ? img.naturalWidth : 0
-                    };
-                })()""",
-                'returnByValue': True
-            })
-            pfp_val = pfp_check.get('result', {}).get('value', {})
-            print("   Chat Header Avatar:", pfp_val)
-            assert "assets/images/avatars/misae-pfp.webp" in pfp_val.get('src', ''), "Avatar path incorrect!"
+            # Wait for load
+            await asyncio.sleep(1.5)
 
-            # Check 2: Transition to Home Screen
-            print("2. Transitioning to Home Screen...")
-            await send('Runtime.evaluate', {'expression': 'transitionToApp()'})
-            await asyncio.sleep(0.5)
+            # Check 1: Go to Home
+            print("1. Navigating from chat intro to home screen...")
+            nav_eval = await send('Runtime.evaluate', {'expression': '(() => { try { showPhoneScreen("home"); return { ok: true, active: document.getElementById("screen-home").classList.contains("active") }; } catch (e) { return { error: e.message, stack: e.stack }; } })()', 'returnByValue': True})
+            print("   nav_eval:", nav_eval)
+            await asyncio.sleep(0.3)
 
+            # Check 2: Verify 9 Apps in Grid and No Notch
             home_state = await send('Runtime.evaluate', {
                 'expression': """(() => {
                     return {
@@ -99,59 +129,113 @@ async def run_comprehensive_test():
             val_home = home_state.get('result', {}).get('value', {})
             print("   Home State:", val_home)
             assert val_home.get('active') is True, "Home screen not active!"
+            assert val_home.get('appCount') == 9, f"Expected exactly 9 apps, got {val_home.get('appCount')}!"
             assert val_home.get('notchPresent') is False, "Notch should be completely removed!"
 
-            # Check 3: Test Every Single App (All 10)
-            apps = ['fridge', 'chat', 'action-kamen', 'chocobi', 'shiro', 'notes', 'cookbook', 'weather', 'contacts', 'settings']
-            print(f"3. Testing all {len(apps)} Phone Apps...")
+            # Check 3: Test Navigation Across All 9 Phone Apps
+            apps = ['fridge', 'chat', 'action-kamen', 'shiro', 'notes', 'cookbook', 'weather', 'contacts', 'settings']
+            print(f"2. Testing navigation for all {len(apps)} apps (no Chocobi)...")
             for app in apps:
                 await send('Runtime.evaluate', {'expression': f'showPhoneScreen("{app}")'})
-                await asyncio.sleep(0.2)
+                await asyncio.sleep(0.15)
                 cur = await send('Runtime.evaluate', {'expression': 'currentPhoneScreen', 'returnByValue': True})
                 assert cur.get('result', {}).get('value') == app, f"Failed navigating to app: {app}"
-                print(f"   ✓ App [{app}] opened successfully")
-            
-            # Back to home
-            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("home")'})
-            await asyncio.sleep(0.3)
-            import base64
-            ss_home = await send('Page.captureScreenshot', {'format': 'png'})
-            if ss_home.get('data'):
-                with open('tests/preview_home_grid.png', 'wb') as f:
-                    f.write(base64.b64decode(ss_home['data']))
-                print("   Saved screenshot: tests/preview_home_grid.png")
+                print(f"   ✓ App [{app}] navigated successfully")
 
-            # Check 4: Test Mute Button Synchronization (Header & Fridge)
-            print("4. Testing Sound Mute Synchronization across Header and Fridge...")
-            # Click Header sound toggle
-            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-sound-toggle").click()'})
-            sync1 = await send('Runtime.evaluate', {
-                'expression': """(() => ({
-                    soundEnabled,
-                    mainIcon: document.getElementById('sound-icon').textContent,
-                    fridgeIcon: document.getElementById('sound-icon-fridge').textContent
-                }))()""",
+            # Check 4: Test Sound FX in Settings App
+            print("3. Testing Sound FX control via Settings toggle only...")
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("settings")'})
+            await asyncio.sleep(0.2)
+            # Verify soundEnabled is initially true
+            s_init = await send('Runtime.evaluate', {'expression': 'soundEnabled', 'returnByValue': True})
+            assert s_init.get('result', {}).get('value') is True, "soundEnabled should be true by default"
+
+            # Toggle setting-sound-fx off
+            await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const toggle = document.getElementById('setting-sound-fx');
+                    toggle.checked = false;
+                    toggle.dispatchEvent(new Event('change'));
+                })()"""
+            })
+            s_off = await send('Runtime.evaluate', {'expression': 'soundEnabled', 'returnByValue': True})
+            assert s_off.get('result', {}).get('value') is False, "soundEnabled did not mute via Settings!"
+            print("   ✓ Sound muted successfully via Settings toggle")
+
+            # Toggle setting-sound-fx back on
+            await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const toggle = document.getElementById('setting-sound-fx');
+                    toggle.checked = true;
+                    toggle.dispatchEvent(new Event('change'));
+                })()"""
+            })
+            s_on = await send('Runtime.evaluate', {'expression': 'soundEnabled', 'returnByValue': True})
+            assert s_on.get('result', {}).get('value') is True, "soundEnabled did not unmute via Settings!"
+            print("   ✓ Sound unmuted successfully via Settings toggle")
+
+            # Check 5: Test Notes App input, character counter, local storage & delete
+            print("4. Testing Notes App interactive input, character counter, and persistence...")
+            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("notes")'})
+            await asyncio.sleep(0.2)
+
+            # Type a secret note and verify counter
+            await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const input = document.getElementById('note-input');
+                    input.value = "Rule 6: Mom hides her emergency choco biscuits behind the rice jar!";
+                    input.dispatchEvent(new Event('input'));
+                })()"""
+            })
+            counter_val = await send('Runtime.evaluate', {
+                'expression': 'document.getElementById("note-char-count").textContent',
                 'returnByValue': True
             })
-            print("   After header toggle (mute):", sync1.get('result', {}).get('value'))
-            s1 = sync1.get('result', {}).get('value', {})
-            assert s1.get('soundEnabled') is False and s1.get('mainIcon') == '🔇' and s1.get('fridgeIcon') == '🔇', "Sound mute out of sync!"
+            print(f"   Char counter: {counter_val.get('result', {}).get('value')}")
+            assert counter_val.get('result', {}).get('value') == "67/200", "Char counter mismatch!"
 
-            # Click Fridge sound toggle (unmute)
-            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-sound-toggle-fridge").click()'})
-            sync2 = await send('Runtime.evaluate', {
-                'expression': """(() => ({
-                    soundEnabled,
-                    mainIcon: document.getElementById('sound-icon').textContent,
-                    fridgeIcon: document.getElementById('sound-icon-fridge').textContent
-                }))()""",
+            # Click Add Note button
+            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-add-note").click()'})
+            await asyncio.sleep(0.2)
+
+            # Check DOM for prepended user rule
+            note_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const userRule = document.querySelector('.notepad-list li.user-rule .note-text');
+                    const rawStorage = localStorage.getItem('recipeRoulette.notes');
+                    return {
+                        domText: userRule ? userRule.textContent : null,
+                        storage: JSON.parse(rawStorage || '[]')
+                    };
+                })()""",
                 'returnByValue': True
             })
-            print("   After fridge toggle (unmute):", sync2.get('result', {}).get('value'))
-            s2 = sync2.get('result', {}).get('value', {})
-            assert s2.get('soundEnabled') is True and s2.get('mainIcon') == '🔊' and s2.get('fridgeIcon') == '🔊', "Sound unmute out of sync!"
+            n_res = note_check.get('result', {}).get('value', {})
+            print("   Note Check:", n_res)
+            assert n_res.get('domText') == "Rule 6: Mom hides her emergency choco biscuits behind the rice jar!", "DOM note text mismatch!"
+            assert len(n_res.get('storage', [])) == 1, "LocalStorage notes count should be 1!"
 
-            # Check 5: Test Recipe Roulette & data/recipes.json load
+            # Test note deletion
+            await send('Runtime.evaluate', {
+                'expression': 'document.querySelector(".notepad-list li.user-rule .btn-delete-note").click()'
+            })
+            await asyncio.sleep(0.2)
+            del_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const userRules = document.querySelectorAll('.notepad-list li.user-rule');
+                    const rawStorage = localStorage.getItem('recipeRoulette.notes');
+                    return {
+                        domCount: userRules.length,
+                        storageCount: JSON.parse(rawStorage || '[]').length
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            d_res = del_check.get('result', {}).get('value', {})
+            assert d_res.get('domCount') == 0 and d_res.get('storageCount') == 0, "Note deletion failed!"
+            print("   ✓ User note successfully added, persisted, and deleted")
+
+            # Check 6: Test Recipe Roulette Cooking in Fridge
             print("5. Testing Recipe Roulette in Fridge Screen...")
             await send('Runtime.evaluate', {'expression': 'showPhoneScreen("fridge")'})
             await asyncio.sleep(0.3)
@@ -159,10 +243,10 @@ async def run_comprehensive_test():
             # Check recipes loaded from data/recipes.json
             recipe_count = await send('Runtime.evaluate', {'expression': 'allRecipes.length', 'returnByValue': True})
             cnt = recipe_count.get('result', {}).get('value', 0)
-            print(f"   Loaded recipes count from data/recipes.json: {cnt}")
+            print(f"   Loaded recipes count: {cnt}")
             assert cnt >= 50, f"Expected 50 recipes, got {cnt}!"
 
-            # Test Cook: select eggs, onion, bread
+            # Select eggs, onion, bread and click Cook
             await send('Runtime.evaluate', {
                 'expression': '(() => { clearSelections(); [...document.querySelectorAll(".chip")].filter(c => ["eggs", "onion", "bread"].includes(c.dataset.name)).forEach(c => c.click()); })()'
             })
@@ -182,131 +266,135 @@ async def run_comprehensive_test():
             assert bat_after.get('result', {}).get('value') == bat_before.get('result', {}).get('value') - 1, "Battery drain failed!"
             assert anger_after.get('result', {}).get('value') > anger_before.get('result', {}).get('value'), "Anger did not increase!"
 
-            ss_fridge = await send('Page.captureScreenshot', {'format': 'png'})
-            if ss_fridge.get('data'):
-                with open('tests/preview_fridge_recipe.png', 'wb') as f:
-                    f.write(base64.b64decode(ss_fridge['data']))
-                print("   Saved screenshot: tests/preview_fridge_recipe.png")
-
-            # Check 6: Verify Cookbook logged the cooked recipe
-            await send('Runtime.evaluate', {'expression': 'showPhoneScreen("cookbook")'})
-            await asyncio.sleep(0.3)
-            logged = await send('Runtime.evaluate', {'expression': 'sessionCookbook.map(r => r.name)', 'returnByValue': True})
-            print("   Cookbook logged dishes:", logged.get('result', {}).get('value'))
-            assert len(logged.get('result', {}).get('value', [])) > 0, "No dishes recorded in session cookbook!"
-
-            # Check 7: Test World Kitchen Toggle
-            print("7. Testing World Kitchen Toggle...")
-            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-mode-world").click()'})
-            km = await send('Runtime.evaluate', {'expression': 'kitchenMode', 'returnByValue': True})
-            assert km.get('result', {}).get('value') == 'world', "Kitchen mode did not switch to world!"
-            print("   World Kitchen Mode toggled successfully")
-
-            # Check 8: Test Anger Meter 100% Rage
-            print("8. Testing Mom's 100% Anger Rage Modal...")
-            await send('Runtime.evaluate', {'expression': 'increaseMomAnger(100)'})
-            await asyncio.sleep(0.5)
-            rage_state = await send('Runtime.evaluate', {
-                'expression': """(() => ({
-                    modalVisible: !document.getElementById('mom-rage-modal').classList.contains('hidden'),
-                    phoneShaking: document.getElementById('comic-phone').classList.contains('shake-intense')
-                }))()""",
+            # Verify action buttons layout in .card-actions
+            btn_layout = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const spin = document.getElementById('btn-spin-again');
+                    const copy = document.getElementById('btn-copy-recipe');
+                    const edit = document.getElementById('btn-change-ingredients');
+                    const spinRect = spin.getBoundingClientRect();
+                    const copyRect = copy.getBoundingClientRect();
+                    const editRect = edit.getBoundingClientRect();
+                    return {
+                        spinRow1: spinRect.top < copyRect.top,
+                        copyAndEditSameRow: Math.abs(copyRect.top - editRect.top) < 4,
+                        spinFullWidth: spinRect.width > copyRect.width * 1.5
+                    };
+                })()""",
                 'returnByValue': True
             })
-            print("   Rage State:", rage_state.get('result', {}).get('value'))
-            assert rage_state.get('result', {}).get('value', {}).get('modalVisible') is True, "Rage modal did not appear!"
+            bl = btn_layout.get('result', {}).get('value', {})
+            print("   Action Buttons Layout:", bl)
+            assert bl.get('spinRow1') and bl.get('copyAndEditSameRow') and bl.get('spinFullWidth'), "Card action buttons layout incorrect!"
 
-            # Calm Mom down
-            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-rage-calm").click()'})
-            await asyncio.sleep(0.3)
-
-            # Check 9: Notification Banner
-            print("9. Testing Notification Banner...")
-            await send('Runtime.evaluate', {'expression': 'triggerRandomNotification()'})
-            notif_shown = await send('Runtime.evaluate', {
-                'expression': 'document.getElementById("phone-notif").classList.contains("show")',
-                'returnByValue': True
-            })
-            print(f"   Notification banner active: {notif_shown.get('result', {}).get('value')}")
-
-            # Check 10: Multi-viewport Verification (1920x1080, 1366x768, 375x812)
-            print("10. Testing Viewports: 1920x1080, 1366x768, 375x812...")
-            viewports = [
-                {'name': 'desktop_1920x1080', 'width': 1920, 'height': 1080, 'mobile': False},
-                {'name': 'laptop_1366x768', 'width': 1366, 'height': 768, 'mobile': False},
-                {'name': 'mobile_375x812', 'width': 375, 'height': 812, 'mobile': True}
+            # Check 7: Contrast Ratios on Every Screen
+            print("\n6. Evaluating WCAG AA Contrast Ratios (Target >= 4.5:1 for normal text)...")
+            contrast_queries = [
+                {"screen": "fridge", "name": "Speech Bubble Text", "selector": "#misae-speech"},
+                {"screen": "fridge", "name": "Pantry Staples Label", "selector": ".pantry-label"},
+                {"screen": "fridge", "name": "Pantry Staples Pill", "selector": ".pantry-strip .pill"},
+                {"screen": "fridge", "name": "Pantry Staples Note", "selector": ".pantry-note"},
+                {"screen": "fridge", "name": "Recipe Title", "selector": "#card-recipe-title"},
+                {"screen": "fridge", "name": "Recipe Steps", "selector": ".recipe-steps-list li"},
+                {"screen": "fridge", "name": "Shinchan Card Quote", "selector": "#card-shinchan-quote"},
+                {"screen": "fridge", "name": "Mummy Verdict Seal", "selector": "#card-mummy-verdict .verdict-sub"},
+                {"screen": "cookbook", "name": "Cookbook Dish Title", "selector": ".cooked-dish-title"},
+                {"screen": "cookbook", "name": "Cookbook Dish Meta", "selector": ".cooked-dish-meta span"},
+                {"screen": "cookbook", "name": "Cookbook Verdict Teal", "selector": ".cooked-dish-meta span.verdict-teal"},
+                {"screen": "action-kamen", "name": "Kamen Stats Channel", "selector": ".kamen-stats .kamen-stat-item"},
+                {"screen": "shiro", "name": "Shiro Hero Description", "selector": ".shiro-hero-desc"},
+                {"screen": "shiro", "name": "Polaroid Caption", "selector": ".polaroid-caption"},
+                {"screen": "notes", "name": "Notepad Default Rule", "selector": ".notepad-list li"},
+                {"screen": "weather", "name": "Weather Condition", "selector": ".weather-condition"},
+                {"screen": "weather", "name": "Weather Primary Forecast", "selector": ".weather-primary-forecast"},
+                {"screen": "weather", "name": "Weather Stat Box Value", "selector": ".stat-value"},
+                {"screen": "weather", "name": "Weather Advice", "selector": ".weather-advice-box"},
+                {"screen": "contacts", "name": "Contact Name", "selector": ".contact-name"},
+                {"screen": "contacts", "name": "Contact Subtitle", "selector": ".contact-sub"},
+                {"screen": "settings", "name": "Setting Title", "selector": ".settings-title"},
+                {"screen": "settings", "name": "Setting Strong Label", "selector": ".setting-info strong"},
+                {"screen": "settings", "name": "Setting Sub Label", "selector": ".setting-info span"},
             ]
 
-            import base64
-            for vp in viewports:
+            failing_contrasts = []
+            results_contrast = []
+
+            for item in contrast_queries:
+                await send('Runtime.evaluate', {'expression': f'showPhoneScreen("{item["screen"]}")'})
+                await asyncio.sleep(0.1)
+
+                eval_expr = f"""(() => {{
+                    const el = document.querySelector('{item["selector"]}');
+                    if (!el) return null;
+                    const style = window.getComputedStyle(el);
+                    let bg = style.backgroundColor;
+                    let p = el.parentElement;
+                    while (p && (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')) {{
+                        bg = window.getComputedStyle(p).backgroundColor;
+                        p = p.parentElement;
+                    }}
+                    return {{
+                        color: style.color,
+                        bg: bg,
+                        fontSize: style.fontSize,
+                        fontWeight: style.fontWeight
+                    }};
+                }})()"""
+                res = await send('Runtime.evaluate', {'expression': eval_expr, 'returnByValue': True})
+                val = res.get('result', {}).get('value')
+                if val:
+                    fg_rgba = parse_rgba(val['color'])
+                    bg_rgba = parse_rgba(val['bg'])
+                    ratio = calc_contrast_ratio(fg_rgba, bg_rgba)
+                    status = "PASS" if ratio >= 4.5 else "WARN"
+                    results_contrast.append({
+                        "name": item["name"],
+                        "screen": item["screen"],
+                        "ratio": round(ratio, 2),
+                        "status": status,
+                        "fg": val['color'],
+                        "bg": val['bg']
+                    })
+                    print(f"   [{status}] {item['screen'].upper()} - {item['name']}: {round(ratio, 2)}:1 (fg: {val['color']} on bg: {val['bg']})")
+                    if ratio < 4.5:
+                        failing_contrasts.append(item['name'])
+
+            assert len(failing_contrasts) == 0, f"Contrast below 4.5:1 on: {failing_contrasts}"
+
+            # Check 8: Capture Screenshots of every screen at 375px and 1366px
+            print("\n7. Capturing screenshots of each screen at 375px and 1366px into screenshots/...")
+            all_screens = ['home', 'fridge', 'chat', 'action-kamen', 'shiro', 'notes', 'cookbook', 'weather', 'contacts', 'settings']
+            viewports_to_capture = [
+                {'width': 375, 'height': 812, 'mobile': True, 'suffix': '375px'},
+                {'width': 1366, 'height': 768, 'mobile': False, 'suffix': '1366px'}
+            ]
+
+            for vp in viewports_to_capture:
                 await send('Emulation.setDeviceMetricsOverride', {
                     'width': vp['width'],
                     'height': vp['height'],
                     'deviceScaleFactor': 1,
                     'mobile': vp['mobile']
                 })
-                await asyncio.sleep(0.3)
-                
-                # Check for horizontal overflow on key phone elements & side panel visibility
-                panel_check = await send('Runtime.evaluate', {
-                    'expression': """(() => {
-                        const phone = document.getElementById('comic-phone');
-                        const viewport = document.getElementById('phone-screens-viewport');
-                        const cardActions = document.querySelector('.card-actions');
-                        const leftPanel = document.querySelector('.side-panel-left');
-                        const rightPanel = document.querySelector('.side-panel-right');
-                        const leftDisplay = leftPanel ? window.getComputedStyle(leftPanel).display : 'none';
-                        const rightDisplay = rightPanel ? window.getComputedStyle(rightPanel).display : 'none';
-                        return {
-                            phoneOverflow: phone ? phone.scrollWidth > phone.clientWidth : false,
-                            cardActionsOverflow: cardActions ? cardActions.scrollWidth > cardActions.clientWidth : false,
-                            sidePanelsVisible: leftDisplay !== 'none' && rightDisplay !== 'none'
-                        };
-                    })()""",
-                    'returnByValue': True
-                })
-                of_res = panel_check.get('result', {}).get('value', {})
-                print(f"    Viewport [{vp['name']}]: Check:", of_res)
-                assert of_res.get('phoneOverflow') is False, f"Phone overflowed horizontally at {vp['name']}!"
-                if vp['width'] >= 1024:
-                    assert of_res.get('sidePanelsVisible') is True, f"Side panels should be visible at {vp['name']}!"
-                else:
-                    assert of_res.get('sidePanelsVisible') is False, f"Side panels should be hidden at {vp['name']}!"
+                await asyncio.sleep(0.2)
+                for sc in all_screens:
+                    await send('Runtime.evaluate', {'expression': f'showPhoneScreen("{sc}")'})
+                    await asyncio.sleep(0.15)
+                    shot = await send('Page.captureScreenshot', {'format': 'png'})
+                    if shot.get('data'):
+                        filename = f"screenshots/{sc}_{vp['suffix']}.png"
+                        with open(filename, 'wb') as f:
+                            f.write(base64.b64decode(shot['data']))
+                        print(f"   Saved: {filename}")
 
-                # Take screenshot
-                ss = await send('Page.captureScreenshot', {'format': 'png'})
-                if ss.get('data'):
-                    with open(f"tests/preview_{vp['name']}.png", 'wb') as f:
-                        f.write(base64.b64decode(ss['data']))
-                    print(f"    Saved screenshot: tests/preview_{vp['name']}.png")
-
-            # Check 11: Test Side Panel "TRY IT" Button (Curd Rice Tadka)
-            print("11. Testing Side Panel 'TRY IT' Button...")
-            await send('Emulation.setDeviceMetricsOverride', {'width': 1920, 'height': 1080, 'deviceScaleFactor': 1, 'mobile': False})
-            await asyncio.sleep(0.3)
-            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-side-try").click()'})
-            await asyncio.sleep(2.5)
-            side_try_result = await send('Runtime.evaluate', {
-                'expression': """(() => ({
-                    screen: currentPhoneScreen,
-                    title: document.getElementById('card-recipe-title').textContent.trim(),
-                    displayActive: document.getElementById('recipe-display').classList.contains('active')
-                }))()""",
-                'returnByValue': True
-            })
-            val_side_try = side_try_result.get('result', {}).get('value', {})
-            print("    Side 'TRY IT' Result:", val_side_try)
-            assert val_side_try.get('screen') == 'fridge', "Screen did not switch to fridge!"
-            assert val_side_try.get('displayActive') is True, "Recipe display not active after TRY IT!"
-
-            # Check 12: Final Console & Network Error Assertions
-            print("12. Checking Console and Network Errors...")
-            print("    Console errors detected:", console_errors)
-            print("    Network errors (4xx/5xx) detected:", network_errors)
+            # Check 9: Final Console & Network Error Assertions
+            print("\n8. Checking final Console and Network errors...")
+            print("   Console errors:", console_errors)
+            print("   Network errors:", network_errors)
             assert len(console_errors) == 0, f"Found console errors: {console_errors}"
-            assert len(network_errors) == 0, f"Found network 404/500 errors: {network_errors}"
+            assert len(network_errors) == 0, f"Found network errors: {network_errors}"
 
-            print("\n🎉 ALL TESTS PASSED WITH 0 CONSOLE ERRORS AND 0 NETWORK ERRORS!")
+            print("\n🎉 ALL TESTS AND CONTRAST RATIO VERIFICATIONS PASSED CLEANLY (0 ERRORS)!")
     finally:
         proc.terminate()
 

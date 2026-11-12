@@ -191,16 +191,7 @@
                 <span class="app-name">Kamen TV</span>
               </button>
 
-              <!-- 4. Chocobi Delivery -->
-              <button type="button" class="app-item" data-app="chocobi" title="Chocobi Delivery">
-                <div class="app-squircle app-chocobi">
-                  <span class="app-emoji">🍫</span>
-                  <span class="app-badge">99+</span>
-                </div>
-                <span class="app-name">Chocobi</span>
-              </button>
-
-              <!-- 5. Shiro's Gallery -->
+              <!-- 4. Shiro's Gallery -->
               <button type="button" class="app-item" data-app="shiro" title="Shiro's Album">
                 <div class="app-squircle app-shiro">
                   <span class="app-emoji">🐶</span>
@@ -258,9 +249,6 @@
             <div class="screen-app-bar">
               <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">RECIPE ROULETTE</span>
-              <button type="button" class="btn-sound-toggle" id="btn-sound-toggle-fridge" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
-                <span id="sound-icon-fridge">🔊</span>
-              </button>
             </div>
 
             <!-- Scrollable Content Housing Complete Recipe Roulette UI -->
@@ -269,14 +257,7 @@
                 <!-- Header -->
                 <header class="comic-header">
                   <div class="header-top-row">
-                    <div class="action-kamen-badge" title="Action Kamen Hero Badge">
-                      <span class="kamen-star">★</span>
-                      <span class="kamen-text">ACTION HERO</span>
-                    </div>
                     <div class="header-badge">⭐ ACTION BASTARD CERTIFIED ⭐</div>
-                    <button type="button" class="btn-sound-toggle" id="btn-sound-toggle" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
-                      <span id="sound-icon">🔊</span>
-                    </button>
                   </div>
                   <h1 class="app-title">RECIPE ROULETTE <span>SHINCHAN EDITION</span></h1>
                   <p class="app-tagline">Survival cooking for college kids, lazy bachelors, and 5-year-old geniuses!</p>
@@ -295,12 +276,14 @@
 
                 <!-- Pantry Staples Notice -->
                 <div class="pantry-strip">
-                  <span>🧂 Pantry Staples:</span>
-                  <span class="pill">Salt</span>
-                  <span class="pill">Oil</span>
-                  <span class="pill">Water</span>
-                  <span class="pill">Basic Spices</span>
-                  <span style="font-size:0.8rem; margin-left:auto; color:#666;">(Always available!)</span>
+                  <span class="pantry-label">Pantry Staples:</span>
+                  <span class="pantry-chips">
+                    <span class="pill">Salt</span>
+                    <span class="pill">Oil</span>
+                    <span class="pill">Water</span>
+                    <span class="pill">Basic Spices</span>
+                  </span>
+                  <span class="pantry-note">(Always available!)</span>
                 </div>
 
                 <!-- Ingredient Picker Panel -->
@@ -414,7 +397,7 @@
                       <img src="assets/images/avatars/shinchan-pfp.jpg" alt="Shinchan" class="quote-pfp" />
                       <div class="quote-content">
                         <span class="quote-speaker">SHINCHAN SAYS:</span>
-                        <span id="card-shinchan-quote">"Action Bastard power breakfast! Eggs make you strong like me!"</span>
+                        <span id="card-shinchan-quote" class="quote-text">"Action Bastard power breakfast! Eggs make you strong like me!"</span>
                       </div>
                     </div>
 
@@ -488,7 +471,7 @@
                 </div>
                 <div class="tv-controls">
                   <button type="button" class="btn-kamen-beam" id="btn-kamen-beam">
-                    ⚡ FIRE ACTION BEAM! ⚡
+                    FIRE ACTION BEAM!
                   </button>
                 </div>
               </div>
@@ -504,61 +487,7 @@
           </div>
 
           <!-- ==============================================
-               SCREEN 5: CHOCOBI DELIVERY
-               ============================================== -->
-          <div class="phone-screen" id="screen-chocobi">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">🍫 CHOCOBI DELIVERY</span>
-            </div>
-            <div class="screen-content chocobi-content">
-              <div class="chocobi-box-display">
-                <div class="chocobi-mascot-box">
-                  <span class="dino-mascot">🦖</span>
-                  <span class="chocobi-logo-text">CHOCOBI CRUNCH</span>
-                  <span class="chocobi-star">⭐⭐⭐</span>
-                </div>
-              </div>
-              <div class="order-tracker-card">
-                <div class="tracker-header">
-                  <strong>📦 ORDER #CHOCOBI-777</strong>
-                  <span class="tracker-status-tag">STOLEN BY SHINCHAN</span>
-                </div>
-                <ul class="tracker-timeline">
-                  <li class="timeline-step done">
-                    <span class="step-dot">✓</span>
-                    <div class="step-desc">
-                      <strong>17:00</strong> - Freshly baked at Chocobi Factory 🏭
-                    </div>
-                  </li>
-                  <li class="timeline-step done">
-                    <span class="step-dot">✓</span>
-                    <div class="step-desc">
-                      <strong>17:30</strong> - Arrived in Kasukabe Ward 🚚
-                    </div>
-                  </li>
-                  <li class="timeline-step current">
-                    <span class="step-dot">🍫</span>
-                    <div class="step-desc">
-                      <strong>17:42</strong> - Intercepted & eaten by Shinchan! 😋
-                    </div>
-                  </li>
-                  <li class="timeline-step future">
-                    <span class="step-dot">⏳</span>
-                    <div class="step-desc">
-                      <strong>ETA:</strong> Never! It's already in Shinchan's belly!
-                    </div>
-                  </li>
-                </ul>
-                <button type="button" class="btn-secondary" id="btn-order-chocobi" style="margin-top:12px; width:100%;">
-                  <span>🍫</span> Order Another Box! <span>🦖</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ==============================================
-               SCREEN 6: SHIRO'S ALBUM
+               SCREEN 5: SHIRO'S ALBUM
                ============================================== -->
           <div class="phone-screen" id="screen-shiro">
             <div class="screen-app-bar">
@@ -596,7 +525,7 @@
           </div>
 
           <!-- ==============================================
-               SCREEN 7: NOTES
+               SCREEN 6: NOTES
                ============================================== -->
           <div class="phone-screen" id="screen-notes">
             <div class="screen-app-bar">
@@ -607,21 +536,27 @@
               <div class="notepad-paper">
                 <div class="notepad-header">
                   <h3>Kasukabe Survival Rules 🖍️</h3>
-                  <button type="button" class="btn-add-note" id="btn-add-note">+ Scribble</button>
+                </div>
+                <div class="notepad-input-bar">
+                  <div class="notepad-input-wrapper">
+                    <input type="text" id="note-input" maxlength="200" placeholder="Scribble a secret rule..." autocomplete="off" />
+                    <span id="note-char-count" class="note-char-count">0/200</span>
+                  </div>
+                  <button type="button" class="btn-add-note" id="btn-add-note">Add</button>
                 </div>
                 <ol class="notepad-list" id="notepad-list">
-                  <li>Rule 1: Mom's favorite chocolate cake is hidden behind the flour jar.</li>
-                  <li>Rule 2: Never give Mom eggplant or you'll get the knuckle drill of doom! 🌪️</li>
-                  <li>Rule 3: Kazama denies loving magical girl Moe-P, but he has the sticker album.</li>
-                  <li>Rule 4: Dad's socks are classified as biological weapons by the UN.</li>
-                  <li>Rule 5: When caught doing pranks, immediately drop pants and do Buri Buri dance! 🍑</li>
+                  <li class="default-rule">Rule 1: Mom's favorite chocolate cake is hidden behind the flour jar.</li>
+                  <li class="default-rule">Rule 2: Never give Mom eggplant or you'll get the knuckle drill of doom! 🌪️</li>
+                  <li class="default-rule">Rule 3: Kazama denies loving magical girl Moe-P, but he has the sticker album.</li>
+                  <li class="default-rule">Rule 4: Dad's socks are classified as biological weapons by the UN.</li>
+                  <li class="default-rule">Rule 5: When caught doing pranks, immediately drop pants and do Buri Buri dance! 🍑</li>
                 </ol>
               </div>
             </div>
           </div>
 
           <!-- ==============================================
-               SCREEN 8: COOKBOOK (SESSION COOKED DISHES)
+               SCREEN 7: COOKBOOK (SESSION COOKED DISHES)
                ============================================== -->
           <div class="phone-screen" id="screen-cookbook">
             <div class="screen-app-bar">
@@ -648,7 +583,7 @@
           </div>
 
           <!-- ==============================================
-               SCREEN 9: WEATHER
+               SCREEN 8: WEATHER
                ============================================== -->
           <div class="phone-screen" id="screen-weather">
             <div class="screen-app-bar">
@@ -693,7 +628,7 @@
           </div>
 
           <!-- ==============================================
-               SCREEN 10: CONTACTS
+               SCREEN 9: CONTACTS
                ============================================== -->
           <div class="phone-screen" id="screen-contacts">
             <div class="screen-app-bar">
@@ -762,7 +697,7 @@
           </div>
 
           <!-- ==============================================
-               SCREEN 11: SETTINGS
+               SCREEN 10: SETTINGS
                ============================================== -->
           <div class="phone-screen" id="screen-settings">
             <div class="screen-app-bar">

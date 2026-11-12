@@ -100,7 +100,7 @@
     transparent 1px,
     transparent 4px
   );
-  opacity: 1;
+  opacity: 0.03;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -297,6 +297,7 @@ body.angry-shake {
 .speech-bubble {
   flex: 1;
   background: var(--white);
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-heavy);
   box-shadow: var(--shadow-comic);
   border-radius: 18px;
@@ -363,21 +364,50 @@ body.angry-shake {
   background: #E8F8F5;
   border: var(--border-thick);
   border-radius: 12px;
-  padding: 8px 14px;
-  font-size: 0.95rem;
+  padding: 8px 12px;
+  font-size: 13px;
   font-weight: 700;
-  color: #145A32;
+  color: #0E6251;
   box-shadow: 2px 2px 0 var(--black);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px 8px;
+  min-width: 0;
+}
+
+.pantry-strip .pantry-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0E6251;
+  white-space: nowrap;
+}
+
+.pantry-strip .pantry-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  min-width: 0;
 }
 
 .pantry-strip span.pill {
   background: #A3E4D7;
-  padding: 2px 8px;
-  border-radius: 8px;
+  padding: 2px 7px;
+  border-radius: 6px;
   border: 1.5px solid var(--black);
+  font-size: 11.5px;
+  white-space: nowrap;
+  color: #0B5345;
+  display: inline-block;
+}
+
+.pantry-strip .pantry-note {
+  font-size: 11.5px;
+  color: #117A65;
+  font-weight: 600;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 /* Main Card */
@@ -897,19 +927,46 @@ body.angry-shake {
   line-height: 1.3;
 }
 
-/* Card Action Buttons: Responsive 3-col grid stacking to 1-col */
+/* Card Action Buttons: Row 1 = Spin Again (full width), Row 2 = Copy Recipe & Edit Ingredients (50/50) */
 .card-actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin-top: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
   width: 100%;
+  box-sizing: border-box;
 }
 
-@media (max-width: 340px) {
-  .card-actions {
-    grid-template-columns: 1fr;
-  }
+#btn-spin-again {
+  grid-column: 1 / -1;
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 800;
+}
+
+#btn-copy-recipe {
+  grid-column: 1 / 2;
+  background: var(--teal);
+  color: var(--ink);
+}
+
+#btn-change-ingredients {
+  grid-column: 2 / 3;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.card-actions .btn-secondary {
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  padding: 8px 6px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .btn-secondary {
@@ -1949,7 +2006,6 @@ body.angry-shake {
 .app-fridge { background: #74B9FF; }
 .app-mom { background: #FF7675; }
 .app-kamen { background: #55EFC4; }
-.app-chocobi { background: #A29BFE; }
 .app-shiro { background: #FFF; }
 .app-notes { background: #FFEAA7; }
 .app-cookbook { background: #FD79A8; }
@@ -2099,100 +2155,17 @@ body.angry-shake {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  color: var(--card-ink, #1a1a1a);
 }
 
-/* Chocobi Delivery */
-.chocobi-box-display {
-  text-align: center;
-  margin-bottom: 12px;
+.kamen-stats strong {
+  color: var(--card-ink, #1a1a1a);
 }
-
-.chocobi-mascot-box {
-  background: #FF7675;
-  border: var(--border-heavy);
-  box-shadow: 4px 4px 0 var(--black);
-  border-radius: 16px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.dino-mascot {
-  font-size: 3.5rem;
-  animation: buttWiggle 1s infinite alternate;
-}
-
-.chocobi-logo-text {
-  font-family: 'Bangers', cursive;
-  font-size: 1.8rem;
-  letter-spacing: 1.5px;
-  color: #FFEAA7;
-  -webkit-text-stroke: 1.5px var(--black);
-}
-
-.order-tracker-card {
-  background: #FFF;
-  border: var(--border-thick);
-  box-shadow: 3.5px 3.5px 0 var(--black);
-  border-radius: 14px;
-  padding: 12px;
-}
-
-.tracker-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 2px dashed #DDD;
-  padding-bottom: 8px;
-  margin-bottom: 10px;
-}
-
-.tracker-status-tag {
-  background: #D63031;
-  color: #FFF;
-  font-family: 'Bangers', cursive;
-  font-size: 0.78rem;
-  padding: 2px 8px;
-  border-radius: 8px;
-  border: 1px solid var(--black);
-}
-
-.tracker-timeline {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.timeline-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 0.85rem;
-}
-
-.step-dot {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid var(--black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.75rem;
-  flex-shrink: 0;
-}
-
-.timeline-step.done .step-dot { background: #00B894; color: #FFF; }
-.timeline-step.current .step-dot { background: #FFEAA7; }
-.timeline-step.future .step-dot { background: #E0E0E0; }
 
 /* Shiro Album */
 .shiro-hero-card {
   background: #FFF;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-heavy);
   box-shadow: 4px 4px 0 var(--black);
   border-radius: 16px;
@@ -2215,7 +2188,7 @@ body.angry-shake {
 
 .shiro-hero-desc {
   font-size: 0.85rem;
-  color: #666;
+  color: #444;
   margin-bottom: 8px;
 }
 
@@ -2240,6 +2213,7 @@ body.angry-shake {
 
 .polaroid-card {
   background: #FFF;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-thick);
   box-shadow: 3px 3px 0 var(--black);
   border-radius: 6px;
@@ -2269,11 +2243,13 @@ body.angry-shake {
   font-size: 0.92rem;
   font-weight: 700;
   line-height: 1.15;
+  color: var(--card-ink, #1a1a1a);
 }
 
 /* Notes App */
 .notepad-paper {
   background: #FFFDE7;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-heavy);
   box-shadow: 4px 4px 0 var(--black);
   border-radius: 14px;
@@ -2289,7 +2265,7 @@ body.angry-shake {
   justify-content: space-between;
   border-bottom: 2.5px solid var(--black);
   padding-bottom: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .notepad-header h3 {
@@ -2298,26 +2274,104 @@ body.angry-shake {
   color: var(--black);
 }
 
-.btn-add-note {
-  font-family: 'Bangers', cursive;
-  font-size: 0.95rem;
-  background: var(--yellow);
+.notepad-input-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.notepad-input-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+#note-input {
+  width: 100%;
+  padding: 6px 52px 6px 10px;
   border: 2px solid var(--black);
   border-radius: 8px;
-  padding: 3px 8px;
+  font-family: 'Gochi Hand', cursive, sans-serif;
+  font-size: 1rem;
+  background: #FFF;
+  color: #111;
+  box-sizing: border-box;
+}
+
+.note-char-count {
+  position: absolute;
+  right: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #666;
+  pointer-events: none;
+}
+
+.btn-add-note {
+  font-family: 'Bangers', cursive;
+  font-size: 1rem;
+  background: var(--yellow);
+  color: var(--black);
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  padding: 5px 12px;
   cursor: pointer;
   box-shadow: 1.5px 1.5px 0 var(--black);
+  white-space: nowrap;
+}
+
+.btn-add-note:hover {
+  background: var(--yellow-light);
+  transform: translateY(-1px);
 }
 
 .notepad-list {
   list-style-position: inside;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   font-family: 'Gochi Hand', cursive;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: #1A237E;
   line-height: 1.3;
+}
+
+.notepad-list li {
+  position: relative;
+  padding-right: 28px;
+  word-break: break-word;
+}
+
+.notepad-list li.user-rule {
+  color: #B71C1C;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-delete-note {
+  background: #FF7675;
+  color: #FFF;
+  border: 1.5px solid var(--black);
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+
+.btn-delete-note:hover {
+  background: #D63031;
 }
 
 /* Cookbook App */
@@ -2336,10 +2390,12 @@ body.angry-shake {
   font-family: 'Bangers', cursive;
   font-size: 1.4rem;
   letter-spacing: 0.8px;
+  color: #FFF;
 }
 
 .cookbook-header-card p {
   font-size: 0.85rem;
+  color: #FFF;
 }
 
 .cookbook-list {
@@ -2350,6 +2406,7 @@ body.angry-shake {
 
 .cookbook-empty-state {
   background: #FFF;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-thick);
   border-radius: 14px;
   padding: 24px 14px;
@@ -2364,6 +2421,7 @@ body.angry-shake {
 
 .cooked-dish-card {
   background: #FFF;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-thick);
   box-shadow: 3px 3px 0 var(--black);
   border-radius: 12px;
@@ -2377,26 +2435,37 @@ body.angry-shake {
 .cooked-dish-title {
   font-family: 'Bangers', cursive;
   font-size: 1.25rem;
-  color: var(--red);
+  color: #C0392B !important;
   letter-spacing: 0.5px;
 }
 
 .cooked-dish-meta {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 700;
+  color: #222222;
+}
+
+.cooked-dish-meta span {
+  color: #222222;
+}
+
+.cooked-dish-meta span.verdict-teal {
+  color: #007A5E !important;
 }
 
 .cooked-dish-comment {
   font-family: 'Gochi Hand', cursive;
   font-size: 0.95rem;
-  color: #333;
+  color: #333333;
 }
 
 /* Weather App */
 .weather-hero-card {
   background: #FDCB6E;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-heavy);
   box-shadow: 4px 4px 0 var(--black);
   border-radius: 18px;
@@ -2420,6 +2489,7 @@ body.angry-shake {
 .weather-condition {
   font-weight: 700;
   font-size: 0.95rem;
+  color: var(--card-ink, #1a1a1a);
   margin-bottom: 8px;
 }
 
@@ -2430,7 +2500,7 @@ body.angry-shake {
   border-radius: 12px;
   padding: 8px 12px;
   font-size: 1.05rem;
-  color: #D63031;
+  color: #C0392B;
 }
 
 .weather-grid {
@@ -2442,6 +2512,7 @@ body.angry-shake {
 
 .weather-stat-box {
   background: #FFF;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-thick);
   border-radius: 10px;
   padding: 8px;
@@ -2451,13 +2522,27 @@ body.angry-shake {
   box-shadow: 2px 2px 0 var(--black);
 }
 
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #444444;
+}
+
+.stat-value {
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  color: var(--card-ink, #1a1a1a);
+  letter-spacing: 0.5px;
+}
+
 .weather-advice-box {
   background: #E8F8F5;
-  border: 2px dashed #1ABC9C;
+  border: 2px dashed #16A085;
   border-radius: 12px;
   padding: 10px;
   font-size: 0.85rem;
-  color: #16A085;
+  color: #0E6251;
 }
 
 /* Contacts App */
@@ -2469,6 +2554,7 @@ body.angry-shake {
 
 .contact-card {
   background: #FFF;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-thick);
   box-shadow: 2.5px 2.5px 0 var(--black);
   border-radius: 12px;
@@ -2512,7 +2598,7 @@ body.angry-shake {
 
 .contact-sub {
   font-size: 0.72rem;
-  color: #666;
+  color: #444;
 }
 
 .btn-call {
@@ -2532,6 +2618,7 @@ body.angry-shake {
 /* Settings App */
 .settings-group {
   background: #FFF;
+  color: var(--card-ink, #1a1a1a);
   border: var(--border-thick);
   box-shadow: 3px 3px 0 var(--black);
   border-radius: 12px;
@@ -2563,11 +2650,12 @@ body.angry-shake {
 
 .setting-info strong {
   font-size: 0.88rem;
+  color: var(--card-ink, #1a1a1a);
 }
 
 .setting-info span {
   font-size: 0.72rem;
-  color: #666;
+  color: #555555;
 }
 
 .comic-switch {
@@ -2577,10 +2665,17 @@ body.angry-shake {
   accent-color: var(--red);
 }
 
+.settings-group .btn-secondary {
+  color: var(--ink, #12122a) !important;
+  font-weight: 700;
+}
+
 .settings-footer-info {
   text-align: center;
   font-size: 0.75rem;
-  color: #888;
+  color: #666;
+  margin-top: 8px;
+}
   margin-top: 8px;
 }
 
@@ -2782,37 +2877,8 @@ body.angry-shake {
 }
 
 /* =========================================
-   ACTION KAMEN HERO BADGE & MASCOT VISUALS
+   MASCOT VISUALS & STYLING
    ========================================= */
-
-.action-kamen-badge {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%) rotate(-4deg);
-  background: #FF0054;
-  color: var(--white);
-  border: var(--border-thick);
-  border-radius: 12px;
-  padding: 3px 8px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  box-shadow: 2px 2px 0 var(--black);
-  user-select: none;
-}
-
-.kamen-star {
-  color: var(--yellow);
-  font-size: 0.95rem;
-  text-shadow: 1px 1px 0 var(--black);
-}
-
-.kamen-text {
-  font-family: 'Bangers', cursive;
-  font-size: 0.75rem;
-  letter-spacing: 0.8px;
-}
 
 /* Original SVG Mascot Styling & Moods */
 .mascot-container {

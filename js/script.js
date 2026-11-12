@@ -154,12 +154,11 @@ function playSound(type) {
 }
 
 function setSoundEnabled(enabled, clientX, clientY) {
-  soundEnabled = enabled;
-  const iconMain = document.getElementById('sound-icon');
-  const iconFridge = document.getElementById('sound-icon-fridge');
-  const iconText = soundEnabled ? '🔊' : '🔇';
-  if (iconMain) iconMain.textContent = iconText;
-  if (iconFridge) iconFridge.textContent = iconText;
+  soundEnabled = !!enabled;
+  const soundFxToggle = document.getElementById('setting-sound-fx');
+  if (soundFxToggle && soundFxToggle.checked !== soundEnabled) {
+    soundFxToggle.checked = soundEnabled;
+  }
   if (soundEnabled) {
     playSound('pop');
     if (typeof clientX === 'number' && typeof clientY === 'number') {
@@ -170,12 +169,6 @@ function setSoundEnabled(enabled, clientX, clientY) {
       triggerComicPopup(clientX, clientY, "MUTED!");
     }
   }
-}
-
-function toggleSound(e) {
-  const cx = e && typeof e.clientX === 'number' ? e.clientX : undefined;
-  const cy = e && typeof e.clientY === 'number' ? e.clientY : undefined;
-  setSoundEnabled(!soundEnabled, cx, cy);
 }
 
 // State
@@ -1086,7 +1079,7 @@ function renderCookbook() {
       <div class="cooked-dish-meta">
         <span>⏱️ ${item.time}</span> · 
         <span>⚡ ${item.difficulty}</span> · 
-        <span style="color:#00B894;">⭐ Mummy's Verdict: 10/10</span>
+        <span class="verdict-teal">⭐ Mummy's Verdict: 10/10</span>
       </div>
       <div class="cooked-dish-comment">"${item.comment}"</div>
     `;
@@ -1247,11 +1240,12 @@ function initPhoneOS() {
     btnChatHome.addEventListener('click', () => showPhoneScreen('home'));
   }
 
-  // Sound toggle on Fridge screen (mirrored with main sound toggle)
-  const btnSoundFridge = document.getElementById('btn-sound-toggle-fridge');
-  if (btnSoundFridge) {
-    btnSoundFridge.addEventListener('click', (e) => {
-      toggleSound(e);
+  // Settings: Comic Sound FX Toggle
+  const settingSoundFx = document.getElementById('setting-sound-fx');
+  if (settingSoundFx) {
+    settingSoundFx.checked = soundEnabled;
+    settingSoundFx.addEventListener('change', (e) => {
+      setSoundEnabled(e.target.checked);
     });
   }
 
@@ -1276,19 +1270,6 @@ function initPhoneOS() {
     });
   }
 
-  // Chocobi Delivery
-  const btnOrderChocobi = document.getElementById('btn-order-chocobi');
-  if (btnOrderChocobi) {
-    btnOrderChocobi.addEventListener('click', (e) => {
-      triggerComicPopup(e.clientX, e.clientY, "CRUNCH!");
-      playSound('pop');
-      btnOrderChocobi.textContent = "🍫 Nom Nom! Already Eaten! 🦖";
-      setTimeout(() => {
-        btnOrderChocobi.innerHTML = "<span>🍫</span> Order Another Box! <span>🦖</span>";
-      }, 2000);
-    });
-  }
-
   // Pet Shiro
   const btnPetShiro = document.getElementById('btn-pet-shiro');
   const shiroAvatar = document.getElementById('shiro-avatar');
@@ -1303,27 +1284,136 @@ function initPhoneOS() {
     });
   }
 
-  // Scribble Note
-  const btnAddNote = document.getElementById('btn-add-note');
-  const notepadList = document.getElementById('notepad-list');
-  const RANDOM_NOTES = [
-    "Rule 6: Never let Kazama see your low test scores.",
-    "Rule 7: Misae's potato stew tastes best when you're super hungry.",
-    "Rule 8: Nanako smiled at me today! Heart rate: 999 BPM!",
-    "Rule 9: Action Kamen lunchboxes make regular food 50% tastier.",
-    "Rule 10: Always blame Shiro if a vase breaks (sorry Shiro)."
-  ];
-  let noteIdx = 0;
-  if (btnAddNote && notepadList) {
-    btnAddNote.addEventListener('click', (e) => {
-      triggerComicPopup(e.clientX, e.clientY, "SCRIBBLED!");
-      playSound('pop');
+  // Notes App (LocalStorage under recipeRoulette.notes + in-memory fallback)
+  const NOTES_STORAGE_KEY = 'recipeRoulette.notes';
+  let inMemoryNotes = [];
+
+  function getStoredNotes() {
+    try {
+      const raw = localStorage.getItem(NOTES_STORAGE_KEY);
+      if (!raw) return inMemoryNotes;
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+      return inMemoryNotes;
+    }
+  }
+
+  function saveStoredNotes(notes) {
+    inMemoryNotes = notes;
+    try {
+      localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
+    } catch (err) {
+      // Quota exceeded or storage disabled - safe in-memory fallback
+    }
+  }
+
+  function renderNotesList() {
+    const notepadList = document.getElementById('notepad-list');
+    if (!notepadList) return;
+
+    notepadList.querySelectorAll('.user-rule').forEach(el => el.remove());
+
+    const stored = getStoredNotes();
+    const firstDefaultRule = notepadList.querySelector('.default-rule');
+
+    stored.forEach((noteText, idx) => {
       const li = document.createElement('li');
-      li.textContent = RANDOM_NOTES[noteIdx % RANDOM_NOTES.length];
-      noteIdx++;
-      notepadList.appendChild(li);
+      li.className = 'user-rule';
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'note-text';
+      textSpan.textContent = noteText; // Security: textContent only
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'btn-delete-note';
+      delBtn.title = 'Delete note';
+      delBtn.setAttribute('aria-label', 'Delete note');
+      delBtn.textContent = '✕';
+
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteUserNote(idx);
+      });
+
+      li.appendChild(textSpan);
+      li.appendChild(delBtn);
+
+      if (firstDefaultRule) {
+        notepadList.insertBefore(li, firstDefaultRule);
+      } else {
+        notepadList.appendChild(li);
+      }
     });
   }
+
+  function addUserNote(text, clientX, clientY) {
+    const trimmed = (text || '').trim();
+    if (!trimmed) return;
+    if (trimmed.length > 200) return;
+
+    const stored = getStoredNotes();
+    if (stored.length >= 30) {
+      alert("Kasukabe notepad is full! Maximum 30 secret notes allowed.");
+      return;
+    }
+
+    stored.unshift(trimmed);
+    saveStoredNotes(stored);
+    renderNotesList();
+
+    playSound('pop');
+    if (typeof clientX === 'number' && typeof clientY === 'number') {
+      triggerComicPopup(clientX, clientY, "SCRIBBLED!");
+    }
+  }
+
+  function deleteUserNote(index) {
+    const stored = getStoredNotes();
+    if (index >= 0 && index < stored.length) {
+      stored.splice(index, 1);
+      saveStoredNotes(stored);
+      renderNotesList();
+      playSound('pop');
+    }
+  }
+
+  const noteInput = document.getElementById('note-input');
+  const noteCharCount = document.getElementById('note-char-count');
+  const btnAddNote = document.getElementById('btn-add-note');
+
+  if (noteInput && noteCharCount) {
+    noteInput.addEventListener('input', () => {
+      noteCharCount.textContent = `${noteInput.value.length}/200`;
+    });
+
+    noteInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = noteInput.value;
+        if (val.trim()) {
+          const rect = btnAddNote ? btnAddNote.getBoundingClientRect() : noteInput.getBoundingClientRect();
+          addUserNote(val, rect.left + rect.width / 2, rect.top);
+          noteInput.value = '';
+          noteCharCount.textContent = '0/200';
+        }
+      }
+    });
+  }
+
+  if (btnAddNote && noteInput) {
+    btnAddNote.addEventListener('click', (e) => {
+      const val = noteInput.value;
+      if (val.trim()) {
+        addUserNote(val, e.clientX, e.clientY);
+        noteInput.value = '';
+        if (noteCharCount) noteCharCount.textContent = '0/200';
+      }
+    });
+  }
+
+  renderNotesList();
 
   // Contacts Speed Dial
   document.querySelectorAll('.contact-card').forEach(card => {
@@ -2183,14 +2273,6 @@ function attachEvents() {
     e.preventDefault();
     addCustomIngredient();
   });
-
-  // Sound toggle button (Header)
-  const soundToggleBtn = document.getElementById('btn-sound-toggle');
-  if (soundToggleBtn) {
-    soundToggleBtn.addEventListener('click', (e) => {
-      toggleSound(e);
-    });
-  }
 
   // Kitchen Mode Selection (Local vs World)
   const btnLocal = document.getElementById('btn-mode-local');
