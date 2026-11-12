@@ -1,0 +1,7 @@
+tests/
+README.md
+scratch/
+*.log
+.git
+.gitignore
+.vercelignore

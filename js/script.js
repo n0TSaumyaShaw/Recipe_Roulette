@@ -6,10 +6,7 @@
 // 1. Hated Ingredients Array (easy to edit)
 const HATED_INGREDIENTS = ['green pepper', 'piman', 'capsicum', 'eggplant', 'brinjal'];
 
-// 2. Default Pantry Staples (assumed always available)
-const PANTRY_STAPLES = ['salt', 'oil', 'water', 'spices', 'butter', 'sugar', 'pepper', 'turmeric'];
-
-// 3. Preset Tappable Chips
+// 2. Preset Tappable Chips
 const DEFAULT_CHIPS = [
   { name: 'eggs', label: 'Eggs', emoji: '🥚' },
   { name: 'onion', label: 'Onion', emoji: '🧅' },
@@ -154,6 +151,31 @@ function playSound(type) {
   } catch (e) {
     // AudioContext blocked or not supported
   }
+}
+
+function setSoundEnabled(enabled, clientX, clientY) {
+  soundEnabled = enabled;
+  const iconMain = document.getElementById('sound-icon');
+  const iconFridge = document.getElementById('sound-icon-fridge');
+  const iconText = soundEnabled ? '🔊' : '🔇';
+  if (iconMain) iconMain.textContent = iconText;
+  if (iconFridge) iconFridge.textContent = iconText;
+  if (soundEnabled) {
+    playSound('pop');
+    if (typeof clientX === 'number' && typeof clientY === 'number') {
+      triggerComicPopup(clientX, clientY, "AUDIO ON!");
+    }
+  } else {
+    if (typeof clientX === 'number' && typeof clientY === 'number') {
+      triggerComicPopup(clientX, clientY, "MUTED!");
+    }
+  }
+}
+
+function toggleSound(e) {
+  const cx = e && typeof e.clientX === 'number' ? e.clientX : undefined;
+  const cy = e && typeof e.clientY === 'number' ? e.clientY : undefined;
+  setSoundEnabled(!soundEnabled, cx, cy);
 }
 
 // State
@@ -823,11 +845,7 @@ const customForm = document.getElementById('custom-ingredient-form');
 const customInput = document.getElementById('custom-input');
 const btnCook = document.getElementById('btn-cook');
 const misaeSpeech = document.getElementById('misae-speech');
-const misaeAvatar = document.getElementById('misae-avatar');
 const flashOverlay = document.getElementById('angry-flash-overlay');
-
-const btnModeLocal = document.getElementById('btn-mode-local');
-const btnModeWorld = document.getElementById('btn-mode-world');
 
 const rouletteContainer = document.getElementById('roulette-container');
 const slotReelText = document.getElementById('slot-reel-text');
@@ -1240,13 +1258,9 @@ function initPhoneOS() {
 
   // Sound toggle on Fridge screen (mirrored with main sound toggle)
   const btnSoundFridge = document.getElementById('btn-sound-toggle-fridge');
-  const soundIconFridge = document.getElementById('sound-icon-fridge');
   if (btnSoundFridge) {
-    btnSoundFridge.addEventListener('click', () => {
-      soundMuted = !soundMuted;
-      soundIcon.textContent = soundMuted ? '🔇' : '🔊';
-      if (soundIconFridge) soundIconFridge.textContent = soundMuted ? '🔇' : '🔊';
-      if (!soundMuted) playSound('pop');
+    btnSoundFridge.addEventListener('click', (e) => {
+      toggleSound(e);
     });
   }
 
@@ -1362,15 +1376,15 @@ function initPhoneOS() {
   setInterval(triggerRandomNotification, 15000);
 }
 
-// Load recipes.json
+// Load data/recipes.json
 async function loadRecipes() {
   try {
-    const res = await fetch('recipes.json');
+    const res = await fetch('data/recipes.json');
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     allRecipes = await res.json();
   } catch (err) {
     console.error('Could not load recipes:', err);
-    misaeSpeech.textContent = "Mama! Someone stole the recipe notebook! (Failed loading recipes.json)";
+    misaeSpeech.textContent = "Mama! Someone stole the recipe notebook! (Failed loading data/recipes.json)";
   }
 }
 
@@ -2179,19 +2193,11 @@ function attachEvents() {
     addCustomIngredient();
   });
 
-  // Sound toggle button
+  // Sound toggle button (Header)
   const soundToggleBtn = document.getElementById('btn-sound-toggle');
-  const soundIcon = document.getElementById('sound-icon');
-  if (soundToggleBtn && soundIcon) {
+  if (soundToggleBtn) {
     soundToggleBtn.addEventListener('click', (e) => {
-      soundEnabled = !soundEnabled;
-      soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
-      if (soundEnabled) {
-        playSound('pop');
-        triggerComicPopup(e.clientX, e.clientY, "AUDIO ON!");
-      } else {
-        triggerComicPopup(e.clientX, e.clientY, "MUTED!");
-      }
+      toggleSound(e);
     });
   }
 

@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Editor & OS artifacts
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python & testing
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs & Environment
+*.log
+.env
+.env.*
+
+# Vercel deployment artifacts
+.vercel
