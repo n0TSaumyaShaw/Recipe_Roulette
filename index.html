@@ -4,18 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recipe Roulette: Shinchan Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Screen Flash for Angry Shinchan -->
+  <!-- Screen Flash for Angry Shinchan & Mom's 100% Rage -->
   <div id="angry-flash-overlay"></div>
 
   <!-- Confetti Canvas & Comic Word Popups -->
   <canvas id="confetti-canvas"></canvas>
   <div id="comic-popups-layer"></div>
 
-  <!-- Landing / Smartphone Intro Screen -->
+  <!-- Main Phone Wrapper Section -->
   <section id="landing-screen">
     <!-- Floating Background Emojis -->
     <div class="floating-emojis" aria-hidden="true">
@@ -29,12 +32,12 @@
       <span class="float-emoji e8">🍛</span>
     </div>
 
-    <!-- Skip Link for Judges -->
-    <button type="button" class="btn-skip-intro" id="btn-skip-intro" title="Skip intro and open fridge">
-      Skip ⏩
+    <!-- Quick Skip Link for Judges -->
+    <button type="button" class="btn-skip-intro" id="btn-skip-intro" title="Skip directly to Phone Home Screen">
+      Skip to Home ⏩
     </button>
 
-    <!-- CSS-Drawn Smartphone -->
+    <!-- CSS-Drawn Smartphone (Shinchan's Phone OS) -->
     <div class="phone-wrapper">
       <div class="comic-phone" id="comic-phone">
         <!-- Phone Camera Notch -->
@@ -43,282 +46,798 @@
         <!-- Phone Status Bar -->
         <div class="phone-status-bar">
           <span class="phone-time" id="phone-clock">17:45</span>
+
+          <!-- Mom's Anger Meter in Status Bar -->
+          <div class="status-anger-pill" id="status-anger-pill" title="Mom's Anger Meter (Don't let it hit 100%!)">
+            <span class="anger-icon" id="anger-face">😡</span>
+            <div class="anger-meter-track">
+              <div class="anger-meter-fill" id="status-anger-fill" style="width: 10%;"></div>
+            </div>
+            <span class="anger-val" id="status-anger-val">10%</span>
+          </div>
+
           <div class="phone-status-right">
             <span class="phone-wifi">📶</span>
-            <span class="phone-battery" title="Mom, please bring the charger!">🪫 1%</span>
+            <span class="phone-battery" id="phone-battery" title="Mom, please bring the charger!">🪫 85%</span>
           </div>
         </div>
 
-        <!-- Notification Toast (Action Kamen) -->
+        <!-- Sliding Notification Banner -->
         <div class="phone-notification" id="phone-notif">
-          <span class="notif-icon">⚡</span>
+          <span class="notif-icon" id="notif-icon">⚡</span>
           <div class="notif-content">
-            <div class="notif-title">ACTION KAMEN ALERT!</div>
-            <div class="notif-text">A new episode is on TV right now!</div>
+            <div class="notif-title" id="notif-title">ACTION KAMEN ALERT!</div>
+            <div class="notif-text" id="notif-text">A new episode is on TV right now!</div>
           </div>
         </div>
 
-        <!-- Chat App Header -->
-        <div class="chat-header">
-          <div class="chat-header-avatar">
-            <img src="misae_pfp.webp" alt="Mom" class="chat-header-pfp" />
-          </div>
-          <div class="chat-header-info">
-            <div class="chat-contact-name">Mom ❤️</div>
-            <div class="chat-contact-status" id="chat-header-status">online</div>
-          </div>
-          <div class="chat-header-actions">⋮</div>
-        </div>
+        <!-- Phone Screens Viewport -->
+        <div class="phone-screens-viewport" id="phone-screens-viewport">
 
-        <!-- Chat Feed -->
-        <div class="chat-body" id="chat-messages">
-          <!-- Shinchan Msg 1 -->
-          <div class="chat-bubble outgoing hidden" id="msg-1">
-            <div class="bubble-text">Mom, what's for food today? 🥺</div>
-            <span class="bubble-time">17:44 ✓✓</span>
-          </div>
-
-          <!-- Shinchan Msg 2 -->
-          <div class="chat-bubble outgoing hidden" id="msg-2">
-            <div class="bubble-text">I'm so hungry my tummy is running a marathon!</div>
-            <span class="bubble-time">17:44 ✓✓</span>
-          </div>
-
-          <!-- Shinchan Msg 3 -->
-          <div class="chat-bubble outgoing hidden" id="msg-3">
-            <div class="bubble-text">Can I have some Chocobi? Please please please!</div>
-            <span class="bubble-time">17:45 ✓✓</span>
-          </div>
-
-          <!-- Misae Typing Indicator -->
-          <div class="chat-bubble incoming typing-bubble hidden" id="msg-typing">
-            <div class="typing-dots">
-              <span></span><span></span><span></span>
+          <!-- ==============================================
+               SCREEN 1: CHAT INTRO (MOM)
+               ============================================== -->
+          <div class="phone-screen active" id="screen-chat">
+            <!-- Chat App Header -->
+            <div class="chat-header">
+              <div class="chat-header-avatar">
+                <img src="misae_pfp.webp" alt="Mom" class="chat-header-pfp" />
+              </div>
+              <div class="chat-header-info">
+                <div class="chat-contact-name">Mom ❤️</div>
+                <div class="chat-contact-status" id="chat-header-status">online</div>
+              </div>
+              <button type="button" class="btn-chat-home" id="btn-chat-home" title="Go to Home Screen">🏠</button>
             </div>
-            <span class="typing-label">Mom is typing...</span>
+
+            <!-- Chat Feed -->
+            <div class="chat-body" id="chat-messages">
+              <!-- Shinchan Msg 1 -->
+              <div class="chat-bubble outgoing hidden" id="msg-1">
+                <div class="bubble-text">Mom, what's for food today? 🥺</div>
+                <span class="bubble-time">17:44 ✓✓</span>
+              </div>
+
+              <!-- Shinchan Msg 2 -->
+              <div class="chat-bubble outgoing hidden" id="msg-2">
+                <div class="bubble-text">I'm so hungry my tummy is running a marathon!</div>
+                <span class="bubble-time">17:44 ✓✓</span>
+              </div>
+
+              <!-- Shinchan Msg 3 -->
+              <div class="chat-bubble outgoing hidden" id="msg-3">
+                <div class="bubble-text">Can I have some Chocobi? Please please please!</div>
+                <span class="bubble-time">17:45 ✓✓</span>
+              </div>
+
+              <!-- Misae Typing Indicator -->
+              <div class="chat-bubble incoming typing-bubble hidden" id="msg-typing">
+                <div class="typing-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <span class="typing-label">Mom is typing...</span>
+              </div>
+
+              <!-- Misae Msg 4 (Reply) -->
+              <div class="chat-bubble incoming hidden" id="msg-4">
+                <div class="bubble-text">We'll cook whatever is left in the fridge!</div>
+                <span class="bubble-time">17:45</span>
+              </div>
+            </div>
+
+            <!-- Bottom Action CTA -->
+            <div class="phone-footer">
+              <button type="button" class="btn-open-fridge" id="btn-open-fridge">
+                <span>🧊</span> OPEN THE FRIDGE! <span>🍳</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Misae Msg 4 (Reply) -->
-          <div class="chat-bubble incoming hidden" id="msg-4">
-            <div class="bubble-text">We'll cook whatever is left in the fridge!</div>
-            <span class="bubble-time">17:45</span>
-          </div>
-        </div>
+          <!-- ==============================================
+               SCREEN 2: PHONE HOME SCREEN (APP GRID)
+               ============================================== -->
+          <div class="phone-screen" id="screen-home">
+            <div class="home-screen-header">
+              <div class="home-time-box">
+                <div class="home-big-clock" id="home-big-clock">17:45</div>
+                <div class="home-date-display">Thursday, Kasukabe City</div>
+              </div>
+              <div class="home-weather-pill" id="home-weather-widget">
+                <span>☀️</span> 32°C · 90% Mom Yelling!
+              </div>
+            </div>
 
-        <!-- Bottom Action CTA -->
-        <div class="phone-footer">
-          <button type="button" class="btn-open-fridge hidden" id="btn-open-fridge">
-            <span>🧊</span> OPEN THE FRIDGE! <span>🍳</span>
+            <!-- 10 Apps Grid -->
+            <div class="app-grid">
+              <!-- 1. Fridge (Recipe Roulette) -->
+              <button type="button" class="app-item" data-app="fridge" title="Recipe Roulette Fridge">
+                <div class="app-squircle app-fridge">
+                  <span class="app-emoji">🧊</span>
+                  <span class="app-badge">SURVIVE</span>
+                </div>
+                <span class="app-name">Fridge</span>
+              </button>
+
+              <!-- 2. Mom (Replay Chat) -->
+              <button type="button" class="app-item" data-app="chat" title="Mom Chat">
+                <div class="app-squircle app-mom">
+                  <img src="misae_pfp.webp" alt="Mom" class="app-pfp-icon" />
+                  <span class="app-badge">1</span>
+                </div>
+                <span class="app-name">Mom</span>
+              </button>
+
+              <!-- 3. Action Kamen TV -->
+              <button type="button" class="app-item" data-app="action-kamen" title="Action Kamen TV">
+                <div class="app-squircle app-kamen">
+                  <span class="app-emoji">⚡</span>
+                  <span class="app-badge">LIVE</span>
+                </div>
+                <span class="app-name">Kamen TV</span>
+              </button>
+
+              <!-- 4. Chocobi Delivery -->
+              <button type="button" class="app-item" data-app="chocobi" title="Chocobi Delivery">
+                <div class="app-squircle app-chocobi">
+                  <span class="app-emoji">🍫</span>
+                  <span class="app-badge">99+</span>
+                </div>
+                <span class="app-name">Chocobi</span>
+              </button>
+
+              <!-- 5. Shiro's Gallery -->
+              <button type="button" class="app-item" data-app="shiro" title="Shiro's Album">
+                <div class="app-squircle app-shiro">
+                  <span class="app-emoji">🐶</span>
+                </div>
+                <span class="app-name">Shiro</span>
+              </button>
+
+              <!-- 6. Notes -->
+              <button type="button" class="app-item" data-app="notes" title="Shinchan's Notes">
+                <div class="app-squircle app-notes">
+                  <span class="app-emoji">📝</span>
+                </div>
+                <span class="app-name">Notes</span>
+              </button>
+
+              <!-- 7. Cookbook -->
+              <button type="button" class="app-item" data-app="cookbook" title="Cooked History">
+                <div class="app-squircle app-cookbook">
+                  <span class="app-emoji">📖</span>
+                  <span class="app-badge" id="cookbook-badge">0</span>
+                </div>
+                <span class="app-name">Cookbook</span>
+              </button>
+
+              <!-- 8. Weather -->
+              <button type="button" class="app-item" data-app="weather" title="Kasukabe Weather">
+                <div class="app-squircle app-weather">
+                  <span class="app-emoji">☀️</span>
+                </div>
+                <span class="app-name">Weather</span>
+              </button>
+
+              <!-- 9. Contacts -->
+              <button type="button" class="app-item" data-app="contacts" title="Speed Dial">
+                <div class="app-squircle app-contacts">
+                  <span class="app-emoji">👥</span>
+                </div>
+                <span class="app-name">Contacts</span>
+              </button>
+
+              <!-- 10. Settings -->
+              <button type="button" class="app-item" data-app="settings" title="Settings">
+                <div class="app-squircle app-settings">
+                  <span class="app-emoji">⚙️</span>
+                </div>
+                <span class="app-name">Settings</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 3: FRIDGE (THE EXISTING RECIPE ROULETTE APP)
+               ============================================== -->
+          <div class="phone-screen" id="screen-fridge">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">🧊 RECIPE ROULETTE</span>
+              <button type="button" class="btn-sound-toggle" id="btn-sound-toggle-fridge" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
+                <span id="sound-icon-fridge">🔊</span>
+              </button>
+            </div>
+
+            <!-- Scrollable Content Housing Complete Recipe Roulette UI -->
+            <div class="fridge-scroll-content">
+              <main class="app-wrapper" id="app-screen">
+                <!-- Header -->
+                <header class="comic-header">
+                  <div class="header-top-row">
+                    <div class="action-kamen-badge" title="Action Kamen Hero Badge">
+                      <span class="kamen-star">★</span>
+                      <span class="kamen-text">ACTION HERO</span>
+                    </div>
+                    <div class="header-badge">⭐ ACTION BASTARD CERTIFIED ⭐</div>
+                    <button type="button" class="btn-sound-toggle" id="btn-sound-toggle" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
+                      <span id="sound-icon">🔊</span>
+                    </button>
+                  </div>
+                  <h1 class="app-title">RECIPE ROULETTE <span>SHINCHAN EDITION</span></h1>
+                  <p class="app-tagline">Survival cooking for college kids, lazy bachelors, and 5-year-old geniuses!</p>
+                </header>
+
+                <!-- Misae / Shinchan Speech Bubble with Character PFP -->
+                <section class="speech-bubble-container" aria-live="polite">
+                  <div class="avatar-badge mascot-container mood-happy" id="misae-avatar" title="Nohara Family">
+                    <img src="shinchan_pfp.jpg" alt="Shinchan" class="avatar-pfp-img" id="avatar-shinchan-pfp" />
+                    <img src="misae_pfp.webp" alt="Misae" class="avatar-pfp-img" id="avatar-misae-pfp" style="display:none;" />
+                  </div>
+                  <div class="speech-bubble" id="misae-speech">
+                    Mama, I'm hungry! What do we have in the fridge?
+                  </div>
+                </section>
+
+                <!-- Pantry Staples Notice -->
+                <div class="pantry-strip">
+                  <span>🧂 Pantry Staples:</span>
+                  <span class="pill">Salt</span>
+                  <span class="pill">Oil</span>
+                  <span class="pill">Water</span>
+                  <span class="pill">Basic Spices</span>
+                  <span style="font-size:0.8rem; margin-left:auto; color:#666;">(Always available!)</span>
+                </div>
+
+                <!-- Ingredient Picker Panel -->
+                <section class="comic-panel" id="ingredients-panel">
+                  <!-- Kitchen Mode Toggle: Local vs World Kitchen -->
+                  <div class="kitchen-mode-bar">
+                    <span class="kitchen-mode-title">🌍 RECIPE SOURCE:</span>
+                    <div class="kitchen-toggle-group" role="group" aria-label="Kitchen Source Selection">
+                      <button type="button" class="btn-kitchen-mode active" id="btn-mode-local" data-mode="local" title="Survival recipes from local recipes.json">
+                        <span>🏠</span> Local Kitchen
+                      </button>
+                      <button type="button" class="btn-kitchen-mode" id="btn-mode-world" data-mode="world" title="Discover recipes across the globe via TheMealDB">
+                        <span>🌍</span> World Kitchen
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="panel-header">
+                    <h2 class="panel-title">
+                      <span>🥕</span> Pick Your Ingredients
+                    </h2>
+                    <div class="preset-bar">
+                      <span class="selected-counter" id="selected-count">0 picked</span>
+                      <button type="button" class="btn-preset-reset" id="btn-clear" title="Clear all selections">Clear</button>
+                    </div>
+                  </div>
+
+                  <!-- Chips Container -->
+                  <div class="chips-container" id="chips-container">
+                    <!-- Dynamically populated via script.js -->
+                  </div>
+
+                  <!-- Custom Ingredient Input -->
+                  <form class="custom-input-group" id="custom-ingredient-form" onsubmit="return false;">
+                    <input 
+                      type="text" 
+                      id="custom-input" 
+                      class="comic-input" 
+                      placeholder="Got something else? (e.g. corn, oats)..." 
+                      maxlength="25"
+                      autocomplete="off"
+                    >
+                    <button type="submit" class="btn-add" id="btn-add-custom">+ ADD</button>
+                  </form>
+
+                  <!-- Cook Trigger Button -->
+                  <button type="button" class="btn-cook" id="btn-cook">
+                    <span>🎲</span> COOK SOMETHING! <span>🍳</span>
+                  </button>
+                </section>
+
+                <!-- Roulette Spin Window -->
+                <section id="roulette-container" aria-hidden="true">
+                  <div class="dice-icon">🎲</div>
+                  <div class="roulette-slot-window">
+                    <div class="roulette-slot-text" id="slot-reel-text">Shuffling Recipes...</div>
+                  </div>
+                  <p class="roulette-subtext">Shinchan is rummaging through the kitchen cabinets...</p>
+                </section>
+
+                <!-- Recipe Result Card -->
+                <section id="recipe-display" aria-live="polite">
+                  <article class="recipe-card">
+                    <div class="recipe-meta-strip">
+                      <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
+                      <div class="recipe-badges">
+                        <span class="badge-tag badge-source" id="card-recipe-source">🏠 Local Kitchen</span>
+                        <span class="badge-tag badge-time" id="card-recipe-time">⏱️ 5 mins</span>
+                        <span class="badge-tag badge-difficulty" id="card-recipe-diff">⚡ Super Easy</span>
+                        <span class="badge-tag badge-match" id="card-recipe-match">🎯 3 Matched</span>
+                      </div>
+                    </div>
+
+                    <!-- Dish Photo (for World Kitchen / rich recipes) -->
+                    <div class="recipe-thumb-container" id="card-image-wrap" style="display:none;">
+                      <img id="card-recipe-image" class="recipe-dish-thumb" src="" alt="Dish Photo" loading="lazy" />
+                    </div>
+
+                    <!-- Grumpy Banner if hated ingredient was selected -->
+                    <div class="grumpy-banner" id="card-grumpy-banner" style="display:none;">
+                      <span>😡</span>
+                      <span id="grumpy-text">Shinchan is staring with intense disappointment because of the green pepper.</span>
+                    </div>
+
+                    <!-- Smart Swaps Banner -->
+                    <div class="smart-swap-box" id="card-swap-box" style="display:none;">
+                      <div class="swap-header">💡 SMART SURVIVAL SWAP!</div>
+                      <ul class="swap-list" id="card-swap-list">
+                        <!-- Populated via JS -->
+                      </ul>
+                    </div>
+
+                    <!-- Ingredients Checklist -->
+                    <div class="recipe-section">
+                      <h3 class="section-subtitle">🛒 What You Need:</h3>
+                      <div class="recipe-ingredients-list" id="card-ingredients-list">
+                        <!-- Injected via JS -->
+                      </div>
+                    </div>
+
+                    <!-- Recipe Steps -->
+                    <div class="recipe-section">
+                      <h3 class="section-subtitle">🔥 Easy Steps:</h3>
+                      <ol class="recipe-steps-list" id="card-steps-list">
+                        <!-- Injected via JS -->
+                      </ol>
+                    </div>
+
+                    <!-- Shinchan Card Quote with Shinchan PFP -->
+                    <div class="shinchan-card-quote" id="card-shinchan-quote-box">
+                      <img src="shinchan_pfp.jpg" alt="Shinchan" class="quote-pfp" />
+                      <div class="quote-content">
+                        <span class="quote-speaker">SHINCHAN SAYS:</span>
+                        <span id="card-shinchan-quote">"Action Bastard power breakfast! Eggs make you strong like me!"</span>
+                      </div>
+                    </div>
+
+                    <!-- Shinchan Butt-Wiggle Celebratory Dance -->
+                    <div class="butt-dance-banner" id="card-butt-dance">
+                      <div class="butt-dancer" aria-hidden="true">🍑</div>
+                      <div class="butt-text">
+                        <strong>BURI BURI CELEBRATION!</strong>
+                        <span>Shinchan is doing his victory butt-wiggle dance!</span>
+                      </div>
+                    </div>
+
+                    <!-- Mummy's Verdict Seal with Misae PFP -->
+                    <div class="mummy-verdict-stamp" id="card-mummy-verdict">
+                      <img src="misae_pfp.webp" alt="Mummy Misae" class="verdict-pfp" />
+                      <div class="verdict-text-box">
+                        <div class="verdict-label">MUMMY'S VERDICT (10/10)</div>
+                        <div class="verdict-sub">Shiro also approves with 2 paws up! 🐾</div>
+                      </div>
+                    </div>
+
+                    <!-- Card Action Buttons -->
+                    <div class="card-actions">
+                      <button type="button" class="btn-secondary" id="btn-spin-again">
+                        <span>🎲</span> Spin Again (Next Match)
+                      </button>
+                      <button type="button" class="btn-secondary" id="btn-copy-recipe" style="background:#A3E4D7;">
+                        <span>📋</span> <span id="copy-text">Copy Recipe</span>
+                      </button>
+                      <button type="button" class="btn-secondary" id="btn-change-ingredients" style="background:var(--white);">
+                        <span>✏️</span> Edit Ingredients
+                      </button>
+                    </div>
+                  </article>
+                </section>
+
+                <!-- Fallback Funny Card with Shinchan PFP -->
+                <section id="fallback-display">
+                  <div class="fallback-pfp-wrap">
+                    <img src="shinchan_pfp.jpg" alt="Shinchan Shocked" class="fallback-shinchan-pfp" />
+                  </div>
+                  <h2 class="fallback-title">THE FRIDGE IS AS EMPTY AS HIROSHI'S WALLET!</h2>
+                  <p class="fallback-text" id="fallback-message">
+                    Pick at least one or two ingredients like eggs, bread, or noodles, or we're eating instant noodles with plain air!
+                  </p>
+                  <button type="button" class="btn-secondary" id="btn-fallback-retry" style="max-width:280px; margin:0 auto;">
+                    <span>👈</span> Pick Some Ingredients!
+                  </button>
+                </section>
+              </main>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 4: ACTION KAMEN TV
+               ============================================== -->
+          <div class="phone-screen" id="screen-action-kamen">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">⚡ ACTION KAMEN TV</span>
+            </div>
+            <div class="screen-content kamen-tv-content">
+              <div class="tv-casing">
+                <div class="tv-antenna">📡</div>
+                <div class="tv-screen-bezel">
+                  <div class="tv-screen-glass" id="tv-glass">
+                    <div class="kamen-character-anim" id="kamen-character">⭐ 🦸‍♂️ ⭐</div>
+                    <div class="kamen-quote" id="kamen-quote">"WA-HA-HA-HA! Action Beam charged 100%! Evil villains, prepare to be defeated!"</div>
+                    <div class="kamen-beam-laser hidden" id="kamen-beam-laser">⚡⚡⚡⚡⚡⚡</div>
+                  </div>
+                </div>
+                <div class="tv-controls">
+                  <button type="button" class="btn-kamen-beam" id="btn-kamen-beam">
+                    ⚡ FIRE ACTION BEAM! ⚡
+                  </button>
+                </div>
+              </div>
+              <div class="kamen-stats">
+                <div class="kamen-stat-item">
+                  <strong>Channel:</strong> Ch. 7 Kasukabe Action TV
+                </div>
+                <div class="kamen-stat-item">
+                  <strong>Status:</strong> Defeating Dr. Black Mask & his minions!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 5: CHOCOBI DELIVERY
+               ============================================== -->
+          <div class="phone-screen" id="screen-chocobi">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">🍫 CHOCOBI DELIVERY</span>
+            </div>
+            <div class="screen-content chocobi-content">
+              <div class="chocobi-box-display">
+                <div class="chocobi-mascot-box">
+                  <span class="dino-mascot">🦖</span>
+                  <span class="chocobi-logo-text">CHOCOBI CRUNCH</span>
+                  <span class="chocobi-star">⭐⭐⭐</span>
+                </div>
+              </div>
+              <div class="order-tracker-card">
+                <div class="tracker-header">
+                  <strong>📦 ORDER #CHOCOBI-777</strong>
+                  <span class="tracker-status-tag">STOLEN BY SHINCHAN</span>
+                </div>
+                <ul class="tracker-timeline">
+                  <li class="timeline-step done">
+                    <span class="step-dot">✓</span>
+                    <div class="step-desc">
+                      <strong>17:00</strong> - Freshly baked at Chocobi Factory 🏭
+                    </div>
+                  </li>
+                  <li class="timeline-step done">
+                    <span class="step-dot">✓</span>
+                    <div class="step-desc">
+                      <strong>17:30</strong> - Arrived in Kasukabe Ward 🚚
+                    </div>
+                  </li>
+                  <li class="timeline-step current">
+                    <span class="step-dot">🍫</span>
+                    <div class="step-desc">
+                      <strong>17:42</strong> - Intercepted & eaten by Shinchan! 😋
+                    </div>
+                  </li>
+                  <li class="timeline-step future">
+                    <span class="step-dot">⏳</span>
+                    <div class="step-desc">
+                      <strong>ETA:</strong> Never! It's already in Shinchan's belly!
+                    </div>
+                  </li>
+                </ul>
+                <button type="button" class="btn-secondary" id="btn-order-chocobi" style="margin-top:12px; width:100%;">
+                  <span>🍫</span> Order Another Box! <span>🦖</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 6: SHIRO'S ALBUM
+               ============================================== -->
+          <div class="phone-screen" id="screen-shiro">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">🐶 SHIRO'S ALBUM</span>
+            </div>
+            <div class="screen-content shiro-content">
+              <div class="shiro-hero-card">
+                <div class="shiro-dog-anim" id="shiro-avatar">🐶</div>
+                <h3 class="shiro-hero-name">Shiro (Goodest Boy)</h3>
+                <p class="shiro-hero-desc">100% Cotton-candy fur · Master of survival</p>
+                <button type="button" class="btn-pet-shiro" id="btn-pet-shiro">
+                  <span>🐾</span> Pet Shiro <span>🍖</span>
+                </button>
+              </div>
+              <div class="polaroid-grid">
+                <div class="polaroid-card">
+                  <div class="polaroid-photo">☁️</div>
+                  <div class="polaroid-caption">Cotton Candy trick!</div>
+                </div>
+                <div class="polaroid-card">
+                  <div class="polaroid-photo">🦴</div>
+                  <div class="polaroid-caption">Bone guard duty!</div>
+                </div>
+                <div class="polaroid-card">
+                  <div class="polaroid-photo">🚶‍♂️</div>
+                  <div class="polaroid-caption">Walking himself!</div>
+                </div>
+                <div class="polaroid-card">
+                  <div class="polaroid-photo">😴</div>
+                  <div class="polaroid-caption">Nap time in doghouse!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 7: NOTES
+               ============================================== -->
+          <div class="phone-screen" id="screen-notes">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">📝 SHINCHAN'S NOTES</span>
+            </div>
+            <div class="screen-content notes-content">
+              <div class="notepad-paper">
+                <div class="notepad-header">
+                  <h3>Kasukabe Survival Rules 🖍️</h3>
+                  <button type="button" class="btn-add-note" id="btn-add-note">+ Scribble</button>
+                </div>
+                <ol class="notepad-list" id="notepad-list">
+                  <li>Rule 1: Mom's favorite chocolate cake is hidden behind the flour jar.</li>
+                  <li>Rule 2: Never give Mom eggplant or you'll get the knuckle drill of doom! 🌪️</li>
+                  <li>Rule 3: Kazama denies loving magical girl Moe-P, but he has the sticker album.</li>
+                  <li>Rule 4: Dad's socks are classified as biological weapons by the UN.</li>
+                  <li>Rule 5: When caught doing pranks, immediately drop pants and do Buri Buri dance! 🍑</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 8: COOKBOOK (SESSION COOKED DISHES)
+               ============================================== -->
+          <div class="phone-screen" id="screen-cookbook">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">📖 SURVIVAL COOKBOOK</span>
+            </div>
+            <div class="screen-content cookbook-content">
+              <div class="cookbook-header-card">
+                <h3>Dishes Cooked This Session 🍳</h3>
+                <p>Track everything Shinchan and Mom prepared today!</p>
+              </div>
+              <div class="cookbook-list" id="cookbook-list">
+                <!-- Dynamically populated via script.js -->
+                <div class="cookbook-empty-state" id="cookbook-empty-state">
+                  <div class="empty-icon">🍳</div>
+                  <h4>No recipes cooked yet!</h4>
+                  <p>Open the Fridge, pick your ingredients, and spin the roulette to log your first delicious survival dish!</p>
+                  <button type="button" class="btn-secondary" id="btn-goto-fridge" style="margin-top:12px;">
+                    <span>🧊</span> Go to Fridge!
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 9: WEATHER
+               ============================================== -->
+          <div class="phone-screen" id="screen-weather">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">☀️ KASUKABE WEATHER</span>
+            </div>
+            <div class="screen-content weather-content">
+              <div class="weather-hero-card">
+                <div class="weather-sun-anim">😎☀️</div>
+                <div class="weather-temp">32°C</div>
+                <div class="weather-condition">Partly Cloudy, Mostly Chaotic</div>
+                <div class="weather-primary-forecast">
+                  ⚡ <strong>"90% chance of Mom yelling, 100% chance of chocobi"</strong> 🍫
+                </div>
+              </div>
+              <div class="weather-grid">
+                <div class="weather-stat-box">
+                  <span class="stat-icon">🔥</span>
+                  <span class="stat-label">Mom's Temper</span>
+                  <span class="stat-value">Simmering</span>
+                </div>
+                <div class="weather-stat-box">
+                  <span class="stat-icon">💨</span>
+                  <span class="stat-label">Buri Wind</span>
+                  <span class="stat-value">18 km/h S</span>
+                </div>
+                <div class="weather-stat-box">
+                  <span class="stat-icon">🍫</span>
+                  <span class="stat-label">Chocobi Rain</span>
+                  <span class="stat-value">Guaranteed</span>
+                </div>
+                <div class="weather-stat-box">
+                  <span class="stat-icon">🪫</span>
+                  <span class="stat-label">Phone Battery</span>
+                  <span class="stat-value" id="weather-battery-stat">85%</span>
+                </div>
+              </div>
+              <div class="weather-advice-box">
+                <strong>💡 Survival Advice:</strong> Do not leave your toy robot on the living room floor or Mom will kick it into next Tuesday!
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 10: CONTACTS
+               ============================================== -->
+          <div class="phone-screen" id="screen-contacts">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">👥 SPEED DIAL</span>
+            </div>
+            <div class="screen-content contacts-content">
+              <div class="contacts-list" id="contacts-list">
+                <div class="contact-card" data-caller="Mom">
+                  <div class="contact-avatar-wrap">
+                    <img src="misae_pfp.webp" alt="Mom" class="contact-pfp" />
+                  </div>
+                  <div class="contact-details">
+                    <strong class="contact-name">Mom ❤️ (Misae)</strong>
+                    <span class="contact-sub">WARNING: Do not call if chores are pending!</span>
+                  </div>
+                  <button type="button" class="btn-call">📞</button>
+                </div>
+
+                <div class="contact-card" data-caller="Dad">
+                  <div class="contact-avatar-wrap">💼</div>
+                  <div class="contact-details">
+                    <strong class="contact-name">Dad 👔 (Hiroshi)</strong>
+                    <span class="contact-sub">Office worker · 32-year house loan pending</span>
+                  </div>
+                  <button type="button" class="btn-call">📞</button>
+                </div>
+
+                <div class="contact-card" data-caller="Kazama">
+                  <div class="contact-avatar-wrap">📚</div>
+                  <div class="contact-details">
+                    <strong class="contact-name">Kazama-kun 🎒</strong>
+                    <span class="contact-sub">Top student · Secretly loves Moe-P</span>
+                  </div>
+                  <button type="button" class="btn-call">📞</button>
+                </div>
+
+                <div class="contact-card" data-caller="Nanako">
+                  <div class="contact-avatar-wrap">🥰</div>
+                  <div class="contact-details">
+                    <strong class="contact-name">Nanako Onee-san 💖</strong>
+                    <span class="contact-sub">Shinchan's future bride (in his mind)</span>
+                  </div>
+                  <button type="button" class="btn-call">📞</button>
+                </div>
+
+                <div class="contact-card" data-caller="Shiro">
+                  <div class="contact-avatar-wrap">🐶</div>
+                  <div class="contact-details">
+                    <strong class="contact-name">Shiro 🦴</strong>
+                    <span class="contact-sub">Good boy · Always hungry</span>
+                  </div>
+                  <button type="button" class="btn-call">📞</button>
+                </div>
+
+                <div class="contact-card" data-caller="Action Kamen">
+                  <div class="contact-avatar-wrap">⚡</div>
+                  <div class="contact-details">
+                    <strong class="contact-name">Action Kamen 🦸‍♂️</strong>
+                    <span class="contact-sub">Superhero hotline (Dial 100 for justice)</span>
+                  </div>
+                  <button type="button" class="btn-call">📞</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==============================================
+               SCREEN 11: SETTINGS
+               ============================================== -->
+          <div class="phone-screen" id="screen-settings">
+            <div class="screen-app-bar">
+              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <span class="app-bar-title">⚙️ SETTINGS</span>
+            </div>
+            <div class="screen-content settings-content">
+              <div class="settings-group">
+                <div class="settings-title">Comic Features</div>
+
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <strong>🍑 Butt-Wiggle Celebrations</strong>
+                    <span>Victory dance when recipes match</span>
+                  </div>
+                  <input type="checkbox" id="setting-butt-wiggle" checked class="comic-switch" />
+                </div>
+
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <strong>🔊 Comic Sound FX</strong>
+                    <span>Web Audio pops, boings, fanfares</span>
+                  </div>
+                  <input type="checkbox" id="setting-sound-fx" checked class="comic-switch" />
+                </div>
+
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <strong>😡 Mom Anger Alerts</strong>
+                    <span>Trigger screen shake at 100%</span>
+                  </div>
+                  <input type="checkbox" id="setting-anger-alerts" checked class="comic-switch" />
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <div class="settings-title">Emergency Shinchan Tools</div>
+                <button type="button" class="btn-secondary" id="btn-trigger-puri" style="width:100%; margin-bottom:8px;">
+                  <span>🍑</span> Test Butt-Wiggle Dance!
+                </button>
+                <button type="button" class="btn-secondary" id="btn-reset-anger" style="width:100%; background:#FFEAA7;">
+                  <span>🧊</span> Calm Mom's Anger (To 10%)
+                </button>
+              </div>
+
+              <div class="settings-footer-info">
+                <span>Shinchan OS v2.0 · Kasukabe Edition</span>
+              </div>
+            </div>
+          </div>
+
+        </div> <!-- /phone-screens-viewport -->
+
+        <!-- Bottom Navigation Bar inside the Phone -->
+        <nav class="phone-nav-bar" id="phone-nav-bar">
+          <button type="button" class="nav-item" data-nav="home">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
           </button>
+          <button type="button" class="nav-item" data-nav="fridge">
+            <span class="nav-icon">🧊</span>
+            <span class="nav-label">Fridge</span>
+          </button>
+          <button type="button" class="nav-item" data-nav="cookbook">
+            <span class="nav-icon">📖</span>
+            <span class="nav-label">Cookbook</span>
+          </button>
+          <button type="button" class="nav-item" data-nav="notes">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">Notes</span>
+          </button>
+        </nav>
+
+        <!-- Mom's 100% Rage Explosion Modal -->
+        <div class="mom-rage-modal hidden" id="mom-rage-modal">
+          <div class="mom-rage-content">
+            <div class="mom-rage-steam">💨 😡 💨</div>
+            <h2 class="mom-rage-title">SHIN-CHAN!!!!!</h2>
+            <p class="mom-rage-sub">Mom's anger hit 100%! The whole house is trembling!</p>
+            <div class="mom-rage-pfp-wrap">
+              <img src="misae_pfp.webp" alt="Angry Mom" class="mom-rage-pfp" />
+            </div>
+            <button type="button" class="btn-rage-calm" id="btn-rage-calm">Say Sorry to Mummy! 🥺</button>
+          </div>
         </div>
-      </div>
-    </div>
+
+      </div> <!-- /comic-phone -->
+    </div> <!-- /phone-wrapper -->
   </section>
-
-  <!-- Main App Screen (Preserved Existing UI) -->
-  <main class="app-wrapper" id="app-screen" style="display: none;">
-    <!-- Header -->
-    <header class="comic-header">
-      <div class="header-top-row">
-        <!-- Action Kamen Hero Badge (CSS-drawn) -->
-        <div class="action-kamen-badge" title="Action Kamen Hero Badge">
-          <span class="kamen-star">★</span>
-          <span class="kamen-text">ACTION HERO</span>
-        </div>
-        <div class="header-badge">⭐ ACTION BASTARD CERTIFIED ⭐</div>
-        <button type="button" class="btn-sound-toggle" id="btn-sound-toggle" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
-          <span id="sound-icon">🔊</span>
-        </button>
-      </div>
-      <h1 class="app-title">RECIPE ROULETTE <span>SHINCHAN EDITION</span></h1>
-      <p class="app-tagline">Survival cooking for college kids, lazy bachelors, and 5-year-old geniuses!</p>
-    </header>
-
-    <!-- Misae / Shinchan Speech Bubble with Character PFP -->
-    <section class="speech-bubble-container" aria-live="polite">
-      <div class="avatar-badge mascot-container mood-happy" id="misae-avatar" title="Nohara Family">
-        <img src="shinchan_pfp.jpg" alt="Shinchan" class="avatar-pfp-img" id="avatar-shinchan-pfp" />
-        <img src="misae_pfp.webp" alt="Misae" class="avatar-pfp-img" id="avatar-misae-pfp" style="display:none;" />
-      </div>
-      <div class="speech-bubble" id="misae-speech">
-        Mama, I'm hungry! What do we have in the fridge?
-      </div>
-    </section>
-
-    <!-- Pantry Staples Notice -->
-    <div class="pantry-strip">
-      <span>🧂 Pantry Staples:</span>
-      <span class="pill">Salt</span>
-      <span class="pill">Oil</span>
-      <span class="pill">Water</span>
-      <span class="pill">Basic Spices</span>
-      <span style="font-size:0.8rem; margin-left:auto; color:#666;">(Always available!)</span>
-    </div>
-
-    <!-- Ingredient Picker Panel -->
-    <section class="comic-panel" id="ingredients-panel">
-      <!-- Kitchen Mode Toggle: Local vs World Kitchen -->
-      <div class="kitchen-mode-bar">
-        <span class="kitchen-mode-title">🌍 RECIPE SOURCE:</span>
-        <div class="kitchen-toggle-group" role="group" aria-label="Kitchen Source Selection">
-          <button type="button" class="btn-kitchen-mode active" id="btn-mode-local" data-mode="local" title="Survival recipes from local recipes.json">
-            <span>🏠</span> Local Kitchen
-          </button>
-          <button type="button" class="btn-kitchen-mode" id="btn-mode-world" data-mode="world" title="Discover recipes across the globe via TheMealDB">
-            <span>🌍</span> World Kitchen
-          </button>
-        </div>
-      </div>
-
-      <div class="panel-header">
-        <h2 class="panel-title">
-          <span>🥕</span> Pick Your Ingredients
-        </h2>
-        <div class="preset-bar">
-          <span class="selected-counter" id="selected-count">0 picked</span>
-          <button type="button" class="btn-preset-reset" id="btn-clear" title="Clear all selections">Clear</button>
-        </div>
-      </div>
-
-      <!-- Chips Container -->
-      <div class="chips-container" id="chips-container">
-        <!-- Dynamically populated or static with data-tags -->
-      </div>
-
-      <!-- Custom Ingredient Input -->
-      <form class="custom-input-group" id="custom-ingredient-form" onsubmit="return false;">
-        <input 
-          type="text" 
-          id="custom-input" 
-          class="comic-input" 
-          placeholder="Got something else? (e.g. corn, oats)..." 
-          maxlength="25"
-          autocomplete="off"
-        >
-        <button type="submit" class="btn-add" id="btn-add-custom">+ ADD</button>
-      </form>
-
-      <!-- Cook Trigger Button -->
-      <button type="button" class="btn-cook" id="btn-cook">
-        <span>🎲</span> COOK SOMETHING! <span>🍳</span>
-      </button>
-    </section>
-
-    <!-- Roulette Spin Window -->
-    <section id="roulette-container" aria-hidden="true">
-      <div class="dice-icon">🎲</div>
-      <div class="roulette-slot-window">
-        <div class="roulette-slot-text" id="slot-reel-text">Shuffling Recipes...</div>
-      </div>
-      <p class="roulette-subtext">Shinchan is rummaging through the kitchen cabinets...</p>
-    </section>
-
-    <!-- Recipe Result Card -->
-    <section id="recipe-display" aria-live="polite">
-      <article class="recipe-card">
-        <div class="recipe-meta-strip">
-          <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
-          <div class="recipe-badges">
-            <span class="badge-tag badge-source" id="card-recipe-source">🏠 Local Kitchen</span>
-            <span class="badge-tag badge-time" id="card-recipe-time">⏱️ 5 mins</span>
-            <span class="badge-tag badge-difficulty" id="card-recipe-diff">⚡ Super Easy</span>
-            <span class="badge-tag badge-match" id="card-recipe-match">🎯 3 Matched</span>
-          </div>
-        </div>
-
-        <!-- Dish Photo (for World Kitchen / rich recipes) -->
-        <div class="recipe-thumb-container" id="card-image-wrap" style="display:none;">
-          <img id="card-recipe-image" class="recipe-dish-thumb" src="" alt="Dish Photo" loading="lazy" />
-        </div>
-
-        <!-- Grumpy Banner if hated ingredient was selected -->
-        <div class="grumpy-banner" id="card-grumpy-banner" style="display:none;">
-          <span>😡</span>
-          <span id="grumpy-text">Shinchan is staring with intense disappointment because of the green pepper.</span>
-        </div>
-
-        <!-- Smart Swaps Banner -->
-        <div class="smart-swap-box" id="card-swap-box" style="display:none;">
-          <div class="swap-header">💡 SMART SURVIVAL SWAP!</div>
-          <ul class="swap-list" id="card-swap-list">
-            <!-- Populated via JS -->
-          </ul>
-        </div>
-
-        <!-- Ingredients Checklist -->
-        <div class="recipe-section">
-          <h3 class="section-subtitle">🛒 What You Need:</h3>
-          <div class="recipe-ingredients-list" id="card-ingredients-list">
-            <!-- Injected via JS -->
-          </div>
-        </div>
-
-        <!-- Recipe Steps -->
-        <div class="recipe-section">
-          <h3 class="section-subtitle">🔥 Easy Steps:</h3>
-          <ol class="recipe-steps-list" id="card-steps-list">
-            <!-- Injected via JS -->
-          </ol>
-        </div>
-
-        <!-- Shinchan Card Quote with Shinchan PFP -->
-        <div class="shinchan-card-quote" id="card-shinchan-quote-box">
-          <img src="shinchan_pfp.jpg" alt="Shinchan" class="quote-pfp" />
-          <div class="quote-content">
-            <span class="quote-speaker">SHINCHAN SAYS:</span>
-            <span id="card-shinchan-quote">"Action Bastard power breakfast! Eggs make you strong like me!"</span>
-          </div>
-        </div>
-
-        <!-- Shinchan Butt-Wiggle Celebratory Dance -->
-        <div class="butt-dance-banner" id="card-butt-dance">
-          <div class="butt-dancer" aria-hidden="true">🍑</div>
-          <div class="butt-text">
-            <strong>BURI BURI CELEBRATION!</strong>
-            <span>Shinchan is doing his victory butt-wiggle dance!</span>
-          </div>
-        </div>
-
-        <!-- Mummy's Verdict Seal with Misae PFP -->
-        <div class="mummy-verdict-stamp" id="card-mummy-verdict">
-          <img src="misae_pfp.webp" alt="Mummy Misae" class="verdict-pfp" />
-          <div class="verdict-text-box">
-            <div class="verdict-label">MUMMY'S VERDICT (10/10)</div>
-            <div class="verdict-sub">Shiro also approves with 2 paws up! 🐾</div>
-          </div>
-        </div>
-
-        <!-- Card Action Buttons -->
-        <div class="card-actions">
-          <button type="button" class="btn-secondary" id="btn-spin-again">
-            <span>🎲</span> Spin Again (Next Match)
-          </button>
-          <button type="button" class="btn-secondary" id="btn-copy-recipe" style="background:#A3E4D7;">
-            <span>📋</span> <span id="copy-text">Copy Recipe</span>
-          </button>
-          <button type="button" class="btn-secondary" id="btn-change-ingredients" style="background:var(--white);">
-            <span>✏️</span> Edit Ingredients
-          </button>
-        </div>
-      </article>
-    </section>
-
-    <!-- Fallback Funny Card with Shinchan PFP -->
-    <section id="fallback-display">
-      <div class="fallback-pfp-wrap">
-        <img src="shinchan_pfp.jpg" alt="Shinchan Shocked" class="fallback-shinchan-pfp" />
-      </div>
-      <h2 class="fallback-title">THE FRIDGE IS AS EMPTY AS HIROSHI'S WALLET!</h2>
-      <p class="fallback-text" id="fallback-message">
-        Pick at least one or two ingredients like eggs, bread, or noodles, or we're eating instant noodles with plain air!
-      </p>
-      <button type="button" class="btn-secondary" id="btn-fallback-retry" style="max-width:280px; margin:0 auto;">
-        <span>👈</span> Pick Some Ingredients!
-      </button>
-    </section>
-  </main>
 
   <script src="script.js"></script>
 </body>
 </html>
-

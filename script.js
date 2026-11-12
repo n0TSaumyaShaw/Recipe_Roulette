@@ -855,6 +855,241 @@ const fallbackDisplay = document.getElementById('fallback-display');
 const fallbackMsg = document.getElementById('fallback-message');
 const btnFallbackRetry = document.getElementById('btn-fallback-retry');
 
+// =========================================
+// SHINCHAN PHONE OS STATE & MANAGERS
+// =========================================
+let currentPhoneScreen = 'chat';
+let batteryPercent = 85;
+let momAnger = 10;
+let sessionCookbook = [];
+
+// Screen Navigation Manager
+function showPhoneScreen(screenId) {
+  const screens = document.querySelectorAll('.phone-screen');
+  screens.forEach(s => s.classList.remove('active'));
+
+  const target = document.getElementById(`screen-${screenId}`);
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+    currentPhoneScreen = screenId;
+  }
+
+  // Update bottom navigation bar active state
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    if (item.dataset.nav === screenId) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  if (screenId === 'cookbook') {
+    renderCookbook();
+  } else if (screenId === 'weather') {
+    updateWeatherUI();
+  } else if (screenId === 'home') {
+    updateHomeClock();
+  }
+
+  playSound('pop');
+}
+
+// Battery Management (-1% per spin, alert at 1%)
+function drainBattery() {
+  batteryPercent = Math.max(1, batteryPercent - 1);
+  updateBatteryUI();
+  if (batteryPercent <= 1) {
+    triggerPhoneNotification("🪫 BATTERY CRITICAL (1%)", "Mom, please bring the charger!", "🪫");
+  }
+}
+
+function updateBatteryUI() {
+  const phoneBattery = document.getElementById('phone-battery');
+  const weatherBattery = document.getElementById('weather-battery-stat');
+  if (phoneBattery) {
+    if (batteryPercent <= 1) {
+      phoneBattery.textContent = "🪫 1%";
+      phoneBattery.title = "Mom, please bring the charger!";
+      phoneBattery.classList.add('battery-low');
+    } else if (batteryPercent <= 20) {
+      phoneBattery.textContent = `🪫 ${batteryPercent}%`;
+      phoneBattery.title = `Battery: ${batteryPercent}% (Low)`;
+      phoneBattery.classList.add('battery-low');
+    } else {
+      phoneBattery.textContent = `🔋 ${batteryPercent}%`;
+      phoneBattery.title = `Battery: ${batteryPercent}%`;
+      phoneBattery.classList.remove('battery-low');
+    }
+  }
+  if (weatherBattery) {
+    weatherBattery.textContent = `${batteryPercent}%`;
+  }
+}
+
+// Mom's Anger Meter Manager (0 - 100%)
+function increaseMomAnger(amount) {
+  momAnger = Math.min(100, momAnger + amount);
+  updateAngerMeterUI();
+  if (momAnger >= 100) {
+    triggerMom100Rage();
+  }
+}
+
+function updateAngerMeterUI() {
+  const fill = document.getElementById('status-anger-fill');
+  const val = document.getElementById('status-anger-val');
+  const face = document.getElementById('anger-face');
+  if (fill) fill.style.width = `${momAnger}%`;
+  if (val) val.textContent = `${momAnger}%`;
+  if (face) {
+    if (momAnger >= 80) face.textContent = "🤬";
+    else if (momAnger >= 50) face.textContent = "😡";
+    else if (momAnger >= 25) face.textContent = "😤";
+    else face.textContent = "🙂";
+  }
+}
+
+function triggerMom100Rage() {
+  const phone = document.getElementById('comic-phone');
+  const rageModal = document.getElementById('mom-rage-modal');
+  if (phone) phone.classList.add('shake-intense');
+  if (flashOverlay) flashOverlay.classList.add('active');
+  if (rageModal) rageModal.classList.remove('hidden');
+
+  playSound('alarm');
+  if (misaeSpeech) {
+    showPfp('misae');
+    misaeSpeech.classList.add('angry');
+    misaeSpeech.textContent = "SHIN-CHAN!!!!! WHAT DID YOU DO TO MY KITCHEN?!!";
+  }
+
+  setTimeout(() => {
+    calmMomAnger();
+  }, 4000);
+}
+
+function calmMomAnger() {
+  const phone = document.getElementById('comic-phone');
+  const rageModal = document.getElementById('mom-rage-modal');
+  if (phone) phone.classList.remove('shake-intense');
+  if (flashOverlay) flashOverlay.classList.remove('active');
+  if (rageModal) rageModal.classList.add('hidden');
+  momAnger = 20;
+  updateAngerMeterUI();
+}
+
+// Sliding Notification Banner (~15s recurring)
+const PHONE_NOTIFICATIONS = [
+  { title: "ACTION KAMEN ALERT!", text: "Special episode 'Action Beam vs Black Mask' is airing now!", icon: "⚡" },
+  { title: "MOM (MISAE)", text: "Shinchan! Where did you hide my chocolate cake?!", icon: "👩" },
+  { title: "SHIRO", text: "*Bark bark!* (Translation: Please feed me, Shinchan forgot again!)", icon: "🐶" },
+  { title: "DAD (HIROSHI)", text: "Only 31 years and 11 months left on the house mortgage...", icon: "💼" },
+  { title: "CHOCOBI DISPATCH", text: "Emergency! Golden dinosaur cards detected at Kasukabe mart!", icon: "🍫" },
+  { title: "KAZAMA-KUN", text: "Shinchan, stop singing Moe-P opening theme in front of my tutor!", icon: "📚" },
+  { title: "NANAKO ONEE-SAN", text: "Hi Shinchan! I baked homemade cookies today!", icon: "🥰" },
+  { title: "BURI BURI ZAEMON", text: "I am a hero on the side of justice! Rescue fee is 10,000 yen!", icon: "🐷" },
+  { title: "YOSHINAGA-SENSEI", text: "Sunflower class art supplies are NOT for face painting!", icon: "🎨" }
+];
+let notifCycleIndex = 0;
+
+function triggerRandomNotification() {
+  const item = PHONE_NOTIFICATIONS[notifCycleIndex % PHONE_NOTIFICATIONS.length];
+  notifCycleIndex++;
+  triggerPhoneNotification(item.title, item.text, item.icon);
+}
+
+function triggerPhoneNotification(title, text, icon) {
+  const notif = document.getElementById('phone-notif');
+  const tEl = document.getElementById('notif-title');
+  const subEl = document.getElementById('notif-text');
+  const iEl = document.getElementById('notif-icon');
+  if (!notif) return;
+  if (tEl) tEl.textContent = title;
+  if (subEl) subEl.textContent = text;
+  if (iEl) iEl.textContent = icon || "⚡";
+
+  notif.classList.remove('show');
+  void notif.offsetWidth;
+  notif.classList.add('show');
+  playSound('pop');
+
+  setTimeout(() => {
+    notif.classList.remove('show');
+  }, 4200);
+}
+
+// Cookbook Session Logger
+function recordCookedRecipe(recipe) {
+  if (!recipe || !recipe.name) return;
+  const existing = sessionCookbook.find(r => r.name === recipe.name);
+  if (existing) {
+    existing.count = (existing.count || 1) + 1;
+  } else {
+    sessionCookbook.unshift({
+      name: recipe.name,
+      time: recipe.time,
+      difficulty: recipe.difficulty,
+      comment: recipe.shinchan_comment || "Approved by Action Bastard!",
+      count: 1
+    });
+  }
+  const badge = document.getElementById('cookbook-badge');
+  if (badge) badge.textContent = sessionCookbook.length;
+}
+
+function renderCookbook() {
+  const list = document.getElementById('cookbook-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (sessionCookbook.length === 0) {
+    list.innerHTML = `
+      <div class="cookbook-empty-state">
+        <div class="empty-icon">🍳</div>
+        <h4>No recipes cooked yet!</h4>
+        <p>Open the Fridge, pick your ingredients, and spin the roulette to log your first delicious survival dish!</p>
+        <button type="button" class="btn-secondary" id="btn-goto-fridge" style="margin-top:12px;">
+          <span>🧊</span> Go to Fridge!
+        </button>
+      </div>
+    `;
+    const btnGo = document.getElementById('btn-goto-fridge');
+    if (btnGo) btnGo.addEventListener('click', () => showPhoneScreen('fridge'));
+    return;
+  }
+
+  sessionCookbook.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'cooked-dish-card';
+    card.innerHTML = `
+      <div class="cooked-dish-title">${item.name} ${item.count > 1 ? `(x${item.count})` : ''}</div>
+      <div class="cooked-dish-meta">
+        <span>⏱️ ${item.time}</span> · 
+        <span>⚡ ${item.difficulty}</span> · 
+        <span style="color:#00B894;">⭐ Mummy's Verdict: 10/10</span>
+      </div>
+      <div class="cooked-dish-comment">"${item.comment}"</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function updateWeatherUI() {
+  const wb = document.getElementById('weather-battery-stat');
+  if (wb) wb.textContent = `${batteryPercent}%`;
+}
+
+function updateHomeClock() {
+  const clock = document.getElementById('home-big-clock');
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  if (clock) clock.textContent = timeStr;
+  const phoneClock = document.getElementById('phone-clock');
+  if (phoneClock) phoneClock.textContent = timeStr;
+}
+
 // Landing Screen & Intro Animation
 let introTimers = [];
 
@@ -865,16 +1100,8 @@ function clearIntroTimers() {
 
 function transitionToApp() {
   clearIntroTimers();
-  const landingScreen = document.getElementById('landing-screen');
-  const appScreen = document.getElementById('app-screen');
-  if (!landingScreen || !appScreen) return;
-
-  landingScreen.classList.add('screen-fade-out');
-  setTimeout(() => {
-    landingScreen.style.display = 'none';
-    appScreen.style.display = 'flex';
-    appScreen.classList.add('screen-fade-in');
-  }, 320);
+  showPhoneScreen('home');
+  playSound('fanfare');
 }
 
 function initIntroScreen() {
@@ -890,7 +1117,7 @@ function initIntroScreen() {
   const btnOpenFridge = document.getElementById('btn-open-fridge');
   const btnSkip = document.getElementById('btn-skip-intro');
 
-  // Skip button click
+  // Skip button click: opens Phone Home Screen
   if (btnSkip) {
     btnSkip.addEventListener('click', () => {
       playSound('pop');
@@ -898,7 +1125,7 @@ function initIntroScreen() {
     });
   }
 
-  // Open fridge CTA click
+  // Open fridge CTA click: opens Phone Home Screen
   if (btnOpenFridge) {
     btnOpenFridge.addEventListener('click', () => {
       playSound('fanfare');
@@ -961,9 +1188,178 @@ function initIntroScreen() {
 // Initialize
 async function init() {
   initIntroScreen();
+  initPhoneOS();
   renderChips();
   attachEvents();
   await loadRecipes();
+}
+
+function initPhoneOS() {
+  updateHomeClock();
+  setInterval(updateHomeClock, 10000);
+  updateBatteryUI();
+  updateAngerMeterUI();
+
+  // App Grid Buttons
+  document.querySelectorAll('.app-item').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const app = btn.dataset.app;
+      if (app) {
+        triggerComicPopup(e.clientX, e.clientY, "OPENING!");
+        showPhoneScreen(app);
+      }
+    });
+  });
+
+  // Back Buttons on sub-screens
+  document.querySelectorAll('.btn-screen-back').forEach(btn => {
+    btn.addEventListener('click', () => {
+      showPhoneScreen('home');
+    });
+  });
+
+  // Bottom Nav Bar Items
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const nav = item.dataset.nav;
+      if (nav) showPhoneScreen(nav);
+    });
+  });
+
+  // Weather widget on Home screen
+  const weatherWidget = document.getElementById('home-weather-widget');
+  if (weatherWidget) {
+    weatherWidget.addEventListener('click', () => showPhoneScreen('weather'));
+  }
+
+  // Chat home button
+  const btnChatHome = document.getElementById('btn-chat-home');
+  if (btnChatHome) {
+    btnChatHome.addEventListener('click', () => showPhoneScreen('home'));
+  }
+
+  // Sound toggle on Fridge screen (mirrored with main sound toggle)
+  const btnSoundFridge = document.getElementById('btn-sound-toggle-fridge');
+  const soundIconFridge = document.getElementById('sound-icon-fridge');
+  if (btnSoundFridge) {
+    btnSoundFridge.addEventListener('click', () => {
+      soundMuted = !soundMuted;
+      soundIcon.textContent = soundMuted ? '🔇' : '🔊';
+      if (soundIconFridge) soundIconFridge.textContent = soundMuted ? '🔇' : '🔊';
+      if (!soundMuted) playSound('pop');
+    });
+  }
+
+  // Action Kamen TV Beam
+  const btnBeam = document.getElementById('btn-kamen-beam');
+  const laser = document.getElementById('kamen-beam-laser');
+  const kamenQuote = document.getElementById('kamen-quote');
+  if (btnBeam) {
+    btnBeam.addEventListener('click', (e) => {
+      triggerComicPopup(e.clientX, e.clientY, "ACTION BEAM!");
+      playSound('fanfare');
+      if (laser) {
+        laser.classList.remove('hidden');
+        setTimeout(() => laser.classList.add('hidden'), 1500);
+      }
+      if (kamenQuote) {
+        kamenQuote.textContent = "💥 ACTION BEAM FIRED! EVIL HAS BEEN PURGED!";
+        setTimeout(() => {
+          kamenQuote.textContent = '"WA-HA-HA-HA! Action Beam charged 100%! Evil villains, prepare to be defeated!"';
+        }, 3000);
+      }
+    });
+  }
+
+  // Chocobi Delivery
+  const btnOrderChocobi = document.getElementById('btn-order-chocobi');
+  if (btnOrderChocobi) {
+    btnOrderChocobi.addEventListener('click', (e) => {
+      triggerComicPopup(e.clientX, e.clientY, "CRUNCH!");
+      playSound('pop');
+      btnOrderChocobi.textContent = "🍫 Nom Nom! Already Eaten! 🦖";
+      setTimeout(() => {
+        btnOrderChocobi.innerHTML = "<span>🍫</span> Order Another Box! <span>🦖</span>";
+      }, 2000);
+    });
+  }
+
+  // Pet Shiro
+  const btnPetShiro = document.getElementById('btn-pet-shiro');
+  const shiroAvatar = document.getElementById('shiro-avatar');
+  if (btnPetShiro) {
+    btnPetShiro.addEventListener('click', (e) => {
+      triggerComicPopup(e.clientX, e.clientY, "WOOF! ❤️");
+      playSound('pop');
+      if (shiroAvatar) {
+        shiroAvatar.textContent = "☁️ 🐶 ☁️";
+        setTimeout(() => { shiroAvatar.textContent = "🐶"; }, 1500);
+      }
+    });
+  }
+
+  // Scribble Note
+  const btnAddNote = document.getElementById('btn-add-note');
+  const notepadList = document.getElementById('notepad-list');
+  const RANDOM_NOTES = [
+    "Rule 6: Never let Kazama see your low test scores.",
+    "Rule 7: Misae's potato stew tastes best when you're super hungry.",
+    "Rule 8: Nanako smiled at me today! Heart rate: 999 BPM!",
+    "Rule 9: Action Kamen lunchboxes make regular food 50% tastier.",
+    "Rule 10: Always blame Shiro if a vase breaks (sorry Shiro)."
+  ];
+  let noteIdx = 0;
+  if (btnAddNote && notepadList) {
+    btnAddNote.addEventListener('click', (e) => {
+      triggerComicPopup(e.clientX, e.clientY, "SCRIBBLED!");
+      playSound('pop');
+      const li = document.createElement('li');
+      li.textContent = RANDOM_NOTES[noteIdx % RANDOM_NOTES.length];
+      noteIdx++;
+      notepadList.appendChild(li);
+    });
+  }
+
+  // Contacts Speed Dial
+  document.querySelectorAll('.contact-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      const caller = card.dataset.caller || "Contact";
+      triggerComicPopup(e.clientX, e.clientY, "RING RING!");
+      playSound('fanfare');
+      alert(`📞 Calling ${caller}... Shinchan: "Moshi moshi! Can you send 10 boxes of Chocobi to my house?!"`);
+    });
+  });
+
+  // Settings Buttons
+  const btnTriggerPuri = document.getElementById('btn-trigger-puri');
+  if (btnTriggerPuri) {
+    btnTriggerPuri.addEventListener('click', (e) => {
+      triggerComicPopup(e.clientX, e.clientY, "BURI BURI!");
+      playSound('fanfare');
+      triggerConfetti();
+    });
+  }
+
+  const btnResetAnger = document.getElementById('btn-reset-anger');
+  if (btnResetAnger) {
+    btnResetAnger.addEventListener('click', (e) => {
+      momAnger = 10;
+      updateAngerMeterUI();
+      triggerComicPopup(e.clientX, e.clientY, "CALMED!");
+      playSound('pop');
+    });
+  }
+
+  const btnRageCalm = document.getElementById('btn-rage-calm');
+  if (btnRageCalm) {
+    btnRageCalm.addEventListener('click', () => {
+      calmMomAnger();
+      playSound('pop');
+    });
+  }
+
+  // Periodic sliding notification banner every 15 seconds
+  setInterval(triggerRandomNotification, 15000);
 }
 
 // Load recipes.json
@@ -1134,6 +1530,7 @@ function toggleIngredient(name, event) {
     wasAdded = true;
     if (isHated(name)) {
       triggerAngryShinchan(name);
+      increaseMomAnger(35);
     } else {
       playSound('pop');
       if (selectedIngredients.size >= 2) {
@@ -1165,6 +1562,7 @@ function addCustomIngredient() {
 
   if (isHated(val)) {
     triggerAngryShinchan(val);
+    increaseMomAnger(35);
   } else {
     updateSpeechBubble(val, true);
   }
@@ -1500,6 +1898,9 @@ async function fetchWorldKitchenMeals(userSelectedList) {
 async function cookSomething(event) {
   if (isSpinning) return;
 
+  drainBattery();
+  increaseMomAnger(15);
+
   if (event && typeof event.clientX === 'number') {
     triggerComicPopup(event.clientX, event.clientY);
   } else {
@@ -1642,6 +2043,11 @@ function displayRecipe(matchData) {
 
   // Confetti rain
   triggerConfetti();
+
+  // Record in session cookbook
+  if (recipe && recipe.name) {
+    recordCookedRecipe(recipe);
+  }
 
   // Mascot celebratory mood
   const pickedHated = Array.from(selectedIngredients).filter(i => isHated(i));

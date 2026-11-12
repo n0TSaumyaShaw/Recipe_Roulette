@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
   --yellow: #FFDE00;
@@ -26,7 +26,7 @@
 }
 
 body {
-  font-family: 'Comic Neue', cursive, sans-serif;
+  font-family: 'Fredoka', 'Comic Neue', sans-serif;
   background-color: var(--yellow);
   background-image: radial-gradient(var(--bg-dots) 20%, transparent 20%),
                     radial-gradient(var(--bg-dots) 20%, transparent 20%);
@@ -1037,8 +1037,8 @@ body.angry-shake {
 }
 
 .comic-phone {
-  width: min(340px, 92vw);
-  height: min(580px, 86vh);
+  width: min(450px, 95vw);
+  height: min(840px, 94vh);
   background: #EFE7DE;
   border: var(--border-heavy);
   border-radius: 38px;
@@ -1047,14 +1047,20 @@ body.angry-shake {
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  transform: rotate(-1.5deg);
-  animation: phoneWiggle 4s ease-in-out infinite alternate;
+  transition: transform 0.2s ease;
 }
 
-@keyframes phoneWiggle {
-  0% { transform: rotate(-2deg); }
-  50% { transform: rotate(1deg) translateY(-4px); }
-  100% { transform: rotate(-1.5deg); }
+.comic-phone.shake-intense {
+  animation: shakeIntense 0.5s infinite;
+}
+
+@keyframes shakeIntense {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-6px, 4px) rotate(-2deg); }
+  40% { transform: translate(6px, -4px) rotate(2deg); }
+  60% { transform: translate(-4px, -3px) rotate(-1deg); }
+  80% { transform: translate(4px, 3px) rotate(1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
 
 .phone-notch {
@@ -1066,19 +1072,61 @@ body.angry-shake {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 30;
+  z-index: 35;
 }
 
 .phone-status-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 16px 2px;
+  padding: 4px 14px 2px;
   font-weight: 700;
-  font-size: 0.72rem;
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom: 1.5px solid rgba(0, 0, 0, 0.15);
-  z-index: 20;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 2px solid var(--black);
+  z-index: 30;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Mom's Anger Pill in Status Bar */
+.status-anger-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFF3CD;
+  border: 1.5px solid var(--black);
+  padding: 1px 6px;
+  border-radius: 12px;
+  box-shadow: 1px 1px 0 var(--black);
+  cursor: pointer;
+}
+
+.anger-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.anger-meter-track {
+  width: 44px;
+  height: 6px;
+  background: #DDD;
+  border-radius: 3px;
+  border: 1px solid var(--black);
+  overflow: hidden;
+}
+
+.anger-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FFDE00, #FF3B30);
+  transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.anger-val {
+  font-family: 'Bangers', cursive;
+  font-size: 0.82rem;
+  color: var(--red);
+  letter-spacing: 0.3px;
 }
 
 .phone-status-right {
@@ -1094,12 +1142,22 @@ body.angry-shake {
   padding: 1px 5px;
   border-radius: 6px;
   border: 1px solid #D90429;
+  transition: all 0.2s ease;
+}
+
+.phone-battery.battery-low {
+  animation: batteryPulse 1s infinite alternate;
+}
+
+@keyframes batteryPulse {
+  0% { background: #FFD6D9; }
+  100% { background: #FF3B30; color: #FFF; }
 }
 
 /* Action Kamen Notification */
 .phone-notification {
   position: absolute;
-  top: 56px;
+  top: 36px;
   left: 10px;
   right: 10px;
   background: #FFF380;
@@ -1110,8 +1168,8 @@ body.angry-shake {
   display: flex;
   align-items: center;
   gap: 8px;
-  z-index: 30;
-  transform: translateY(-120px);
+  z-index: 40;
+  transform: translateY(-130px);
   opacity: 0;
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -1138,7 +1196,89 @@ body.angry-shake {
   color: #333;
 }
 
-/* Chat App Header */
+/* =========================================
+   PHONE SCREENS VIEWPORT & BASE SCREEN
+   ========================================= */
+.phone-screens-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.phone-screen {
+  position: absolute;
+  inset: 0;
+  display: none !important;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #FFFFFF;
+}
+
+.phone-screen.active {
+  display: flex !important;
+  animation: screenFadeIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* App Bar inside Sub-screens */
+.screen-app-bar {
+  background: var(--yellow);
+  border-bottom: var(--border-thick);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.btn-screen-back {
+  font-family: 'Bangers', cursive;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+  background: var(--white);
+  color: var(--black);
+  border: 2px solid var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+  border-radius: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.btn-screen-back:hover {
+  background: var(--yellow-light);
+  transform: translateY(-1px);
+}
+
+.btn-screen-back:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+.app-bar-title {
+  font-family: 'Bangers', cursive;
+  font-size: 1.25rem;
+  letter-spacing: 0.8px;
+  color: var(--black);
+  flex: 1;
+  text-align: center;
+}
+
+.screen-content {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background-color: #FAF5EE;
+}
+
+/* =========================================
+   SCREEN 1: CHAT INTRO STYLES
+   ========================================= */
 .chat-header {
   background: #075E54;
   color: var(--white);
@@ -1148,6 +1288,7 @@ body.angry-shake {
   align-items: center;
   gap: 10px;
   z-index: 20;
+  flex-shrink: 0;
 }
 
 .chat-header-avatar {
@@ -1179,25 +1320,36 @@ body.angry-shake {
 
 .chat-contact-name {
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   line-height: 1.15;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--white);
 }
 
 .chat-contact-status {
-  font-size: 0.7rem;
-  opacity: 0.85;
+  font-size: 0.72rem;
+  opacity: 0.9;
+  color: #D4F4DD;
 }
 
-.chat-header-actions {
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: default;
+.btn-chat-home {
+  font-size: 1.2rem;
+  background: #FFF;
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  padding: 2px 6px;
+  cursor: pointer;
+  box-shadow: 1.5px 1.5px 0 var(--black);
+  transition: transform 0.12s ease;
 }
 
-/* Chat Body */
+.btn-chat-home:hover {
+  background: var(--yellow-light);
+  transform: translateY(-1px);
+}
+
 .chat-body {
   flex: 1;
   padding: 12px 10px 8px;
@@ -1221,15 +1373,11 @@ body.angry-shake {
   box-shadow: 2px 2px 0 var(--black);
   position: relative;
   word-break: break-word;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-.chat-bubble.pop-in {
-  animation: chatBubblePop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-}
-
-@keyframes chatBubblePop {
-  0% { transform: scale(0.7) translateY(8px); opacity: 0; }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
+.chat-bubble.hidden {
+  display: none !important;
 }
 
 .chat-bubble.outgoing {
@@ -1244,6 +1392,12 @@ body.angry-shake {
   border-bottom-left-radius: 4px;
 }
 
+.chat-bubble .bubble-text {
+  font-family: 'Gochi Hand', cursive, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
 .bubble-time {
   display: block;
   font-size: 0.65rem;
@@ -1252,7 +1406,6 @@ body.angry-shake {
   margin-top: 3px;
 }
 
-/* Typing Indicator */
 .typing-bubble {
   display: inline-flex;
   align-items: center;
@@ -1281,8 +1434,8 @@ body.angry-shake {
 .typing-dots span:nth-child(3) { animation-delay: 0s; }
 
 @keyframes typingBounce {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-  40% { transform: scale(1.15); opacity: 1; }
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
 }
 
 .typing-label {
@@ -1291,7 +1444,6 @@ body.angry-shake {
   color: #666;
 }
 
-/* Phone Footer & Open Fridge CTA */
 .phone-footer {
   padding: 8px 10px;
   background: #F0F0F0;
@@ -1300,36 +1452,908 @@ body.angry-shake {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .btn-open-fridge {
   width: 100%;
-  font-family: 'Bangers', cursive;
-  font-size: 1.35rem;
-  letter-spacing: 1px;
-  background: var(--red);
-  color: var(--white);
+  padding: 10px 14px;
+  background: var(--yellow);
   border: var(--border-thick);
-  box-shadow: 3px 3px 0 var(--black);
   border-radius: 12px;
-  padding: 10px;
+  box-shadow: 3px 3px 0 var(--black);
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 1px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  animation: fridgePulse 1.2s infinite alternate;
-  transition: all 0.15s ease;
-}
-
-@keyframes fridgePulse {
-  0% { transform: scale(0.98); box-shadow: 3px 3px 0 var(--black); }
-  100% { transform: scale(1.02); box-shadow: 5px 5px 0 var(--black); }
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 .btn-open-fridge:hover {
-  background: var(--red-dark);
-  transform: scale(1.04);
+  background: var(--yellow-light);
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+.btn-open-fridge:active {
+  transform: translateY(2px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
+/* =========================================
+   SCREEN 2: HOME SCREEN (APP GRID)
+   ========================================= */
+#screen-home {
+  background: #FFEAA7;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.08) 15%, transparent 15%);
+  background-size: 16px 16px;
+  padding: 12px 10px 16px;
+  align-items: center;
+}
+
+.home-screen-header {
+  text-align: center;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.home-big-clock {
+  font-family: 'Bangers', cursive;
+  font-size: 3.4rem;
+  line-height: 1;
+  color: var(--black);
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0 var(--white);
+}
+
+.home-date-display {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #444;
+}
+
+.home-weather-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFF;
+  border: 2px solid var(--black);
+  box-shadow: 2.5px 2.5px 0 var(--black);
+  border-radius: 14px;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  margin-top: 6px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.home-weather-pill:hover {
+  transform: translateY(-2px);
+}
+
+/* App Grid Layout */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 8px;
+  width: 100%;
+  max-width: 380px;
+  padding: 4px 6px 12px;
+}
+
+.app-item {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px;
+  user-select: none;
+}
+
+.app-squircle {
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
+  border: var(--border-thick);
+  box-shadow: 3.5px 3.5px 0 var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 1.9rem;
+  transition: transform 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.app-item:hover .app-squircle {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 5px 5px 0 var(--black);
+}
+
+.app-item:active .app-squircle {
+  transform: translateY(1px);
+  box-shadow: 1.5px 1.5px 0 var(--black);
+}
+
+/* App Squircle Colors */
+.app-fridge { background: #74B9FF; }
+.app-mom { background: #FF7675; }
+.app-kamen { background: #55EFC4; }
+.app-chocobi { background: #A29BFE; }
+.app-shiro { background: #FFF; }
+.app-notes { background: #FFEAA7; }
+.app-cookbook { background: #FD79A8; }
+.app-weather { background: #FDCB6E; }
+.app-contacts { background: #81ECEC; }
+.app-settings { background: #DFE6E9; }
+
+.app-pfp-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.app-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--red);
+  color: var(--white);
+  font-family: 'Bangers', cursive;
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  border: 1.5px solid var(--black);
+  box-shadow: 1px 1px 0 var(--black);
+  letter-spacing: 0.4px;
+}
+
+.app-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--black);
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+/* =========================================
+   SCREEN 3: FRIDGE (RECIPE ROULETTE EMBED)
+   ========================================= */
+#screen-fridge {
+  background: var(--yellow);
+}
+
+.fridge-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 10px 20px;
+}
+
+.fridge-scroll-content .app-wrapper {
+  display: flex !important;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* =========================================
+   MINI APP SCREENS STYLING
+   ========================================= */
+/* Action Kamen TV */
+.tv-casing {
+  background: #2D3436;
+  border: var(--border-heavy);
+  box-shadow: 5px 5px 0 var(--black);
+  border-radius: 20px;
+  padding: 14px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.tv-antenna {
+  font-size: 1.8rem;
+  margin-top: -24px;
+  margin-bottom: 4px;
+}
+
+.tv-screen-glass {
+  background: #00B894;
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 20px 12px;
+  color: #FFF;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.4);
+}
+
+.kamen-character-anim {
+  font-size: 3rem;
+  animation: buttWiggle 0.8s infinite alternate;
+}
+
+.kamen-quote {
+  font-family: 'Bangers', cursive;
+  font-size: 1.25rem;
+  letter-spacing: 0.8px;
+  color: #FFEAA7;
+  text-shadow: 2px 2px 0 var(--black);
+  margin-top: 10px;
+}
+
+.kamen-beam-laser {
+  font-size: 2.5rem;
+  color: #FFDE00;
+  animation: laserPulse 0.3s infinite;
+  margin: 10px 0;
+}
+
+@keyframes laserPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; color: #FFF; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.btn-kamen-beam {
+  font-family: 'Bangers', cursive;
+  font-size: 1.35rem;
+  letter-spacing: 1px;
+  background: #E17055;
+  color: #FFF;
+  border: var(--border-thick);
+  box-shadow: 3px 3px 0 var(--black);
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.btn-kamen-beam:hover {
+  background: #D63031;
+  transform: translateY(-2px);
+}
+
+.kamen-stats {
+  background: #FFF;
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 3px 3px 0 var(--black);
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Chocobi Delivery */
+.chocobi-box-display {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.chocobi-mascot-box {
+  background: #FF7675;
+  border: var(--border-heavy);
+  box-shadow: 4px 4px 0 var(--black);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.dino-mascot {
+  font-size: 3.5rem;
+  animation: buttWiggle 1s infinite alternate;
+}
+
+.chocobi-logo-text {
+  font-family: 'Bangers', cursive;
+  font-size: 1.8rem;
+  letter-spacing: 1.5px;
+  color: #FFEAA7;
+  -webkit-text-stroke: 1.5px var(--black);
+}
+
+.order-tracker-card {
+  background: #FFF;
+  border: var(--border-thick);
+  box-shadow: 3.5px 3.5px 0 var(--black);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.tracker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px dashed #DDD;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.tracker-status-tag {
+  background: #D63031;
+  color: #FFF;
+  font-family: 'Bangers', cursive;
+  font-size: 0.78rem;
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--black);
+}
+
+.tracker-timeline {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.timeline-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.step-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.timeline-step.done .step-dot { background: #00B894; color: #FFF; }
+.timeline-step.current .step-dot { background: #FFEAA7; }
+.timeline-step.future .step-dot { background: #E0E0E0; }
+
+/* Shiro Album */
+.shiro-hero-card {
+  background: #FFF;
+  border: var(--border-heavy);
+  box-shadow: 4px 4px 0 var(--black);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.shiro-dog-anim {
+  font-size: 4rem;
+  animation: buttWiggle 0.9s infinite alternate;
+}
+
+.shiro-hero-name {
+  font-family: 'Bangers', cursive;
+  font-size: 1.5rem;
+  color: var(--black);
+  margin-top: 4px;
+}
+
+.shiro-hero-desc {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.btn-pet-shiro {
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  background: #74B9FF;
+  color: var(--black);
+  border: var(--border-thick);
+  box-shadow: 2.5px 2.5px 0 var(--black);
+  border-radius: 12px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.polaroid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.polaroid-card {
+  background: #FFF;
+  border: var(--border-thick);
+  box-shadow: 3px 3px 0 var(--black);
+  border-radius: 6px;
+  padding: 8px 8px 12px;
+  text-align: center;
+  transform: rotate(-1.5deg);
+}
+
+.polaroid-card:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.polaroid-photo {
+  background: #EFEFEF;
+  border: 1.5px solid var(--black);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.polaroid-caption {
+  font-family: 'Gochi Hand', cursive;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* Notes App */
+.notepad-paper {
+  background: #FFFDE7;
+  border: var(--border-heavy);
+  box-shadow: 4px 4px 0 var(--black);
+  border-radius: 14px;
+  padding: 16px 14px;
+  min-height: 380px;
+  background-image: repeating-linear-gradient(#FFFDE7 0px, #FFFDE7 24px, #B2EBF2 25px);
+  background-position: 0 40px;
+}
+
+.notepad-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2.5px solid var(--black);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.notepad-header h3 {
+  font-family: 'Bangers', cursive;
+  font-size: 1.35rem;
+  color: var(--black);
+}
+
+.btn-add-note {
+  font-family: 'Bangers', cursive;
+  font-size: 0.95rem;
+  background: var(--yellow);
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  padding: 3px 8px;
+  cursor: pointer;
+  box-shadow: 1.5px 1.5px 0 var(--black);
+}
+
+.notepad-list {
+  list-style-position: inside;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'Gochi Hand', cursive;
+  font-size: 1.15rem;
+  color: #1A237E;
+  line-height: 1.3;
+}
+
+/* Cookbook App */
+.cookbook-header-card {
+  background: #FD79A8;
+  color: var(--white);
+  border: var(--border-heavy);
+  box-shadow: 3.5px 3.5px 0 var(--black);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.cookbook-header-card h3 {
+  font-family: 'Bangers', cursive;
+  font-size: 1.4rem;
+  letter-spacing: 0.8px;
+}
+
+.cookbook-header-card p {
+  font-size: 0.85rem;
+}
+
+.cookbook-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cookbook-empty-state {
+  background: #FFF;
+  border: var(--border-thick);
+  border-radius: 14px;
+  padding: 24px 14px;
+  text-align: center;
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.cookbook-empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.cooked-dish-card {
+  background: #FFF;
+  border: var(--border-thick);
+  box-shadow: 3px 3px 0 var(--black);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.cooked-dish-title {
+  font-family: 'Bangers', cursive;
+  font-size: 1.25rem;
+  color: var(--red);
+  letter-spacing: 0.5px;
+}
+
+.cooked-dish-meta {
+  display: flex;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.cooked-dish-comment {
+  font-family: 'Gochi Hand', cursive;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* Weather App */
+.weather-hero-card {
+  background: #FDCB6E;
+  border: var(--border-heavy);
+  box-shadow: 4px 4px 0 var(--black);
+  border-radius: 18px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.weather-sun-anim {
+  font-size: 4rem;
+  animation: phoneWiggle 3s infinite alternate;
+}
+
+.weather-temp {
+  font-family: 'Bangers', cursive;
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--black);
+}
+
+.weather-condition {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.weather-primary-forecast {
+  background: #FFF;
+  border: var(--border-thick);
+  box-shadow: 2px 2px 0 var(--black);
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 1.05rem;
+  color: #D63031;
+}
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.weather-stat-box {
+  background: #FFF;
+  border: var(--border-thick);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.weather-advice-box {
+  background: #E8F8F5;
+  border: 2px dashed #1ABC9C;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 0.85rem;
+  color: #16A085;
+}
+
+/* Contacts App */
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-card {
+  background: #FFF;
+  border: var(--border-thick);
+  box-shadow: 2.5px 2.5px 0 var(--black);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-avatar-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #FFEAA7;
+}
+
+.contact-pfp {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contact-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.contact-name {
+  font-size: 0.9rem;
+  color: var(--black);
+}
+
+.contact-sub {
+  font-size: 0.72rem;
+  color: #666;
+}
+
+.btn-call {
+  background: #2ECC71;
+  border: 2px solid var(--black);
+  box-shadow: 1.5px 1.5px 0 var(--black);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+/* Settings App */
+.settings-group {
+  background: #FFF;
+  border: var(--border-thick);
+  box-shadow: 3px 3px 0 var(--black);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.settings-title {
+  font-family: 'Bangers', cursive;
+  font-size: 1.15rem;
+  color: var(--black);
+  border-bottom: 2px solid #EEE;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.setting-info strong {
+  font-size: 0.88rem;
+}
+
+.setting-info span {
+  font-size: 0.72rem;
+  color: #666;
+}
+
+.comic-switch {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--red);
+}
+
+.settings-footer-info {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 8px;
+}
+
+/* =========================================
+   PHONE BOTTOM NAVIGATION BAR
+   ========================================= */
+.phone-nav-bar {
+  height: 54px;
+  background: #FFFFFF;
+  border-top: var(--border-thick);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 2px 8px;
+  flex-shrink: 0;
+  z-index: 30;
+}
+
+.nav-item {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+  padding: 2px;
+}
+
+.nav-item.active {
+  background: var(--yellow);
+  border: 2px solid var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.nav-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--black);
+}
+
+/* =========================================
+   MOM'S 100% RAGE EXPLOSION MODAL
+   ========================================= */
+.mom-rage-modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(214, 48, 49, 0.75);
+  backdrop-filter: blur(2px);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: rageModalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes rageModalPop {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.mom-rage-content {
+  background: var(--white);
+  border: var(--border-heavy);
+  box-shadow: 8px 8px 0 var(--black);
+  border-radius: 24px;
+  padding: 20px 16px;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mom-rage-steam {
+  font-size: 2.2rem;
+  margin-bottom: 2px;
+}
+
+.mom-rage-title {
+  font-family: 'Bangers', cursive;
+  font-size: 2.5rem;
+  color: var(--red);
+  -webkit-text-stroke: 1.5px var(--black);
+  text-shadow: 3px 3px 0 var(--black);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.mom-rage-sub {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.mom-rage-pfp-wrap {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: var(--border-heavy);
+  box-shadow: 4px 4px 0 var(--black);
+  margin: 0 auto 14px;
+  overflow: hidden;
+}
+
+.mom-rage-pfp {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-rage-calm {
+  font-family: 'Bangers', cursive;
+  font-size: 1.35rem;
+  letter-spacing: 1px;
+  background: var(--yellow);
+  color: var(--black);
+  border: var(--border-heavy);
+  box-shadow: 4px 4px 0 var(--black);
+  border-radius: 14px;
+  padding: 10px 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.15s ease;
+}
+
+.btn-rage-calm:hover {
+  background: #FFF;
+  transform: translateY(-2px);
 }
 
 .hidden {
