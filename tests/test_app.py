@@ -710,6 +710,49 @@ async def run_comprehensive_test():
             print("   Storage Blocked Simulation (In-Memory Fallback):", sdc)
             assert sdc is True, "In-memory state fallback failed when storage was blocked!"
 
+            # Check 5c: Test Phone Out of Battery Shutdown (0%) and Recharge
+            print("\n5c. Testing Phone Out of Battery Shutdown (0%) and Plug-in Charger Recharge...")
+            await send('Runtime.evaluate', {'expression': 'triggerPhoneDead()'})
+            await asyncio.sleep(0.3)
+            dead_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const overlay = document.getElementById('phone-dead-overlay');
+                    const batText = document.getElementById('phone-battery').textContent;
+                    return {
+                        isDeadOverlayVisible: overlay && window.getComputedStyle(overlay).display !== 'none',
+                        batteryPercent,
+                        batText
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            dc = dead_check.get('result', {}).get('value', {})
+            print("   Dead Battery Check (0%):", dc)
+            assert dc.get('isDeadOverlayVisible') is True, "Dead battery overlay should be visible at 0%!"
+            assert dc.get('batteryPercent') == 0, f"Expected 0% battery, got {dc.get('batteryPercent')}"
+            assert "0%" in dc.get('batText', ''), "Battery indicator should show 0%!"
+
+            # Click 'Plug in charger' to recharge to 100%
+            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-plug-charger").click()'})
+            await asyncio.sleep(1.2)
+            recharge_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const overlay = document.getElementById('phone-dead-overlay');
+                    const batText = document.getElementById('phone-battery').textContent;
+                    return {
+                        isDeadOverlayHidden: overlay && window.getComputedStyle(overlay).display === 'none',
+                        batteryPercent,
+                        batText
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            rc = recharge_check.get('result', {}).get('value', {})
+            print("   Recharge Check (100%):", rc)
+            assert rc.get('isDeadOverlayHidden') is True, "Dead battery overlay should hide after recharge!"
+            assert rc.get('batteryPercent') == 100, f"Expected 100% battery, got {rc.get('batteryPercent')}"
+            assert "100%" in rc.get('batText', ''), "Battery indicator should show 100%!"
+
             # Check 7: Contrast Ratios on Every Screen
             print("\n6. Evaluating WCAG AA Contrast Ratios (Target >= 4.5:1 for normal text)...")
             contrast_queries = [

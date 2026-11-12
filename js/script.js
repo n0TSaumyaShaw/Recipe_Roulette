@@ -1032,30 +1032,137 @@ function showPhoneScreen(screenId) {
   playSound('pop');
 }
 
-// Battery Management (-1% per spin, alert at 1%)
+// Battery Management (-1% per spin, alert at 1%, dead at 0%)
 function drainBattery() {
-  batteryPercent = Math.max(1, batteryPercent - 1);
+  batteryPercent = Math.max(0, batteryPercent - 1);
   updateBatteryUI();
-  if (batteryPercent <= 1) {
+  if (batteryPercent === 1) {
     triggerPhoneNotification("🪫 BATTERY CRITICAL (1%)", "Mom, please bring the charger!", "🪫");
+  } else if (batteryPercent === 0) {
+    triggerPhoneDead();
   }
+}
+
+function triggerPhoneDead() {
+  batteryPercent = 0;
+  updateBatteryUI();
+  playPowerDownSound();
+
+  const overlay = document.getElementById('phone-dead-overlay');
+  const chargingWrap = document.getElementById('charging-progress-wrap');
+  const btnPlug = document.getElementById('btn-plug-charger');
+
+  if (chargingWrap) chargingWrap.style.display = 'none';
+  if (btnPlug) {
+    btnPlug.style.display = 'block';
+    btnPlug.disabled = false;
+  }
+
+  if (overlay) {
+    overlay.style.display = 'flex';
+  }
+}
+
+function rechargeBattery(targetPercent = 100, onComplete = null) {
+  const overlay = document.getElementById('phone-dead-overlay');
+  const chargingWrap = document.getElementById('charging-progress-wrap');
+  const fill = document.getElementById('charging-meter-fill');
+  const pctText = document.getElementById('charging-pct');
+  const btnPlug = document.getElementById('btn-plug-charger');
+
+  if (overlay && overlay.style.display !== 'none') {
+    // Animate charging up inside dead screen
+    if (btnPlug) btnPlug.disabled = true;
+    if (chargingWrap) chargingWrap.style.display = 'flex';
+
+    let current = batteryPercent;
+    const interval = setInterval(() => {
+      current += 5;
+      if (current >= targetPercent) {
+        current = targetPercent;
+        clearInterval(interval);
+
+        playPowerUpSound();
+        batteryPercent = targetPercent;
+        updateBatteryUI();
+
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          if (btnPlug) btnPlug.disabled = false;
+          if (chargingWrap) chargingWrap.style.display = 'none';
+          triggerComicPopup(window.innerWidth / 2, window.innerHeight / 2, "POWER RESTORED! ⚡");
+          if (typeof onComplete === 'function') onComplete();
+        }, 400);
+      }
+      if (fill) fill.style.width = `${current}%`;
+      if (pctText) pctText.textContent = `Charging... ${current}%`;
+    }, 30);
+  } else {
+    // Instant top-up from settings or clicking battery in status bar
+    batteryPercent = targetPercent;
+    updateBatteryUI();
+    playPowerUpSound();
+    triggerComicPopup(window.innerWidth / 2, window.innerHeight / 2, "BATTERY CHARGED! 🔋 100%");
+    if (typeof onComplete === 'function') onComplete();
+  }
+}
+
+function playPowerDownSound() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(320, now);
+    osc.frequency.exponentialRampToValueAtTime(50, now + 0.55);
+    gain.gain.setValueAtTime(0.18, now);
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.55);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.55);
+  } catch (e) {}
+}
+
+function playPowerUpSound() {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    [180, 270, 360, 540].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+      gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+      gain.gain.linearRampToValueAtTime(0.01, now + idx * 0.08 + 0.14);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.14);
+    });
+  } catch (e) {}
 }
 
 function updateBatteryUI() {
   const phoneBattery = document.getElementById('phone-battery');
   const weatherBattery = document.getElementById('weather-battery-stat');
   if (phoneBattery) {
-    if (batteryPercent <= 1) {
-      phoneBattery.textContent = "🪫 1%";
-      phoneBattery.title = "Mom, please bring the charger!";
+    if (batteryPercent <= 0) {
+      phoneBattery.textContent = "🪫 0%";
+      phoneBattery.title = "Phone dead! Click to plug in charger!";
       phoneBattery.classList.add('battery-low');
     } else if (batteryPercent <= 20) {
       phoneBattery.textContent = `🪫 ${batteryPercent}%`;
-      phoneBattery.title = `Battery: ${batteryPercent}% (Low)`;
+      phoneBattery.title = `Battery: ${batteryPercent}% (Low - Click to recharge)`;
       phoneBattery.classList.add('battery-low');
     } else {
       phoneBattery.textContent = `🔋 ${batteryPercent}%`;
-      phoneBattery.title = `Battery: ${batteryPercent}%`;
+      phoneBattery.title = `Battery: ${batteryPercent}% (Click to recharge)`;
       phoneBattery.classList.remove('battery-low');
     }
   }
@@ -1848,6 +1955,8 @@ function initPhoneOS() {
   // Expose getShiroMood globally for automated tests
   window.getShiroMood = getShiroMood;
   window.getShiroState = getShiroState;
+  window.triggerPhoneDead = triggerPhoneDead;
+  window.rechargeBattery = rechargeBattery;
 
   function updateShiroUI() {
     const state = getShiroState();
@@ -2203,6 +2312,43 @@ function initPhoneOS() {
       updateAngerMeterUI();
       triggerComicPopup(e.clientX, e.clientY, "CALMED!");
       playSound('pop');
+    });
+  }
+
+  // Battery Management Buttons
+  const btnRecharge = document.getElementById('btn-recharge-battery');
+  if (btnRecharge) {
+    btnRecharge.addEventListener('click', () => {
+      rechargeBattery(100);
+    });
+  }
+
+  const btnTestDead = document.getElementById('btn-test-dead-battery');
+  if (btnTestDead) {
+    btnTestDead.addEventListener('click', () => {
+      triggerPhoneDead();
+    });
+  }
+
+  const btnPlug = document.getElementById('btn-plug-charger');
+  if (btnPlug) {
+    btnPlug.addEventListener('click', () => {
+      rechargeBattery(100);
+    });
+  }
+
+  const phoneBatteryEl = document.getElementById('phone-battery');
+  if (phoneBatteryEl) {
+    phoneBatteryEl.style.cursor = 'pointer';
+    phoneBatteryEl.addEventListener('click', (e) => {
+      if (batteryPercent <= 0) {
+        rechargeBattery(100);
+      } else if (batteryPercent < 100) {
+        rechargeBattery(100);
+      } else {
+        triggerComicPopup(e.clientX, e.clientY, "BATTERY FULL! 🔋");
+        playSound('pop');
+      }
     });
   }
 

@@ -1671,6 +1671,181 @@ body.angry-shake {
   min-height: 0;
 }
 
+/* =========================================
+   DEAD BATTERY / 0% SHUTDOWN OVERLAY
+   ========================================= */
+.phone-dead-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 120;
+  background: #090912;
+  color: #FFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+  text-align: center;
+  animation: crtPowerOff 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes crtPowerOff {
+  0% {
+    opacity: 0;
+    transform: scale(1, 0.005);
+    filter: brightness(5);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1, 0.005);
+    filter: brightness(3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-dead-overlay {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.dead-battery-card {
+  width: 100%;
+  max-width: 290px;
+  background: #141424;
+  border: 2px solid #E63946;
+  box-shadow: 0 0 16px rgba(230, 57, 70, 0.4), 3px 3px 0 var(--black);
+  border-radius: 12px;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dead-battery-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(230, 57, 70, 0.15);
+  border: 1.5px solid #E63946;
+  border-radius: 20px;
+  padding: 4px 12px;
+  animation: pulseDeadBattery 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseDeadBattery {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.dead-battery-emoji {
+  font-size: 1.6rem;
+}
+
+.dead-battery-pct {
+  font-family: var(--font-pixel);
+  font-size: 0.9rem;
+  color: #E63946;
+  letter-spacing: 1px;
+}
+
+.dead-battery-title {
+  font-family: var(--font-pixel);
+  font-size: 0.82rem;
+  color: var(--yellow);
+  text-shadow: 0 0 6px rgba(255, 212, 0, 0.5);
+  line-height: 1.3;
+}
+
+.dead-battery-speech {
+  background: #FFF;
+  color: var(--card-ink, #1a1a1a);
+  border: 1.5px solid var(--black);
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.dead-speech-shin {
+  margin: 0 0 4px 0;
+  font-weight: 700;
+  color: #C0392B;
+}
+
+.dead-speech-mom {
+  margin: 0;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.charging-progress-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.charging-meter-track {
+  width: 100%;
+  height: 14px;
+  background: #0B111E;
+  border: 1.5px solid var(--black);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.charging-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2ECC71, #A3E4D7);
+  box-shadow: 0 0 8px rgba(46, 204, 113, 0.8);
+  transition: width 0.08s linear;
+  border-radius: 4px;
+}
+
+.charging-pct {
+  font-family: var(--font-pixel);
+  font-size: 0.65rem;
+  color: #2ECC71;
+  text-align: center;
+}
+
+.btn-plug-charger {
+  background: #FFD400;
+  color: #12122A;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  padding: 8px 14px;
+  box-shadow: 0 3px 0 var(--black), 0 0 10px rgba(255, 212, 0, 0.4);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.btn-plug-charger:hover {
+  background: #FFE033;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--black), 0 0 14px rgba(255, 212, 0, 0.6);
+}
+
+.btn-plug-charger:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--black);
+}
+
 .phone-screen {
   position: absolute;
   inset: 0;

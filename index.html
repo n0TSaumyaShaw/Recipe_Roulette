@@ -900,6 +900,12 @@
                 <button type="button" class="btn-secondary" id="btn-reset-anger" style="width:100%; background:#FFEAA7;">
                   <span>🧊</span> Calm Mom's Anger (To 10%)
                 </button>
+                <button type="button" class="btn-secondary" id="btn-recharge-battery" style="width:100%; margin-top:8px; background:#A3E4D7; color:#0B5345;">
+                  <span>🔋</span> Recharge Battery (100%)
+                </button>
+                <button type="button" class="btn-secondary" id="btn-test-dead-battery" style="width:100%; margin-top:8px; background:#FADBD8; color:#78281F;">
+                  <span>🪫</span> Drain Battery to 0% (Test Shutdown)
+                </button>
                 <button type="button" class="btn-secondary btn-clear-data" id="btn-clear-data" style="width:100%; margin-top:8px; background:#FF7675; color:#FFF;">
                   <span>🗑️</span> Clear My Saved Data
                 </button>
@@ -908,6 +914,33 @@
               <div class="settings-footer-info">
                 <span>Shinchan OS v2.0 · Kasukabe Edition</span>
               </div>
+            </div>
+          </div>
+
+          <!-- Phone Out of Battery / Dead Overlay (inside screen) -->
+          <div class="phone-dead-overlay" id="phone-dead-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="Phone out of battery">
+            <div class="dead-battery-card">
+              <div class="dead-battery-icon-wrap">
+                <span class="dead-battery-emoji">🪫</span>
+                <span class="dead-battery-pct">0%</span>
+              </div>
+              <div class="dead-battery-title">SHIN-TEL OUT OF CHARGE!</div>
+              <div class="dead-battery-speech">
+                <p class="dead-speech-shin">"MOM! THE SCREEN WENT BLACK! Did Action Kamen blast my phone?!"</p>
+                <p class="dead-speech-mom">"Shinchan! You spun recipes all day without charging! Go plug it in the wall socket!"</p>
+              </div>
+
+              <!-- Charging animation progress -->
+              <div class="charging-progress-wrap" id="charging-progress-wrap" style="display: none;">
+                <div class="charging-meter-track" role="progressbar" aria-label="Recharging Battery" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                  <div class="charging-meter-fill" id="charging-meter-fill" style="width: 0%;"></div>
+                </div>
+                <span class="charging-pct" id="charging-pct">Charging... 0%</span>
+              </div>
+
+              <button type="button" class="btn-plug-charger" id="btn-plug-charger">
+                🔌 PLUG IN CHARGER
+              </button>
             </div>
           </div>
 
