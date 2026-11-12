@@ -753,6 +753,84 @@ async def run_comprehensive_test():
             assert rc.get('batteryPercent') == 100, f"Expected 100% battery, got {rc.get('batteryPercent')}"
             assert "100%" in rc.get('batText', ''), "Battery indicator should show 100%!"
 
+            # Check 5d: Test Manual Power Off, Power Menu, and Restart Features
+            print("\n5d. Testing Manual Power Off, Power Menu, and Restart Features...")
+            # Test Power Menu trigger via side power button
+            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-side-power").click()'})
+            await asyncio.sleep(0.2)
+            menu_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const dialog = document.getElementById('phone-power-dialog');
+                    return {
+                        isVisible: dialog && window.getComputedStyle(dialog).display !== 'none'
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            assert menu_check.get('result', {}).get('value', {}).get('isVisible') is True, "Power menu dialog failed to display!"
+            print("   ✓ Power Menu Dialog opened successfully via side button")
+
+            # Cancel Power Menu
+            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-power-opt-cancel").click()'})
+            await asyncio.sleep(0.2)
+
+            # Test Power Off
+            await send('Runtime.evaluate', {'expression': 'powerOffPhone()'})
+            await asyncio.sleep(0.3)
+            off_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const offOverlay = document.getElementById('phone-power-off-overlay');
+                    const led = document.getElementById('gadget-pwr-led');
+                    return {
+                        isOffOverlayVisible: offOverlay && window.getComputedStyle(offOverlay).display !== 'none',
+                        hasLedOff: led ? led.classList.contains('led-off') : false
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            oc = off_check.get('result', {}).get('value', {})
+            print("   Power Off Check:", oc)
+            assert oc.get('isOffOverlayVisible') is True, "Powered off overlay should be visible!"
+            assert oc.get('hasLedOff') is True, "Gadget LED should have 'led-off' class when powered off!"
+
+            # Test Power On via #btn-power-on
+            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-power-on").click()'})
+            await asyncio.sleep(1.4)
+            on_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const offOverlay = document.getElementById('phone-power-off-overlay');
+                    const bootOverlay = document.getElementById('phone-boot-overlay');
+                    const led = document.getElementById('gadget-pwr-led');
+                    return {
+                        isOffHidden: offOverlay && window.getComputedStyle(offOverlay).display === 'none',
+                        isBootHidden: bootOverlay && window.getComputedStyle(bootOverlay).display === 'none',
+                        hasLedOff: led ? led.classList.contains('led-off') : false
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            onc = on_check.get('result', {}).get('value', {})
+            print("   Power On / Boot Check:", onc)
+            assert onc.get('isOffHidden') is True and onc.get('isBootHidden') is True, "Overlays should be hidden after boot!"
+            assert onc.get('hasLedOff') is False, "LED should resume normal status after boot!"
+
+            # Test Restart
+            print("   Testing Restart feature...")
+            await send('Runtime.evaluate', {'expression': 'restartPhone()'})
+            await asyncio.sleep(1.6)
+            restart_check = await send('Runtime.evaluate', {
+                'expression': """(() => {
+                    const bootOverlay = document.getElementById('phone-boot-overlay');
+                    return {
+                        isBootHidden: bootOverlay && window.getComputedStyle(bootOverlay).display === 'none'
+                    };
+                })()""",
+                'returnByValue': True
+            })
+            rc_val = restart_check.get('result', {}).get('value', {})
+            assert rc_val.get('isBootHidden') is True, "Restart boot sequence did not complete!"
+            print("   ✓ Restart completed cleanly and restored normal OS operation")
+
             # Check 7: Contrast Ratios on Every Screen
             print("\n6. Evaluating WCAG AA Contrast Ratios (Target >= 4.5:1 for normal text)...")
             contrast_queries = [

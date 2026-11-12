@@ -1148,6 +1148,111 @@ function playPowerUpSound() {
   } catch (e) {}
 }
 
+// System Power Management (Power Off, Restart, Power Menu)
+let isPhonePoweredOff = false;
+
+function showPowerMenu() {
+  if (isPhonePoweredOff) {
+    powerOnPhone();
+    return;
+  }
+  const dialog = document.getElementById('phone-power-dialog');
+  if (dialog) {
+    dialog.style.display = 'flex';
+    playSound('pop');
+  }
+}
+
+function hidePowerMenu() {
+  const dialog = document.getElementById('phone-power-dialog');
+  if (dialog) {
+    dialog.style.display = 'none';
+  }
+}
+
+function powerOffPhone() {
+  hidePowerMenu();
+  isPhonePoweredOff = true;
+  playPowerDownSound();
+
+  const led = document.getElementById('gadget-pwr-led');
+  if (led) {
+    led.classList.remove('led-boot');
+    led.classList.add('led-off');
+  }
+
+  const offOverlay = document.getElementById('phone-power-off-overlay');
+  const deadOverlay = document.getElementById('phone-dead-overlay');
+  if (deadOverlay) deadOverlay.style.display = 'none';
+  if (offOverlay) {
+    offOverlay.style.display = 'flex';
+  }
+}
+
+function powerOnPhone(onComplete = null) {
+  const offOverlay = document.getElementById('phone-power-off-overlay');
+  if (offOverlay) offOverlay.style.display = 'none';
+
+  const bootOverlay = document.getElementById('phone-boot-overlay');
+  const led = document.getElementById('gadget-pwr-led');
+  if (led) {
+    led.classList.remove('led-off');
+    led.classList.add('led-boot');
+  }
+
+  if (bootOverlay) {
+    bootOverlay.style.display = 'flex';
+  }
+
+  playPowerUpSound();
+
+  setTimeout(() => {
+    if (bootOverlay) bootOverlay.style.display = 'none';
+    if (led) {
+      led.classList.remove('led-boot', 'led-off');
+    }
+    isPhonePoweredOff = false;
+    showPhoneScreen('home');
+    triggerComicPopup(window.innerWidth / 2, window.innerHeight / 2, "SHIN-TEL READY! ⚡");
+    if (typeof onComplete === 'function') onComplete();
+  }, 1100);
+}
+
+function restartPhone(onComplete = null) {
+  hidePowerMenu();
+  playPowerDownSound();
+
+  const offOverlay = document.getElementById('phone-power-off-overlay');
+  const deadOverlay = document.getElementById('phone-dead-overlay');
+  if (offOverlay) offOverlay.style.display = 'none';
+  if (deadOverlay) deadOverlay.style.display = 'none';
+
+  const bootOverlay = document.getElementById('phone-boot-overlay');
+  const led = document.getElementById('gadget-pwr-led');
+  if (led) {
+    led.classList.remove('led-off');
+    led.classList.add('led-boot');
+  }
+
+  if (bootOverlay) {
+    bootOverlay.style.display = 'flex';
+  }
+
+  setTimeout(() => {
+    playPowerUpSound();
+    setTimeout(() => {
+      if (bootOverlay) bootOverlay.style.display = 'none';
+      if (led) {
+        led.classList.remove('led-boot', 'led-off');
+      }
+      isPhonePoweredOff = false;
+      showPhoneScreen('home');
+      triggerComicPopup(window.innerWidth / 2, window.innerHeight / 2, "REBOOT COMPLETE! 🚀");
+      if (typeof onComplete === 'function') onComplete();
+    }, 900);
+  }, 400);
+}
+
 function updateBatteryUI() {
   const phoneBattery = document.getElementById('phone-battery');
   const weatherBattery = document.getElementById('weather-battery-stat');
@@ -1957,6 +2062,11 @@ function initPhoneOS() {
   window.getShiroState = getShiroState;
   window.triggerPhoneDead = triggerPhoneDead;
   window.rechargeBattery = rechargeBattery;
+  window.showPowerMenu = showPowerMenu;
+  window.hidePowerMenu = hidePowerMenu;
+  window.powerOffPhone = powerOffPhone;
+  window.powerOnPhone = powerOnPhone;
+  window.restartPhone = restartPhone;
 
   function updateShiroUI() {
     const state = getShiroState();
@@ -2349,6 +2459,68 @@ function initPhoneOS() {
         triggerComicPopup(e.clientX, e.clientY, "BATTERY FULL! 🔋");
         playSound('pop');
       }
+    });
+  }
+
+  // Physical Side Buttons (Chassis Hardware Controls)
+  const btnSidePower = document.getElementById('btn-side-power');
+  if (btnSidePower) {
+    btnSidePower.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showPowerMenu();
+    });
+  }
+
+  const btnSideFunc = document.getElementById('btn-side-func');
+  if (btnSideFunc) {
+    btnSideFunc.addEventListener('click', (e) => {
+      e.stopPropagation();
+      restartPhone();
+    });
+  }
+
+  // Power Menu Actions
+  const btnPowerOptOff = document.getElementById('btn-power-opt-off');
+  if (btnPowerOptOff) {
+    btnPowerOptOff.addEventListener('click', () => {
+      powerOffPhone();
+    });
+  }
+
+  const btnPowerOptRestart = document.getElementById('btn-power-opt-restart');
+  if (btnPowerOptRestart) {
+    btnPowerOptRestart.addEventListener('click', () => {
+      restartPhone();
+    });
+  }
+
+  const btnPowerOptCancel = document.getElementById('btn-power-opt-cancel');
+  if (btnPowerOptCancel) {
+    btnPowerOptCancel.addEventListener('click', () => {
+      hidePowerMenu();
+    });
+  }
+
+  // Power On Button inside Powered Off Screen
+  const btnPowerOn = document.getElementById('btn-power-on');
+  if (btnPowerOn) {
+    btnPowerOn.addEventListener('click', () => {
+      powerOnPhone();
+    });
+  }
+
+  // Settings App Power Actions
+  const btnSettingsRestart = document.getElementById('btn-settings-restart');
+  if (btnSettingsRestart) {
+    btnSettingsRestart.addEventListener('click', () => {
+      restartPhone();
+    });
+  }
+
+  const btnSettingsPowerOff = document.getElementById('btn-settings-power-off');
+  if (btnSettingsPowerOff) {
+    btnSettingsPowerOff.addEventListener('click', () => {
+      powerOffPhone();
     });
   }
 

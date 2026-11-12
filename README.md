@@ -138,7 +138,7 @@ This repository is pre-configured for zero-config Vercel deployment:
 
 ## 👤 Author
 
-- **Name:** [Your Name / GitHub Username]
-- **Hackathon Team:** [Your Team Name]
+- **Name:** Saumya Shaw
+- **Hackathon Team:** Exodus (Members: Only me)
 - **Institution:** SRM Institute of Science and Technology (SRMIST)
 - **GitHub:** [@n0TSaumyaShaw](https://github.com/n0TSaumyaShaw)

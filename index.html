@@ -45,8 +45,8 @@
       <div class="gadget-antenna" aria-hidden="true"></div>
 
       <!-- Side Physical Buttons -->
-      <div class="gadget-side-btn gadget-side-btn-top gadget-btn-red" aria-hidden="true"></div>
-      <div class="gadget-side-btn gadget-side-btn-bottom gadget-btn-yellow" aria-hidden="true"></div>
+      <button type="button" class="gadget-side-btn gadget-side-btn-top gadget-btn-red" id="btn-side-power" title="SHIN-TEL Power Button (Power Off / Restart)" aria-label="Power Button"></button>
+      <button type="button" class="gadget-side-btn gadget-side-btn-bottom gadget-btn-yellow" id="btn-side-func" title="Quick Restart" aria-label="Quick Restart"></button>
 
       <div class="comic-phone" id="comic-phone">
         <!-- Gadget Top Shell: Speaker Grille & Blinking Power LED -->
@@ -906,6 +906,12 @@
                 <button type="button" class="btn-secondary" id="btn-test-dead-battery" style="width:100%; margin-top:8px; background:#FADBD8; color:#78281F;">
                   <span>🪫</span> Drain Battery to 0% (Test Shutdown)
                 </button>
+                <button type="button" class="btn-secondary" id="btn-settings-restart" style="width:100%; margin-top:8px; background:#D6EAF8; color:#1B4F72;">
+                  <span>🔄</span> Restart SHIN-TEL
+                </button>
+                <button type="button" class="btn-secondary" id="btn-settings-power-off" style="width:100%; margin-top:8px; background:#F2D7D5; color:#78281F;">
+                  <span>🔴</span> Power Off SHIN-TEL
+                </button>
                 <button type="button" class="btn-secondary btn-clear-data" id="btn-clear-data" style="width:100%; margin-top:8px; background:#FF7675; color:#FFF;">
                   <span>🗑️</span> Clear My Saved Data
                 </button>
@@ -941,6 +947,54 @@
               <button type="button" class="btn-plug-charger" id="btn-plug-charger">
                 🔌 PLUG IN CHARGER
               </button>
+            </div>
+          </div>
+
+          <!-- Power Menu Options Modal (Triggered by side power button or Settings) -->
+          <div class="phone-power-dialog" id="phone-power-dialog" style="display: none;" role="dialog" aria-modal="true" aria-label="Power Options">
+            <div class="power-dialog-card">
+              <div class="power-dialog-header">
+                <span class="power-dialog-title">⚡ SHIN-TEL POWER</span>
+              </div>
+              <div class="power-dialog-actions">
+                <button type="button" class="btn-power-opt btn-power-opt-off" id="btn-power-opt-off">
+                  <span class="power-opt-icon">🔴</span>
+                  <span class="power-opt-label">Power Off</span>
+                </button>
+                <button type="button" class="btn-power-opt btn-power-opt-restart" id="btn-power-opt-restart">
+                  <span class="power-opt-icon">🔄</span>
+                  <span class="power-opt-label">Restart Phone</span>
+                </button>
+                <button type="button" class="btn-power-opt btn-power-opt-cancel" id="btn-power-opt-cancel">
+                  <span class="power-opt-icon">✖</span>
+                  <span class="power-opt-label">Cancel</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Powered Off Screen Overlay -->
+          <div class="phone-power-off-overlay" id="phone-power-off-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="Phone powered off">
+            <div class="power-off-content">
+              <div class="power-off-icon">🔴</div>
+              <div class="power-off-title">SHIN-TEL IS POWERED OFF</div>
+              <p class="power-off-sub">Press the red side button or tap below to turn on</p>
+              <button type="button" class="btn-power-on" id="btn-power-on">
+                ⚡ POWER ON
+              </button>
+            </div>
+          </div>
+
+          <!-- Retro 90s Boot / Restart Screen -->
+          <div class="phone-boot-overlay" id="phone-boot-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="Rebooting">
+            <div class="boot-screen-content">
+              <div class="boot-logo">SHIN-TEL BIOS v2.0</div>
+              <div class="boot-console" id="boot-console">
+                <p>> RAM CHECK: 640KB OK</p>
+                <p>> KASUKABE CHIPSET DETECTED</p>
+                <p>> ACTION BASTARD ROM LOADED</p>
+                <p class="boot-cursor">> BOOTING KASUKABE OS_</p>
+              </div>
             </div>
           </div>
 
