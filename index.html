@@ -6,10 +6,13 @@
   <title>Recipe Roulette: Shinchan Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+  <!-- Retro CRT Scanline Overlay -->
+  <div class="crt-scanline-overlay" aria-hidden="true"></div>
 
   <!-- Screen Flash for Angry Shinchan & Mom's 100% Rage -->
   <div id="angry-flash-overlay"></div>
@@ -32,47 +35,64 @@
       <span class="float-emoji e8">🍛</span>
     </div>
 
-    <!-- Quick Skip Link for Judges -->
-    <button type="button" class="btn-skip-intro" id="btn-skip-intro" title="Skip directly to Phone Home Screen">
-      Skip to Home ⏩
-    </button>
-
-    <!-- CSS-Drawn Smartphone (Shinchan's Phone OS) -->
+    <!-- Chunky 90s Handheld Gadget (Shinchan's SHIN-TEL P-90) -->
     <div class="phone-wrapper">
+      <!-- Antenna Stub on Top -->
+      <div class="gadget-antenna" aria-hidden="true"></div>
+
+      <!-- Side Physical Buttons -->
+      <div class="gadget-side-btn gadget-side-btn-top" aria-hidden="true"></div>
+      <div class="gadget-side-btn gadget-side-btn-bottom" aria-hidden="true"></div>
+
       <div class="comic-phone" id="comic-phone">
-        <!-- Phone Camera Notch -->
-        <div class="phone-notch"></div>
+        <!-- Gadget Top Shell: Speaker Grille & Blinking Power LED -->
+        <div class="gadget-top-shell" aria-hidden="true">
+          <div class="gadget-speaker-grille">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="gadget-led-wrap">
+            <span class="gadget-led" id="gadget-pwr-led"></span>
+            <span class="gadget-led-label">PWR</span>
+          </div>
+        </div>
 
-        <!-- Phone Status Bar -->
-        <div class="phone-status-bar">
-          <span class="phone-time" id="phone-clock">17:45</span>
-
-          <!-- Mom's Anger Meter in Status Bar -->
-          <div class="status-anger-pill" id="status-anger-pill" title="Mom's Anger Meter (Don't let it hit 100%!)">
-            <span class="anger-icon" id="anger-face">😡</span>
-            <div class="anger-meter-track">
-              <div class="anger-meter-fill" id="status-anger-fill" style="width: 10%;"></div>
+        <!-- Inset Screen Bezel & Container -->
+        <div class="gadget-screen-container">
+          <!-- Handheld Screen Status Bar (NO notch, clean retro layout) -->
+          <div class="phone-status-bar">
+            <div class="phone-status-left">
+              <span class="phone-time" id="phone-clock">17:45</span>
             </div>
-            <span class="anger-val" id="status-anger-val">10%</span>
+
+            <!-- Mom's Anger Meter in Status Bar Centre -->
+            <div class="status-anger-pill" id="status-anger-pill" title="Mom's Anger Meter (Don't let it hit 100%!)">
+              <span class="anger-icon" id="anger-face">😡</span>
+              <div class="anger-meter-track">
+                <div class="anger-meter-fill" id="status-anger-fill" style="width: 10%;"></div>
+              </div>
+              <span class="anger-val" id="status-anger-val">10%</span>
+            </div>
+
+            <div class="phone-status-right">
+              <span class="phone-wifi" title="Signal: Strong">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+              </span>
+              <span class="phone-battery" id="phone-battery" title="Mom, please bring the charger!">🪫 85%</span>
+            </div>
           </div>
 
-          <div class="phone-status-right">
-            <span class="phone-wifi">📶</span>
-            <span class="phone-battery" id="phone-battery" title="Mom, please bring the charger!">🪫 85%</span>
+          <!-- Sliding Notification Banner (slides down below status bar) -->
+          <div class="phone-notification" id="phone-notif">
+            <span class="notif-icon" id="notif-icon">⚡</span>
+            <div class="notif-content">
+              <div class="notif-title" id="notif-title">ACTION KAMEN ALERT!</div>
+              <div class="notif-text" id="notif-text">A new episode is on TV right now!</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Sliding Notification Banner -->
-        <div class="phone-notification" id="phone-notif">
-          <span class="notif-icon" id="notif-icon">⚡</span>
-          <div class="notif-content">
-            <div class="notif-title" id="notif-title">ACTION KAMEN ALERT!</div>
-            <div class="notif-text" id="notif-text">A new episode is on TV right now!</div>
-          </div>
-        </div>
-
-        <!-- Phone Screens Viewport -->
-        <div class="phone-screens-viewport" id="phone-screens-viewport">
+          <!-- Phone Screens Viewport -->
+          <div class="phone-screens-viewport" id="phone-screens-viewport">
 
           <!-- ==============================================
                SCREEN 1: CHAT INTRO (MOM)
@@ -87,7 +107,9 @@
                 <div class="chat-contact-name">Mom ❤️</div>
                 <div class="chat-contact-status" id="chat-header-status">online</div>
               </div>
-              <button type="button" class="btn-chat-home" id="btn-chat-home" title="Go to Home Screen">🏠</button>
+              <button type="button" class="btn-chat-home" id="btn-chat-home" title="Go to Home Screen">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </button>
             </div>
 
             <!-- Chat Feed -->
@@ -128,7 +150,7 @@
             <!-- Bottom Action CTA -->
             <div class="phone-footer">
               <button type="button" class="btn-open-fridge" id="btn-open-fridge">
-                <span>🧊</span> OPEN THE FRIDGE! <span>🍳</span>
+                OPEN THE FRIDGE!
               </button>
             </div>
           </div>
@@ -241,8 +263,8 @@
                ============================================== -->
           <div class="phone-screen" id="screen-fridge">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
-              <span class="app-bar-title">🧊 RECIPE ROULETTE</span>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+              <span class="app-bar-title">RECIPE ROULETTE</span>
               <button type="button" class="btn-sound-toggle" id="btn-sound-toggle-fridge" title="Toggle comic sound effects" aria-label="Toggle comic sounds">
                 <span id="sound-icon-fridge">🔊</span>
               </button>
@@ -295,10 +317,10 @@
                     <span class="kitchen-mode-title">🌍 RECIPE SOURCE:</span>
                     <div class="kitchen-toggle-group" role="group" aria-label="Kitchen Source Selection">
                       <button type="button" class="btn-kitchen-mode active" id="btn-mode-local" data-mode="local" title="Survival recipes from local recipes.json">
-                        <span>🏠</span> Local Kitchen
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Local Kitchen
                       </button>
                       <button type="button" class="btn-kitchen-mode" id="btn-mode-world" data-mode="world" title="Discover recipes across the globe via TheMealDB">
-                        <span>🌍</span> World Kitchen
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> World Kitchen
                       </button>
                     </div>
                   </div>
@@ -333,7 +355,7 @@
 
                   <!-- Cook Trigger Button -->
                   <button type="button" class="btn-cook" id="btn-cook">
-                    <span>🎲</span> COOK SOMETHING! <span>🍳</span>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/></svg> COOK SOMETHING!
                   </button>
                 </section>
 
@@ -424,13 +446,13 @@
                     <!-- Card Action Buttons -->
                     <div class="card-actions">
                       <button type="button" class="btn-secondary" id="btn-spin-again">
-                        <span>🎲</span> Spin Again (Next Match)
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/></svg> Spin Again
                       </button>
-                      <button type="button" class="btn-secondary" id="btn-copy-recipe" style="background:#A3E4D7;">
-                        <span>📋</span> <span id="copy-text">Copy Recipe</span>
+                      <button type="button" class="btn-secondary" id="btn-copy-recipe">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> <span id="copy-text">Copy Recipe</span>
                       </button>
-                      <button type="button" class="btn-secondary" id="btn-change-ingredients" style="background:var(--white);">
-                        <span>✏️</span> Edit Ingredients
+                      <button type="button" class="btn-secondary" id="btn-change-ingredients">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Ingredients
                       </button>
                     </div>
                   </article>
@@ -446,7 +468,7 @@
                     Pick at least one or two ingredients like eggs, bread, or noodles, or we're eating instant noodles with plain air!
                   </p>
                   <button type="button" class="btn-secondary" id="btn-fallback-retry" style="max-width:280px; margin:0 auto;">
-                    <span>👈</span> Pick Some Ingredients!
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Pick Some Ingredients!
                   </button>
                 </section>
               </main>
@@ -458,7 +480,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-action-kamen">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">⚡ ACTION KAMEN TV</span>
             </div>
             <div class="screen-content kamen-tv-content">
@@ -493,7 +515,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-chocobi">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">🍫 CHOCOBI DELIVERY</span>
             </div>
             <div class="screen-content chocobi-content">
@@ -547,7 +569,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-shiro">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">🐶 SHIRO'S ALBUM</span>
             </div>
             <div class="screen-content shiro-content">
@@ -585,7 +607,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-notes">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">📝 SHINCHAN'S NOTES</span>
             </div>
             <div class="screen-content notes-content">
@@ -610,7 +632,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-cookbook">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">📖 SURVIVAL COOKBOOK</span>
             </div>
             <div class="screen-content cookbook-content">
@@ -637,7 +659,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-weather">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">☀️ KASUKABE WEATHER</span>
             </div>
             <div class="screen-content weather-content">
@@ -682,7 +704,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-contacts">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">👥 SPEED DIAL</span>
             </div>
             <div class="screen-content contacts-content">
@@ -751,7 +773,7 @@
                ============================================== -->
           <div class="phone-screen" id="screen-settings">
             <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home">← Back</button>
+              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
               <span class="app-bar-title">⚙️ SETTINGS</span>
             </div>
             <div class="screen-content settings-content">
@@ -800,26 +822,42 @@
           </div>
 
         </div> <!-- /phone-screens-viewport -->
+      </div> <!-- /gadget-screen-container -->
 
-        <!-- Bottom Navigation Bar inside the Phone -->
-        <nav class="phone-nav-bar" id="phone-nav-bar">
-          <button type="button" class="nav-item" data-nav="home">
-            <span class="nav-icon">🏠</span>
-            <span class="nav-label">Home</span>
-          </button>
-          <button type="button" class="nav-item" data-nav="fridge">
-            <span class="nav-icon">🧊</span>
-            <span class="nav-label">Fridge</span>
-          </button>
-          <button type="button" class="nav-item" data-nav="cookbook">
-            <span class="nav-icon">📖</span>
-            <span class="nav-label">Cookbook</span>
-          </button>
-          <button type="button" class="nav-item" data-nav="notes">
-            <span class="nav-icon">📝</span>
-            <span class="nav-label">Notes</span>
-          </button>
-        </nav>
+      <!-- Chunky Handheld Brand Label -->
+      <div class="gadget-brand-bar" aria-hidden="true">
+        <span class="gadget-brand-line"></span>
+        <span class="gadget-brand-text">SHIN-TEL <span>P-90</span></span>
+        <span class="gadget-brand-line"></span>
+      </div>
+
+      <!-- Bottom Navigation Bar: Chunky Physical Controls -->
+      <nav class="phone-nav-bar" id="phone-nav-bar" aria-label="Gadget Physical Buttons">
+        <button type="button" class="nav-item" data-nav="home" title="Home Screen">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button type="button" class="nav-item" data-nav="fridge" title="Fridge Roulette">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="5" y1="10" x2="19" y2="10"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="15" y1="15" x2="15" y2="15.01"/></svg>
+          </span>
+          <span class="nav-label">Fridge</span>
+        </button>
+        <button type="button" class="nav-item" data-nav="cookbook" title="Cookbook History">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </span>
+          <span class="nav-label">Cookbook</span>
+        </button>
+        <button type="button" class="nav-item" data-nav="notes" title="Shinchan's Notes">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </span>
+          <span class="nav-label">Notes</span>
+        </button>
+      </nav>
 
         <!-- Mom's 100% Rage Explosion Modal -->
         <div class="mom-rage-modal hidden" id="mom-rage-modal">

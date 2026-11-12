@@ -1,37 +1,99 @@
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=Silkscreen:wght@400;700&display=swap');
 
 :root {
-  --yellow: #FFDE00;
+  /* -------------------------------------------
+     RETRO DARK THEME PALETTE (Customizable)
+     ------------------------------------------- */
+  --bg-page: #0f0f1a;
+  --bg-page-grid: rgba(255, 255, 255, 0.04);
+  --bg-page-glow: rgba(0, 240, 255, 0.06);
+
+  /* Shinchan Glowing Retro Accents */
+  --yellow: #FFD400;
+  --yellow-glow: 0 0 12px rgba(255, 212, 0, 0.55);
   --yellow-light: #FFF480;
-  --red: #FF3B30;
+  --red: #E63946;
+  --red-glow: 0 0 14px rgba(230, 57, 70, 0.6);
   --red-dark: #C91D13;
+  --cyan: #00F0FF;
+  --cyan-glow: 0 0 10px rgba(0, 240, 255, 0.5);
   --blue: #00B4D8;
   --blue-dark: #0077B6;
   --green: #2EC4B6;
   --black: #111111;
   --white: #FFFFFF;
-  --bg-dots: rgba(0, 0, 0, 0.08);
+
+  /* Chunky 90s Handheld Gadget Housing */
+  --gadget-shell: #252830;
+  --gadget-shell-light: #343944;
+  --gadget-shell-dark: #17181d;
+  --gadget-bezel: #121318;
+  --gadget-antenna: #1e2027;
+  --gadget-led-on: #00ff66;
+  --gadget-led-glow: 0 0 8px #00ff66, 0 0 16px rgba(0, 255, 102, 0.4);
+  --gadget-brand: #9da5b4;
+
+  /* Inside Screen & Cards */
+  --screen-bg: #141620;
+  --screen-inner-shadow: inset 0 0 18px rgba(0, 0, 0, 0.85);
+  --card-bg: #FFFDF8;
+  --card-bg-alt: #F4EFE6;
+  --status-bar-bg: #1a1c28;
+  --status-bar-text: #E2E8F0;
+
+  /* Borders & Comic Shadows */
   --border-thick: 3px solid var(--black);
   --border-heavy: 4px solid var(--black);
   --shadow-comic: 4px 4px 0 var(--black);
   --shadow-comic-lg: 6px 6px 0 var(--black);
   --radius-comic: 16px;
+
+  /* Fonts */
+  --font-pixel: 'Silkscreen', monospace;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  min-width: 0;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Retro CRT Scanline Overlay */
+.crt-scanline-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+  opacity: 0.05;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-scanline-overlay {
+    display: none !important;
+  }
 }
 
 body {
   font-family: 'Fredoka', 'Comic Neue', sans-serif;
-  background-color: var(--yellow);
-  background-image: radial-gradient(var(--bg-dots) 20%, transparent 20%),
-                    radial-gradient(var(--bg-dots) 20%, transparent 20%);
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px;
+  background-color: var(--bg-page);
+  background-image: 
+    radial-gradient(circle at center, transparent 35%, rgba(5, 5, 12, 0.88) 100%),
+    linear-gradient(var(--bg-page-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-page-grid) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
+  background-position: center center, 0 0, 0 0;
   color: var(--black);
   min-height: 100vh;
   padding: 16px 12px 40px;
@@ -85,7 +147,7 @@ body.angry-shake {
 
 /* Header Section */
 .comic-header {
-  background: var(--white);
+  background: var(--card-bg);
   border: var(--border-heavy);
   box-shadow: var(--shadow-comic-lg);
   border-radius: var(--radius-comic);
@@ -118,26 +180,40 @@ body.angry-shake {
 }
 
 .btn-sound-toggle {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
   background: var(--yellow);
   border: var(--border-thick);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   box-shadow: 2px 2px 0 var(--black);
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  flex-shrink: 0;
 }
 
 .btn-sound-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.6), 2px 2px 0 var(--black);
+}
+
+.header-top-row .btn-sound-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.header-top-row .btn-sound-toggle:hover {
   transform: translateY(-50%) scale(1.1);
+}
+
+.screen-app-bar .btn-sound-toggle {
+  position: static;
+  transform: none;
 }
 
 .app-title {
@@ -791,40 +867,50 @@ body.angry-shake {
   line-height: 1.3;
 }
 
-/* Card Action Buttons */
+/* Card Action Buttons: Responsive 3-col grid stacking to 1-col */
 .card-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+@media (max-width: 440px) {
+  .card-actions {
+    grid-template-columns: 1fr;
+  }
 }
 
 .btn-secondary {
-  flex: 1;
+  width: 100%;
+  min-width: 0;
   font-family: 'Bangers', cursive;
-  font-size: 1.35rem;
-  letter-spacing: 1px;
+  font-size: 1.15rem;
+  letter-spacing: 0.8px;
   background: var(--yellow);
   color: var(--black);
-  border: var(--border-heavy);
-  box-shadow: var(--shadow-comic);
-  border-radius: 14px;
-  padding: 10px 14px;
+  border: var(--border-thick);
+  box-shadow: 3px 3px 0 var(--black);
+  border-radius: 12px;
+  padding: 10px 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .btn-secondary:hover {
-  background: #FFED4A;
+  background: var(--yellow-light);
   transform: translateY(-2px);
-  box-shadow: 5px 5px 0 var(--black);
+  box-shadow: 0 0 10px rgba(255, 212, 0, 0.5), 4px 4px 0 var(--black);
 }
 
 .btn-secondary:active {
-  transform: translateY(1px);
+  transform: translateY(2px);
   box-shadow: 1px 1px 0 var(--black);
 }
 
@@ -965,7 +1051,8 @@ body.angry-shake {
 .float-emoji {
   position: absolute;
   font-size: 2.2rem;
-  opacity: 0.6;
+  opacity: 0.22;
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4));
   bottom: -50px;
   animation: floatDrift 7s linear infinite;
 }
@@ -996,37 +1083,7 @@ body.angry-shake {
   }
 }
 
-/* Skip Intro Link */
-.btn-skip-intro {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  z-index: 50;
-  background: var(--yellow);
-  color: var(--black);
-  border: var(--border-thick);
-  box-shadow: 2.5px 2.5px 0 var(--black);
-  border-radius: 20px;
-  font-family: 'Bangers', cursive;
-  font-size: 1.15rem;
-  letter-spacing: 0.5px;
-  padding: 5px 14px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.btn-skip-intro:hover {
-  background: #FFF;
-  transform: translateY(-2px);
-  box-shadow: 4px 4px 0 var(--black);
-}
-
-.btn-skip-intro:active {
-  transform: translateY(1px);
-  box-shadow: 1px 1px 0 var(--black);
-}
-
-/* Smartphone Frame */
+/* Chunky 90s Handheld Gadget Housing */
 .phone-wrapper {
   position: relative;
   z-index: 10;
@@ -1034,20 +1091,70 @@ body.angry-shake {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 18px; /* Room for antenna stub */
 }
 
+/* Antenna Stub on Top Right */
+.gadget-antenna {
+  position: absolute;
+  top: 0;
+  right: calc(50% - min(225px, 47.5vw) + 36px);
+  width: 18px;
+  height: 24px;
+  background: linear-gradient(90deg, #181920 0%, #3a3f4d 50%, #15161c 100%);
+  border: 3px solid var(--black);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 2px 2px 0 var(--black);
+  z-index: 5;
+}
+
+/* Physical Side Buttons on Left Chassis */
+.gadget-side-btn {
+  position: absolute;
+  left: calc(50% - min(225px, 47.5vw) - 7px);
+  width: 8px;
+  background: linear-gradient(180deg, #323642 0%, #17181f 100%);
+  border: 2px solid var(--black);
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+  box-shadow: -2px 2px 0 var(--black);
+  z-index: 5;
+}
+
+.gadget-side-btn-top {
+  top: 170px;
+  height: 38px;
+}
+
+.gadget-side-btn-bottom {
+  top: 225px;
+  height: 38px;
+}
+
+/* The Chunky Handheld Shell */
 .comic-phone {
   width: min(450px, 95vw);
-  height: min(840px, 94vh);
-  background: #EFE7DE;
+  height: min(850px, 94vh);
+  background: var(--gadget-shell);
+  background-image: linear-gradient(145deg, var(--gadget-shell-light) 0%, var(--gadget-shell) 35%, var(--gadget-shell-dark) 100%);
   border: var(--border-heavy);
-  border-radius: 38px;
-  box-shadow: 8px 8px 0 var(--black);
+  border-radius: 36px;
+  box-shadow: 
+    0 0 0 2px var(--gadget-shell-light) inset,
+    8px 10px 0 var(--black),
+    0 20px 45px rgba(0, 0, 0, 0.85);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  padding: 10px 10px 8px;
   transition: transform 0.2s ease;
+  transform: rotate(-0.5deg);
+}
+
+.comic-phone:hover {
+  transform: rotate(0deg);
 }
 
 .comic-phone.shake-intense {
@@ -1063,68 +1170,141 @@ body.angry-shake {
   100% { transform: translate(0, 0) rotate(0deg); }
 }
 
-.phone-notch {
-  width: 80px;
-  height: 14px;
-  background: var(--black);
-  border-radius: 0 0 10px 10px;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 35;
+/* Gadget Top Shell (Speaker Dots & Blinking LED) */
+.gadget-top-shell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 14px 6px;
+  flex-shrink: 0;
 }
 
+.gadget-speaker-grille {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.gadget-speaker-grille span {
+  width: 5px;
+  height: 5px;
+  background: var(--black);
+  border-radius: 50%;
+  box-shadow: inset 1px 1px 1px rgba(0,0,0,0.8), 0.5px 0.5px 0 rgba(255,255,255,0.15);
+}
+
+.gadget-led-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gadget-led {
+  width: 8px;
+  height: 8px;
+  background: var(--gadget-led-on);
+  border-radius: 50%;
+  border: 1.5px solid var(--black);
+  box-shadow: var(--gadget-led-glow);
+  animation: ledBlink 2.2s infinite ease-in-out;
+}
+
+@keyframes ledBlink {
+  0%, 100% { opacity: 1; filter: brightness(1.2); }
+  50% { opacity: 0.3; filter: brightness(0.5); }
+}
+
+.gadget-led-label {
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--gadget-brand);
+  letter-spacing: 0.5px;
+}
+
+/* Inset Screen Container with Inner Glow */
+.gadget-screen-container {
+  flex: 1;
+  background: var(--screen-bg);
+  border: 3.5px solid var(--black);
+  border-radius: 20px;
+  box-shadow: var(--screen-inner-shadow), 0 0 0 1.5px var(--gadget-bezel);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Retro Handheld Status Bar (NO NOTCH, Perfectly Centered) */
 .phone-status-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 14px 2px;
-  font-weight: 700;
-  font-size: 0.75rem;
-  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 12px;
+  font-family: var(--font-pixel);
+  font-size: 0.65rem;
+  background: var(--status-bar-bg);
+  color: var(--status-bar-text);
   border-bottom: 2px solid var(--black);
   z-index: 30;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Mom's Anger Pill in Status Bar */
+.phone-status-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.phone-time {
+  font-family: var(--font-pixel);
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  color: var(--yellow);
+}
+
 .status-anger-pill {
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: #FFF3CD;
+  gap: 5px;
+  background: #252836;
   border: 1.5px solid var(--black);
-  padding: 1px 6px;
-  border-radius: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
   box-shadow: 1px 1px 0 var(--black);
   cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.status-anger-pill:hover {
+  transform: scale(1.05);
 }
 
 .anger-icon {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1;
 }
 
 .anger-meter-track {
   width: 44px;
   height: 6px;
-  background: #DDD;
+  background: #111218;
   border-radius: 3px;
-  border: 1px solid var(--black);
+  border: 1px solid rgba(255,255,255,0.15);
   overflow: hidden;
 }
 
 .anger-meter-fill {
   height: 100%;
-  background: linear-gradient(90deg, #FFDE00, #FF3B30);
+  background: linear-gradient(90deg, var(--yellow), var(--red));
   transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .anger-val {
-  font-family: 'Bangers', cursive;
-  font-size: 0.82rem;
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
   color: var(--red);
   letter-spacing: 0.3px;
 }
@@ -1135,40 +1315,44 @@ body.angry-shake {
   gap: 6px;
 }
 
+.phone-wifi svg {
+  display: block;
+  stroke: var(--cyan);
+}
+
 .phone-battery {
-  color: #D90429;
-  font-weight: 700;
-  background: #FFD6D9;
-  padding: 1px 5px;
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  color: var(--yellow);
+  background: #232534;
+  padding: 2px 6px;
   border-radius: 6px;
-  border: 1px solid #D90429;
-  transition: all 0.2s ease;
+  border: 1px solid var(--black);
+  box-shadow: 1px 1px 0 var(--black);
 }
 
 .phone-battery.battery-low {
+  color: #FFF;
+  background: var(--red);
   animation: batteryPulse 1s infinite alternate;
 }
 
-@keyframes batteryPulse {
-  0% { background: #FFD6D9; }
-  100% { background: #FF3B30; color: #FFF; }
-}
-
-/* Action Kamen Notification */
+/* Action Kamen Notification (Slides Below Status Bar Inside Screen) */
 .phone-notification {
   position: absolute;
-  top: 36px;
-  left: 10px;
-  right: 10px;
-  background: #FFF380;
-  border: 2.5px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black);
-  border-radius: 12px;
+  top: 38px;
+  left: 8px;
+  right: 8px;
+  background: #1A1D2E;
+  color: #FFF;
+  border: 2px solid var(--yellow);
+  box-shadow: 0 0 14px rgba(255, 212, 0, 0.35), 3px 3px 0 var(--black);
+  border-radius: 10px;
   padding: 6px 10px;
   display: flex;
   align-items: center;
   gap: 8px;
-  z-index: 40;
+  z-index: 50;
   transform: translateY(-130px);
   opacity: 0;
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1180,20 +1364,20 @@ body.angry-shake {
 }
 
 .notif-icon {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
 
 .notif-title {
-  font-family: 'Bangers', cursive;
-  font-size: 0.95rem;
-  color: #D32F2F;
-  line-height: 1.1;
+  font-family: var(--font-pixel);
+  font-size: 0.68rem;
+  color: var(--yellow);
+  line-height: 1.2;
 }
 
 .notif-text {
   font-size: 0.75rem;
-  font-weight: 700;
-  color: #333;
+  font-weight: 600;
+  color: #E2E8F0;
 }
 
 /* =========================================
@@ -1273,16 +1457,18 @@ body.angry-shake {
   flex: 1;
   padding: 12px;
   overflow-y: auto;
-  background-color: #FAF5EE;
+  overflow-x: hidden;
+  background-color: var(--screen-bg);
 }
 
 /* =========================================
    SCREEN 1: CHAT INTRO STYLES
    ========================================= */
 .chat-header {
-  background: #075E54;
+  background: #141724;
   color: var(--white);
   border-bottom: 2.5px solid var(--black);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
   padding: 8px 12px;
   display: flex;
   align-items: center;
@@ -1329,20 +1515,25 @@ body.angry-shake {
 }
 
 .chat-contact-status {
-  font-size: 0.72rem;
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
   opacity: 0.9;
-  color: #D4F4DD;
+  color: var(--green);
 }
 
 .btn-chat-home {
-  font-size: 1.2rem;
-  background: #FFF;
+  font-size: 1.1rem;
+  background: var(--yellow);
+  color: var(--black);
   border: 2px solid var(--black);
   border-radius: 8px;
-  padding: 2px 6px;
+  padding: 3px 6px;
   cursor: pointer;
   box-shadow: 1.5px 1.5px 0 var(--black);
   transition: transform 0.12s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-chat-home:hover {
@@ -1357,8 +1548,8 @@ body.angry-shake {
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
-  background-color: #EFE7DE;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 15%, transparent 15%);
+  background-color: #161824;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 15%, transparent 15%);
   background-size: 14px 14px;
 }
 
@@ -1382,13 +1573,15 @@ body.angry-shake {
 
 .chat-bubble.outgoing {
   align-self: flex-end;
-  background: #DCF8C6;
+  background: #E8F8F5;
+  color: #111111;
   border-bottom-right-radius: 4px;
 }
 
 .chat-bubble.incoming {
   align-self: flex-start;
-  background: #FFFFFF;
+  background: var(--card-bg);
+  color: #111111;
   border-bottom-left-radius: 4px;
 }
 
@@ -1411,7 +1604,7 @@ body.angry-shake {
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  background: #FFFFFF;
+  background: var(--card-bg);
 }
 
 .typing-dots {
@@ -1446,7 +1639,7 @@ body.angry-shake {
 
 .phone-footer {
   padding: 8px 10px;
-  background: #F0F0F0;
+  background: #181925;
   border-top: 2px solid var(--black);
   min-height: 54px;
   display: flex;
@@ -1459,11 +1652,12 @@ body.angry-shake {
   width: 100%;
   padding: 10px 14px;
   background: var(--yellow);
+  color: var(--black);
   border: var(--border-thick);
   border-radius: 12px;
-  box-shadow: 3px 3px 0 var(--black);
+  box-shadow: 0 0 12px rgba(255, 212, 0, 0.4), 3px 3px 0 var(--black);
   font-family: 'Bangers', cursive;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   letter-spacing: 1px;
   cursor: pointer;
   display: flex;
@@ -1476,7 +1670,7 @@ body.angry-shake {
 .btn-open-fridge:hover {
   background: var(--yellow-light);
   transform: translateY(-2px);
-  box-shadow: 4px 4px 0 var(--black);
+  box-shadow: 0 0 16px rgba(255, 212, 0, 0.6), 4px 4px 0 var(--black);
 }
 
 .btn-open-fridge:active {
@@ -1488,10 +1682,12 @@ body.angry-shake {
    SCREEN 2: HOME SCREEN (APP GRID)
    ========================================= */
 #screen-home {
-  background: #FFEAA7;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.08) 15%, transparent 15%);
-  background-size: 16px 16px;
-  padding: 12px 10px 16px;
+  background: var(--screen-bg);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  padding: 14px 10px 16px;
   align-items: center;
 }
 
@@ -1503,31 +1699,34 @@ body.angry-shake {
 
 .home-big-clock {
   font-family: 'Bangers', cursive;
-  font-size: 3.4rem;
+  font-size: 3.5rem;
   line-height: 1;
-  color: var(--black);
-  letter-spacing: 2px;
-  text-shadow: 2px 2px 0 var(--white);
+  color: var(--yellow);
+  letter-spacing: 2.5px;
+  text-shadow: 0 0 16px rgba(255, 212, 0, 0.6), 2px 2px 0 var(--black);
 }
 
 .home-date-display {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #444;
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  color: #A0AEC0;
+  margin-top: 4px;
 }
 
 .home-weather-pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #FFF;
+  background: var(--card-bg);
   border: 2px solid var(--black);
-  box-shadow: 2.5px 2.5px 0 var(--black);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.25), 2.5px 2.5px 0 var(--black);
   border-radius: 14px;
   padding: 4px 12px;
   font-weight: 700;
   font-size: 0.82rem;
-  margin-top: 6px;
+  margin-top: 8px;
+  color: var(--black);
   cursor: pointer;
   transition: transform 0.15s ease;
 }
@@ -1607,28 +1806,30 @@ body.angry-shake {
   right: -6px;
   background: var(--red);
   color: var(--white);
-  font-family: 'Bangers', cursive;
-  font-size: 0.72rem;
-  padding: 1px 6px;
-  border-radius: 10px;
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  padding: 2px 5px;
+  border-radius: 8px;
   border: 1.5px solid var(--black);
   box-shadow: 1px 1px 0 var(--black);
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
 }
 
 .app-name {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--black);
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  color: #E2E8F0;
   text-align: center;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
 /* =========================================
    SCREEN 3: FRIDGE (RECIPE ROULETTE EMBED)
    ========================================= */
 #screen-fridge {
-  background: var(--yellow);
+  background: var(--screen-bg);
+  background-image: radial-gradient(rgba(255, 212, 0, 0.05) 15%, transparent 15%);
+  background-size: 16px 16px;
 }
 
 .fridge-scroll-content {
@@ -2220,18 +2421,51 @@ body.angry-shake {
 }
 
 /* =========================================
-   PHONE BOTTOM NAVIGATION BAR
+   CHUNKY GADGET BRAND & BOTTOM NAVIGATION BAR
    ========================================= */
+.gadget-brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 6px 4px 4px;
+  flex-shrink: 0;
+}
+
+.gadget-brand-line {
+  flex: 1;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.gadget-brand-text {
+  font-family: var(--font-pixel);
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: var(--gadget-brand);
+  text-shadow: 1px 1px 0 var(--black);
+  user-select: none;
+}
+
+.gadget-brand-text span {
+  color: var(--yellow);
+  font-size: 0.62rem;
+}
+
+/* Chunky Physical Bottom Nav Buttons Under Screen */
 .phone-nav-bar {
-  height: 54px;
-  background: #FFFFFF;
-  border-top: var(--border-thick);
+  height: 52px;
+  background: #181920;
+  border: var(--border-thick);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 2px 8px;
+  padding: 4px;
   flex-shrink: 0;
-  z-index: 30;
+  gap: 6px;
+  box-shadow: 0 2px 0 var(--gadget-shell-light) inset, 2px 2px 0 var(--black);
 }
 
 .nav-item {
@@ -2241,29 +2475,55 @@ body.angry-shake {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
+  background: #282b36;
+  border: 2px solid var(--black);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 var(--black);
   cursor: pointer;
-  border-radius: 10px;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
+  color: #8f97a8;
   padding: 2px;
+}
+
+.nav-item:hover {
+  background: #353947;
+  color: var(--white);
+  transform: translateY(-1px);
 }
 
 .nav-item.active {
   background: var(--yellow);
-  border: 2px solid var(--black);
-  box-shadow: 2px 2px 0 var(--black);
+  color: var(--black);
+  border-color: var(--black);
+  box-shadow: 0 0 12px rgba(255, 212, 0, 0.65), 2px 2px 0 var(--black);
+  transform: translateY(1px);
+}
+
+.nav-item.active .nav-label {
+  color: var(--black);
+  font-weight: 700;
+}
+
+.nav-item.active .nav-icon svg {
+  stroke: var(--black);
 }
 
 .nav-icon {
-  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 }
 
+.nav-icon svg {
+  display: block;
+}
+
 .nav-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--black);
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
 }
 
 /* =========================================
@@ -2272,8 +2532,8 @@ body.angry-shake {
 .mom-rage-modal {
   position: absolute;
   inset: 0;
-  background: rgba(214, 48, 49, 0.75);
-  backdrop-filter: blur(2px);
+  background: rgba(15, 15, 26, 0.88);
+  backdrop-filter: blur(4px);
   z-index: 90;
   display: flex;
   align-items: center;
@@ -2282,15 +2542,10 @@ body.angry-shake {
   animation: rageModalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@keyframes rageModalPop {
-  0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
 .mom-rage-content {
-  background: var(--white);
-  border: var(--border-heavy);
-  box-shadow: 8px 8px 0 var(--black);
+  background: var(--card-bg);
+  border: 4px solid var(--red);
+  box-shadow: 0 0 24px rgba(230, 57, 70, 0.6), 8px 8px 0 var(--black);
   border-radius: 24px;
   padding: 20px 16px;
   text-align: center;

@@ -1133,15 +1133,6 @@ function initIntroScreen() {
   const msg4 = document.getElementById('msg-4');
   const notif = document.getElementById('phone-notif');
   const btnOpenFridge = document.getElementById('btn-open-fridge');
-  const btnSkip = document.getElementById('btn-skip-intro');
-
-  // Skip button click: opens Phone Home Screen
-  if (btnSkip) {
-    btnSkip.addEventListener('click', () => {
-      playSound('pop');
-      transitionToApp();
-    });
-  }
 
   // Open fridge CTA click: opens Phone Home Screen
   if (btnOpenFridge) {

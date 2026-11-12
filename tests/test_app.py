@@ -6,7 +6,7 @@ import subprocess
 import time
 
 CHROME_PATH = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
-PORT = 9320
+PORT = 9455
 
 async def run_comprehensive_test():
     cmd = [
@@ -15,16 +15,29 @@ async def run_comprehensive_test():
         '--no-sandbox',
         '--disable-gpu',
         f'--remote-debugging-port={PORT}',
-        r'--user-data-dir=C:\Users\Saumya\AppData\Local\Temp\chrome_app_full_test_9320',
+        r'--user-data-dir=C:\Users\Saumya\AppData\Local\Temp\chrome_app_full_test_9455',
         'http://localhost:8080/index.html'
     ]
     proc = subprocess.Popen(cmd)
-    time.sleep(3)
+    print("Launching headless Chrome...", flush=True)
+    time.sleep(2)
     try:
-        targets = json.loads(urllib.request.urlopen(f'http://localhost:{PORT}/json').read().decode())
-        page = next(t for t in targets if t.get('type') == 'page')
-        ws_url = page['webSocketDebuggerUrl']
+        ws_url = None
+        for attempt in range(10):
+            try:
+                req = urllib.request.urlopen(f'http://127.0.0.1:{PORT}/json', timeout=2)
+                targets = json.loads(req.read().decode())
+                page = next((t for t in targets if t.get('type') == 'page'), None)
+                if page:
+                    ws_url = page['webSocketDebuggerUrl']
+                    break
+            except Exception as e:
+                time.sleep(0.5)
 
+        if not ws_url:
+            raise RuntimeError("Could not obtain webSocketDebuggerUrl from Chrome!")
+
+        print(f"Connected to Chrome DevTools WebSocket: {ws_url}", flush=True)
         async with websockets.connect(ws_url, max_size=None) as ws:
             msg_id = 0
             console_errors = []
@@ -68,22 +81,25 @@ async def run_comprehensive_test():
             print("   Chat Header Avatar:", pfp_val)
             assert "assets/images/avatars/misae-pfp.webp" in pfp_val.get('src', ''), "Avatar path incorrect!"
 
-            # Check 2: Skip Intro -> Home Screen
+            # Check 2: Transition to Home Screen
             print("2. Transitioning to Home Screen...")
-            await send('Runtime.evaluate', {'expression': 'document.getElementById("btn-skip-intro").click()'})
+            await send('Runtime.evaluate', {'expression': 'transitionToApp()'})
             await asyncio.sleep(0.5)
 
             home_state = await send('Runtime.evaluate', {
                 'expression': """(() => {
                     return {
                         active: document.getElementById('screen-home').classList.contains('active'),
-                        appCount: document.querySelectorAll('.app-item').length
+                        appCount: document.querySelectorAll('.app-item').length,
+                        notchPresent: document.querySelector('.phone-notch') !== null
                     };
                 })()""",
                 'returnByValue': True
             })
-            print("   Home State:", home_state.get('result', {}).get('value'))
-            assert home_state.get('result', {}).get('value', {}).get('active') is True, "Home screen not active!"
+            val_home = home_state.get('result', {}).get('value', {})
+            print("   Home State:", val_home)
+            assert val_home.get('active') is True, "Home screen not active!"
+            assert val_home.get('notchPresent') is False, "Notch should be completely removed!"
 
             # Check 3: Test Every Single App (All 10)
             apps = ['fridge', 'chat', 'action-kamen', 'chocobi', 'shiro', 'notes', 'cookbook', 'weather', 'contacts', 'settings']
@@ -97,7 +113,13 @@ async def run_comprehensive_test():
             
             # Back to home
             await send('Runtime.evaluate', {'expression': 'showPhoneScreen("home")'})
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.3)
+            import base64
+            ss_home = await send('Page.captureScreenshot', {'format': 'png'})
+            if ss_home.get('data'):
+                with open('tests/preview_home_grid.png', 'wb') as f:
+                    f.write(base64.b64decode(ss_home['data']))
+                print("   Saved screenshot: tests/preview_home_grid.png")
 
             # Check 4: Test Mute Button Synchronization (Header & Fridge)
             print("4. Testing Sound Mute Synchronization across Header and Fridge...")
@@ -160,6 +182,12 @@ async def run_comprehensive_test():
             assert bat_after.get('result', {}).get('value') == bat_before.get('result', {}).get('value') - 1, "Battery drain failed!"
             assert anger_after.get('result', {}).get('value') > anger_before.get('result', {}).get('value'), "Anger did not increase!"
 
+            ss_fridge = await send('Page.captureScreenshot', {'format': 'png'})
+            if ss_fridge.get('data'):
+                with open('tests/preview_fridge_recipe.png', 'wb') as f:
+                    f.write(base64.b64decode(ss_fridge['data']))
+                print("   Saved screenshot: tests/preview_fridge_recipe.png")
+
             # Check 6: Verify Cookbook logged the cooked recipe
             await send('Runtime.evaluate', {'expression': 'showPhoneScreen("cookbook")'})
             await asyncio.sleep(0.3)
@@ -201,8 +229,50 @@ async def run_comprehensive_test():
             })
             print(f"   Notification banner active: {notif_shown.get('result', {}).get('value')}")
 
-            # Check 10: Final Console & Network Error Assertions
-            print("10. Checking Console and Network Errors...")
+            # Check 10: Multi-viewport Verification (1920x1080, 1366x768, 375x812)
+            print("10. Testing Viewports: 1920x1080, 1366x768, 375x812...")
+            viewports = [
+                {'name': 'desktop_1920x1080', 'width': 1920, 'height': 1080, 'mobile': False},
+                {'name': 'laptop_1366x768', 'width': 1366, 'height': 768, 'mobile': False},
+                {'name': 'mobile_375x812', 'width': 375, 'height': 812, 'mobile': True}
+            ]
+
+            import base64
+            for vp in viewports:
+                await send('Emulation.setDeviceMetricsOverride', {
+                    'width': vp['width'],
+                    'height': vp['height'],
+                    'deviceScaleFactor': 1,
+                    'mobile': vp['mobile']
+                })
+                await asyncio.sleep(0.3)
+                
+                # Check for horizontal overflow on key phone elements
+                overflow_check = await send('Runtime.evaluate', {
+                    'expression': """(() => {
+                        const phone = document.getElementById('comic-phone');
+                        const viewport = document.getElementById('phone-screens-viewport');
+                        const cardActions = document.querySelector('.card-actions');
+                        return {
+                            phoneOverflow: phone ? phone.scrollWidth > phone.clientWidth : false,
+                            cardActionsOverflow: cardActions ? cardActions.scrollWidth > cardActions.clientWidth : false
+                        };
+                    })()""",
+                    'returnByValue': True
+                })
+                of_res = overflow_check.get('result', {}).get('value', {})
+                print(f"    Viewport [{vp['name']}]: Overflow Check:", of_res)
+                assert of_res.get('phoneOverflow') is False, f"Phone overflowed horizontally at {vp['name']}!"
+
+                # Take screenshot
+                ss = await send('Page.captureScreenshot', {'format': 'png'})
+                if ss.get('data'):
+                    with open(f"tests/preview_{vp['name']}.png", 'wb') as f:
+                        f.write(base64.b64decode(ss['data']))
+                    print(f"    Saved screenshot: tests/preview_{vp['name']}.png")
+
+            # Check 11: Final Console & Network Error Assertions
+            print("11. Checking Console and Network Errors...")
             print("    Console errors detected:", console_errors)
             print("    Network errors (4xx/5xx) detected:", network_errors)
             assert len(console_errors) == 0, f"Found console errors: {console_errors}"
