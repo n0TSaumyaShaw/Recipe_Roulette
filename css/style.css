@@ -1044,14 +1044,6 @@ body.angry-shake {
   background: var(--cream);
   color: var(--ink);
 }
-  cursor: pointer;
-  transition: all 0.12s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  white-space: nowrap;
-}
 
 .btn-secondary:hover {
   background: var(--yellow-light);
@@ -2803,46 +2795,47 @@ body.angry-shake {
   color: #666;
   margin-top: 8px;
 }
-  margin-top: 8px;
-}
 
 /* =========================================
    CHUNKY GADGET PHYSICAL NAV KEYS & BRAND LABEL
    ========================================= */
 .phone-nav-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px 4px 6px;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  flex-shrink: 0;
-  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 6px !important;
+  padding: 8px 6px 4px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .nav-item {
-  height: 38px;
-  background: var(--key);
-  color: var(--text);
-  border: 2px solid var(--outline);
-  border-radius: var(--btn-radius);
-  box-shadow: 0 3px 0 #1c1c24, 0 4px 2px rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  transition: all 0.12s ease;
+  height: 36px !important;
+  background: var(--key, #34343f) !important;
+  color: var(--text, #F4EEDC) !important;
+  border: 2px solid var(--outline, #000) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 3px 0 #1c1c24, 0 4px 2px rgba(0, 0, 0, 0.4) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 2px !important;
+  transition: all 0.12s ease !important;
+  outline: none !important;
 }
 
 .nav-item .nav-label {
-  font-family: var(--font-heading);
-  font-size: 14.5px;
-  letter-spacing: 0.8px;
-  color: var(--text);
-  margin-top: 0;
-  line-height: 1;
+  font-family: var(--font-heading, 'Bangers', cursive) !important;
+  font-size: 13px !important;
+  letter-spacing: 0.3px !important;
+  color: var(--text, #F4EEDC) !important;
+  margin-top: 0 !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
 }
 
 .nav-item .nav-icon {
@@ -2850,53 +2843,50 @@ body.angry-shake {
 }
 
 .nav-item:hover {
-  background: #3e3e4c;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 0 #1c1c24;
+  background: #3e3e4c !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 0 #1c1c24 !important;
 }
 
 .nav-item:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #1c1c24;
+  transform: translateY(2px) !important;
+  box-shadow: 0 1px 0 #1c1c24 !important;
 }
 
 .nav-item.active {
-  background: var(--yellow);
-  color: var(--ink);
-  border-color: var(--outline);
-  box-shadow: 0 3px 0 #b39500, 0 0 14px rgba(255, 212, 0, 0.5);
-  transform: translateY(1px);
+  background: var(--yellow, #FFD400) !important;
+  color: var(--ink, #12122a) !important;
+  border-color: var(--outline, #000) !important;
+  box-shadow: 0 3px 0 #b39500, 0 0 16px rgba(255, 212, 0, 0.55) !important;
+  transform: translateY(1px) !important;
 }
 
 .nav-item.active .nav-label {
-  color: var(--ink);
+  color: var(--ink, #12122a) !important;
 }
 
 /* Chunky Handheld Brand Label Under Nav Keys */
 .gadget-brand-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 0 2px;
-  flex-shrink: 0;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 0 2px !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
 }
 
 .gadget-brand-line {
-  display: none;
+  display: none !important;
 }
 
 .gadget-brand-text {
-  font-family: var(--font-pixel);
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  color: var(--label);
-  text-shadow: 1px 1px 0 #000;
-  user-select: none;
-}
-  font-family: var(--font-pixel);
-  font-size: 0.58rem;
-  letter-spacing: 0.3px;
-  margin-top: 2px;
+  font-family: var(--font-pixel, 'Press Start 2P', monospace) !important;
+  font-size: 9px !important;
+  letter-spacing: 2.5px !important;
+  color: var(--label, #8a8a98) !important;
+  text-shadow: 1px 1px 0 #000 !important;
+  user-select: none !important;
+  text-align: center !important;
 }
 
 /* =========================================
