@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +12,12 @@
   <meta name="theme-color" content="#0f0f1a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Gochi+Hand&family=Press+Start+2P&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
   <!-- Retro CRT Scanline Overlay -->
@@ -61,8 +65,10 @@
       <div class="gadget-antenna" aria-hidden="true"></div>
 
       <!-- Side Physical Buttons -->
-      <button type="button" class="gadget-side-btn gadget-side-btn-top gadget-btn-red" id="btn-side-power" title="SHIN-TEL Power Button (Power Off / Restart)" aria-label="Power Button"></button>
-      <button type="button" class="gadget-side-btn gadget-side-btn-bottom gadget-btn-yellow" id="btn-side-func" title="Quick Restart" aria-label="Quick Restart"></button>
+      <button type="button" class="gadget-side-btn gadget-side-btn-top gadget-btn-red" id="btn-side-power"
+        title="SHIN-TEL Power Button (Power Off / Restart)" aria-label="Power Button"></button>
+      <button type="button" class="gadget-side-btn gadget-side-btn-bottom gadget-btn-yellow" id="btn-side-func"
+        title="Quick Restart" aria-label="Quick Restart"></button>
 
       <div class="comic-phone" id="comic-phone">
         <!-- Gadget Top Shell: Speaker Grille & Blinking Power LED -->
@@ -110,946 +116,1080 @@
           <!-- Phone Screens Viewport -->
           <div class="phone-screens-viewport" id="phone-screens-viewport">
 
-          <!-- ==============================================
+            <!-- ==============================================
                SCREEN 1: CHAT INTRO (MOM)
                ============================================== -->
-          <div class="phone-screen active" id="screen-chat">
-            <!-- Chat App Header -->
-            <div class="chat-header">
-              <div class="chat-header-avatar">
-                <img src="assets/images/avatars/misae-pfp.webp" alt="Mom" class="chat-header-pfp" />
-              </div>
-              <div class="chat-header-info">
-                <div class="chat-contact-name">Mom ❤️</div>
-                <div class="chat-contact-status" id="chat-header-status">online</div>
-              </div>
-              <button type="button" class="btn-chat-home" id="btn-chat-home" title="Go to Home Screen">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              </button>
-            </div>
-
-            <!-- Chat Feed -->
-            <div class="chat-body" id="chat-messages">
-              <!-- Shinchan Msg 1 -->
-              <div class="chat-bubble outgoing hidden" id="msg-1">
-                <div class="bubble-text">Mom, what's for food today? 🥺</div>
-                <span class="bubble-time">17:44 ✓✓</span>
-              </div>
-
-              <!-- Shinchan Msg 2 -->
-              <div class="chat-bubble outgoing hidden" id="msg-2">
-                <div class="bubble-text">I'm so hungry my tummy is running a marathon!</div>
-                <span class="bubble-time">17:44 ✓✓</span>
-              </div>
-
-              <!-- Shinchan Msg 3 -->
-              <div class="chat-bubble outgoing hidden" id="msg-3">
-                <div class="bubble-text">Can I have some Chocobi? Please please please!</div>
-                <span class="bubble-time">17:45 ✓✓</span>
-              </div>
-
-              <!-- Misae Typing Indicator -->
-              <div class="chat-bubble incoming typing-bubble hidden" id="msg-typing">
-                <div class="typing-dots">
-                  <span></span><span></span><span></span>
+            <div class="phone-screen active" id="screen-chat">
+              <!-- Chat App Header -->
+              <div class="chat-header">
+                <div class="chat-header-avatar">
+                  <img src="assets/images/avatars/misae-pfp.webp" alt="Mom" class="chat-header-pfp" />
                 </div>
-                <span class="typing-label">Mom is typing...</span>
+                <div class="chat-header-info">
+                  <div class="chat-contact-name">Mom ❤️</div>
+                  <div class="chat-contact-status" id="chat-header-status">online</div>
+                </div>
+                <button type="button" class="btn-chat-home" id="btn-chat-home" title="Go to Home Screen">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </button>
               </div>
 
-              <!-- Misae Msg 4 (Reply) -->
-              <div class="chat-bubble incoming hidden" id="msg-4">
-                <div class="bubble-text">We'll cook whatever is left in the fridge!</div>
-                <span class="bubble-time">17:45</span>
+              <!-- Chat Feed -->
+              <div class="chat-body" id="chat-messages">
+                <!-- Shinchan Msg 1 -->
+                <div class="chat-bubble outgoing hidden" id="msg-1">
+                  <div class="bubble-text">Mom, what's for food today? 🥺</div>
+                  <span class="bubble-time">17:44 ✓✓</span>
+                </div>
+
+                <!-- Shinchan Msg 2 -->
+                <div class="chat-bubble outgoing hidden" id="msg-2">
+                  <div class="bubble-text">I'm so hungry my tummy is running a marathon!</div>
+                  <span class="bubble-time">17:44 ✓✓</span>
+                </div>
+
+                <!-- Shinchan Msg 3 -->
+                <div class="chat-bubble outgoing hidden" id="msg-3">
+                  <div class="bubble-text">Can I have some Chocobi? Please please please!</div>
+                  <span class="bubble-time">17:45 ✓✓</span>
+                </div>
+
+                <!-- Misae Typing Indicator -->
+                <div class="chat-bubble incoming typing-bubble hidden" id="msg-typing">
+                  <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="typing-label">Mom is typing...</span>
+                </div>
+
+                <!-- Misae Msg 4 (Reply) -->
+                <div class="chat-bubble incoming hidden" id="msg-4">
+                  <div class="bubble-text">We'll cook whatever is left in the fridge!</div>
+                  <span class="bubble-time">17:45</span>
+                </div>
+              </div>
+
+              <!-- Bottom Action CTA -->
+              <div class="phone-footer">
+                <button type="button" class="btn-open-fridge" id="btn-open-fridge">
+                  OPEN THE FRIDGE!
+                </button>
               </div>
             </div>
 
-            <!-- Bottom Action CTA -->
-            <div class="phone-footer">
-              <button type="button" class="btn-open-fridge" id="btn-open-fridge">
-                OPEN THE FRIDGE!
-              </button>
-            </div>
-          </div>
-
-          <!-- ==============================================
+            <!-- ==============================================
                SCREEN 2: PHONE HOME SCREEN (APP GRID)
                ============================================== -->
-          <div class="phone-screen" id="screen-home">
-            <div class="home-screen-header">
-              <div class="home-time-box">
-                <div class="home-big-clock" id="home-big-clock">17:45</div>
-                <div class="home-date-display">Thursday, Kasukabe City</div>
+            <div class="phone-screen" id="screen-home">
+              <div class="home-screen-header">
+                <div class="home-time-box">
+                  <div class="home-big-clock" id="home-big-clock">17:45</div>
+                  <div class="home-date-display">Thursday, Kasukabe City</div>
+                </div>
+                <div class="home-weather-pill" id="home-weather-widget">
+                  <span>☀️</span> 32°C · 90% Mom Yelling!
+                </div>
               </div>
-              <div class="home-weather-pill" id="home-weather-widget">
-                <span>☀️</span> 32°C · 90% Mom Yelling!
+
+              <!-- 10 Apps Grid -->
+              <div class="app-grid">
+                <!-- 1. Fridge (Recipe Roulette) -->
+                <button type="button" class="app-item" data-app="fridge" title="Recipe Roulette Fridge">
+                  <div class="app-squircle app-fridge">
+                    <span class="app-emoji">🧊</span>
+                    <span class="app-badge">SURVIVE</span>
+                  </div>
+                  <span class="app-name">Fridge</span>
+                </button>
+
+                <!-- 2. Mom (Replay Chat) -->
+                <button type="button" class="app-item" data-app="chat" title="Mom Chat">
+                  <div class="app-squircle app-mom">
+                    <img src="assets/images/avatars/misae-pfp.webp" alt="Mom" class="app-pfp-icon" />
+                    <span class="app-badge">1</span>
+                  </div>
+                  <span class="app-name">Mom</span>
+                </button>
+
+                <!-- 3. Action Kamen TV -->
+                <button type="button" class="app-item" data-app="action-kamen" title="Action Kamen TV">
+                  <div class="app-squircle app-kamen">
+                    <span class="app-emoji">⚡</span>
+                    <span class="app-badge">LIVE</span>
+                  </div>
+                  <span class="app-name">Kamen TV</span>
+                </button>
+
+                <!-- 4. Shiro's Gallery -->
+                <button type="button" class="app-item" data-app="shiro" title="Shiro's Album">
+                  <div class="app-squircle app-shiro">
+                    <span class="app-emoji">🐶</span>
+                  </div>
+                  <span class="app-name">Shiro</span>
+                </button>
+
+                <!-- 6. Notes -->
+                <button type="button" class="app-item" data-app="notes" title="Shinchan's Notes">
+                  <div class="app-squircle app-notes">
+                    <span class="app-emoji">📝</span>
+                  </div>
+                  <span class="app-name">Notes</span>
+                </button>
+
+                <!-- 7. Cookbook -->
+                <button type="button" class="app-item" data-app="cookbook" title="Cooked History">
+                  <div class="app-squircle app-cookbook">
+                    <span class="app-emoji">📖</span>
+                    <span class="app-badge" id="cookbook-badge">0</span>
+                  </div>
+                  <span class="app-name">Cookbook</span>
+                </button>
+
+                <!-- 8. Weather -->
+                <button type="button" class="app-item" data-app="weather" title="Kasukabe Weather">
+                  <div class="app-squircle app-weather">
+                    <span class="app-emoji">☀️</span>
+                  </div>
+                  <span class="app-name">Weather</span>
+                </button>
+
+                <!-- 9. Contacts -->
+                <button type="button" class="app-item" data-app="contacts" title="Speed Dial">
+                  <div class="app-squircle app-contacts">
+                    <span class="app-emoji">👥</span>
+                  </div>
+                  <span class="app-name">Contacts</span>
+                </button>
+
+                <!-- 10. Settings -->
+                <button type="button" class="app-item" data-app="settings" title="Settings">
+                  <div class="app-squircle app-settings">
+                    <span class="app-emoji">⚙️</span>
+                  </div>
+                  <span class="app-name">Settings</span>
+                </button>
               </div>
             </div>
 
-            <!-- 10 Apps Grid -->
-            <div class="app-grid">
-              <!-- 1. Fridge (Recipe Roulette) -->
-              <button type="button" class="app-item" data-app="fridge" title="Recipe Roulette Fridge">
-                <div class="app-squircle app-fridge">
-                  <span class="app-emoji">🧊</span>
-                  <span class="app-badge">SURVIVE</span>
-                </div>
-                <span class="app-name">Fridge</span>
-              </button>
-
-              <!-- 2. Mom (Replay Chat) -->
-              <button type="button" class="app-item" data-app="chat" title="Mom Chat">
-                <div class="app-squircle app-mom">
-                  <img src="assets/images/avatars/misae-pfp.webp" alt="Mom" class="app-pfp-icon" />
-                  <span class="app-badge">1</span>
-                </div>
-                <span class="app-name">Mom</span>
-              </button>
-
-              <!-- 3. Action Kamen TV -->
-              <button type="button" class="app-item" data-app="action-kamen" title="Action Kamen TV">
-                <div class="app-squircle app-kamen">
-                  <span class="app-emoji">⚡</span>
-                  <span class="app-badge">LIVE</span>
-                </div>
-                <span class="app-name">Kamen TV</span>
-              </button>
-
-              <!-- 4. Shiro's Gallery -->
-              <button type="button" class="app-item" data-app="shiro" title="Shiro's Album">
-                <div class="app-squircle app-shiro">
-                  <span class="app-emoji">🐶</span>
-                </div>
-                <span class="app-name">Shiro</span>
-              </button>
-
-              <!-- 6. Notes -->
-              <button type="button" class="app-item" data-app="notes" title="Shinchan's Notes">
-                <div class="app-squircle app-notes">
-                  <span class="app-emoji">📝</span>
-                </div>
-                <span class="app-name">Notes</span>
-              </button>
-
-              <!-- 7. Cookbook -->
-              <button type="button" class="app-item" data-app="cookbook" title="Cooked History">
-                <div class="app-squircle app-cookbook">
-                  <span class="app-emoji">📖</span>
-                  <span class="app-badge" id="cookbook-badge">0</span>
-                </div>
-                <span class="app-name">Cookbook</span>
-              </button>
-
-              <!-- 8. Weather -->
-              <button type="button" class="app-item" data-app="weather" title="Kasukabe Weather">
-                <div class="app-squircle app-weather">
-                  <span class="app-emoji">☀️</span>
-                </div>
-                <span class="app-name">Weather</span>
-              </button>
-
-              <!-- 9. Contacts -->
-              <button type="button" class="app-item" data-app="contacts" title="Speed Dial">
-                <div class="app-squircle app-contacts">
-                  <span class="app-emoji">👥</span>
-                </div>
-                <span class="app-name">Contacts</span>
-              </button>
-
-              <!-- 10. Settings -->
-              <button type="button" class="app-item" data-app="settings" title="Settings">
-                <div class="app-squircle app-settings">
-                  <span class="app-emoji">⚙️</span>
-                </div>
-                <span class="app-name">Settings</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- ==============================================
+            <!-- ==============================================
                SCREEN 3: FRIDGE (THE EXISTING RECIPE ROULETTE APP)
                ============================================== -->
-          <div class="phone-screen" id="screen-fridge">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">RECIPE ROULETTE</span>
-            </div>
+            <div class="phone-screen" id="screen-fridge">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">RECIPE ROULETTE</span>
+              </div>
 
-            <!-- Scrollable Content Housing Complete Recipe Roulette UI -->
-            <div class="fridge-scroll-content">
-              <main class="app-wrapper" id="app-screen">
-                <!-- Header -->
-                <header class="comic-header">
-                  <div class="header-top-row">
-                    <div class="header-badge">⭐ ACTION BASTARD CERTIFIED ⭐</div>
-                  </div>
-                  <h1 class="app-title">RECIPE ROULETTE <span>SHINCHAN EDITION</span></h1>
-                  <p class="app-tagline">Survival cooking for college kids, lazy bachelors, and 5-year-old geniuses!</p>
-                </header>
-
-                <!-- Misae / Shinchan Speech Bubble with Character PFP -->
-                <section class="speech-bubble-container" aria-live="polite">
-                  <div class="avatar-badge mascot-container mood-happy" id="misae-avatar" title="Nohara Family">
-                    <img src="assets/images/avatars/shinchan-pfp.jpg" alt="Shinchan" class="avatar-pfp-img" id="avatar-shinchan-pfp" />
-                    <img src="assets/images/avatars/misae-pfp.webp" alt="Misae" class="avatar-pfp-img" id="avatar-misae-pfp" style="display:none;" />
-                  </div>
-                  <div class="speech-bubble" id="misae-speech">
-                    Mama, I'm hungry! What do we have in the fridge?
-                  </div>
-                </section>
-
-                <!-- Pantry Staples Notice -->
-                <div class="pantry-strip">
-                  <span class="pantry-label">Pantry Staples:</span>
-                  <span class="pantry-chips">
-                    <span class="pill">Salt</span>
-                    <span class="pill">Oil</span>
-                    <span class="pill">Water</span>
-                    <span class="pill">Basic Spices</span>
-                  </span>
-                  <span class="pantry-note">(Always available!)</span>
-                </div>
-
-                <!-- Ingredient Picker Panel -->
-                <section class="comic-panel" id="ingredients-panel">
-                  <!-- Kitchen Mode Toggle: Local vs World Kitchen -->
-                  <div class="kitchen-mode-bar">
-                    <span class="kitchen-mode-title">🌍 RECIPE SOURCE:</span>
-                    <div class="kitchen-toggle-group" role="group" aria-label="Kitchen Source Selection">
-                      <button type="button" class="btn-kitchen-mode active" id="btn-mode-local" data-mode="local" title="Survival recipes from local recipes.json">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Local Kitchen
-                      </button>
-                      <button type="button" class="btn-kitchen-mode" id="btn-mode-world" data-mode="world" title="Discover recipes across the globe via TheMealDB">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> World Kitchen
-                      </button>
+              <!-- Scrollable Content Housing Complete Recipe Roulette UI -->
+              <div class="fridge-scroll-content">
+                <main class="app-wrapper" id="app-screen">
+                  <!-- Header -->
+                  <header class="comic-header">
+                    <div class="header-top-row">
+                      <div class="header-badge">⭐ ACTION BASTARD CERTIFIED ⭐</div>
                     </div>
-                  </div>
+                    <h1 class="app-title">RECIPE ROULETTE <span>SHINCHAN EDITION</span></h1>
+                    <p class="app-tagline">Survival cooking for college kids, lazy bachelors, and 5-year-old geniuses!
+                    </p>
+                  </header>
 
-                  <div class="panel-header">
-                    <h2 class="panel-title">
-                      <span>🥕</span> Pick Your Ingredients
-                    </h2>
-                    <div class="preset-bar">
-                      <span class="selected-counter" id="selected-count">0 picked</span>
-                      <button type="button" class="btn-preset-resume" id="btn-resume-ingredients" style="display:none;" title="Resume last picked ingredients">Resume Last</button>
-                      <button type="button" class="btn-preset-reset" id="btn-clear" title="Clear all selections">Clear</button>
+                  <!-- Misae / Shinchan Speech Bubble with Character PFP -->
+                  <section class="speech-bubble-container" aria-live="polite">
+                    <div class="avatar-badge mascot-container mood-happy" id="misae-avatar" title="Nohara Family">
+                      <img src="assets/images/avatars/shinchan-pfp.jpg" alt="Shinchan" class="avatar-pfp-img"
+                        id="avatar-shinchan-pfp" />
+                      <img src="assets/images/avatars/misae-pfp.webp" alt="Misae" class="avatar-pfp-img"
+                        id="avatar-misae-pfp" style="display:none;" />
                     </div>
+                    <div class="speech-bubble" id="misae-speech">
+                      Mama, I'm hungry! What do we have in the fridge?
+                    </div>
+                  </section>
+
+                  <!-- Pantry Staples Notice -->
+                  <div class="pantry-strip">
+                    <span class="pantry-label">Pantry Staples:</span>
+                    <span class="pantry-chips">
+                      <span class="pill">Salt</span>
+                      <span class="pill">Oil</span>
+                      <span class="pill">Water</span>
+                      <span class="pill">Basic Spices</span>
+                    </span>
+                    <span class="pantry-note">(Always available!)</span>
                   </div>
 
-                  <!-- Chips Container -->
-                  <div class="chips-container" id="chips-container">
-                    <!-- Dynamically populated via script.js -->
-                  </div>
-
-                  <!-- Custom Ingredient Input -->
-                  <form class="custom-input-group" id="custom-ingredient-form" onsubmit="return false;">
-                    <input 
-                      type="text" 
-                      id="custom-input" 
-                      class="comic-input" 
-                      placeholder="Got something else? (e.g. corn, oats)..." 
-                      maxlength="25"
-                      autocomplete="off"
-                    >
-                    <button type="submit" class="btn-add" id="btn-add-custom">+ ADD</button>
-                  </form>
-
-                  <!-- Cook Trigger Button -->
-                  <button type="button" class="btn-cook" id="btn-cook">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/></svg> COOK SOMETHING!
-                  </button>
-                </section>
-
-                <!-- Roulette Spin Window -->
-                <section id="roulette-container" aria-hidden="true">
-                  <div class="dice-icon">🎲</div>
-                  <div class="roulette-slot-window">
-                    <div class="roulette-slot-text" id="slot-reel-text">Shuffling Recipes...</div>
-                  </div>
-                  <p class="roulette-subtext">Shinchan is rummaging through the kitchen cabinets...</p>
-                </section>
-
-                <!-- Recipe Result Card -->
-                <section id="recipe-display" aria-live="polite">
-                  <article class="recipe-card">
-                    <div class="recipe-meta-strip">
-                      <div class="recipe-title-row">
-                        <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
-                        <button type="button" class="btn-favorite-recipe" id="btn-favorite-recipe" title="Save to Favorites" aria-label="Save recipe to favorites">
-                          <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                          </svg>
+                  <!-- Ingredient Picker Panel -->
+                  <section class="comic-panel" id="ingredients-panel">
+                    <!-- Kitchen Mode Toggle: Local vs World Kitchen -->
+                    <div class="kitchen-mode-bar">
+                      <span class="kitchen-mode-title">🌍 RECIPE SOURCE:</span>
+                      <div class="kitchen-toggle-group" role="group" aria-label="Kitchen Source Selection">
+                        <button type="button" class="btn-kitchen-mode active" id="btn-mode-local" data-mode="local"
+                          title="Survival recipes from local recipes.json">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                          </svg> Local Kitchen
+                        </button>
+                        <button type="button" class="btn-kitchen-mode" id="btn-mode-world" data-mode="world"
+                          title="Discover recipes across the globe via TheMealDB">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path
+                              d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                          </svg> World Kitchen
                         </button>
                       </div>
-                      <div class="recipe-badges">
-                        <span class="badge-tag badge-source" id="card-recipe-source">🏠 Local Kitchen</span>
-                        <span class="badge-tag badge-time" id="card-recipe-time">⏱️ 5 mins</span>
-                        <span class="badge-tag badge-difficulty" id="card-recipe-diff">⚡ Super Easy</span>
-                        <span class="badge-tag badge-match" id="card-recipe-match">🎯 3 Matched</span>
+                    </div>
+
+                    <div class="panel-header">
+                      <h2 class="panel-title">
+                        <span>🥕</span> Pick Your Ingredients
+                      </h2>
+                      <div class="preset-bar">
+                        <span class="selected-counter" id="selected-count">0 picked</span>
+                        <button type="button" class="btn-preset-resume" id="btn-resume-ingredients"
+                          style="display:none;" title="Resume last picked ingredients">Resume Last</button>
+                        <button type="button" class="btn-preset-reset" id="btn-clear"
+                          title="Clear all selections">Clear</button>
                       </div>
                     </div>
 
-                    <!-- Dish Photo (for World Kitchen / rich recipes) -->
-                    <div class="recipe-thumb-container" id="card-image-wrap" style="display:none;">
-                      <img id="card-recipe-image" class="recipe-dish-thumb" src="" alt="Dish Photo" loading="lazy" />
+                    <!-- Chips Container -->
+                    <div class="chips-container" id="chips-container">
+                      <!-- Dynamically populated via script.js -->
                     </div>
 
-                    <!-- Grumpy Banner if hated ingredient was selected -->
-                    <div class="grumpy-banner" id="card-grumpy-banner" style="display:none;">
-                      <span>😡</span>
-                      <span id="grumpy-text">Shinchan is staring with intense disappointment because of the green pepper.</span>
-                    </div>
+                    <!-- Custom Ingredient Input -->
+                    <form class="custom-input-group" id="custom-ingredient-form" onsubmit="return false;">
+                      <input type="text" id="custom-input" class="comic-input"
+                        placeholder="Got something else? (e.g. corn, oats)..." maxlength="25" autocomplete="off">
+                      <button type="submit" class="btn-add" id="btn-add-custom">+ ADD</button>
+                    </form>
 
-                    <!-- Smart Swaps Banner -->
-                    <div class="smart-swap-box" id="card-swap-box" style="display:none;">
-                      <div class="swap-header">💡 SMART SURVIVAL SWAP!</div>
-                      <ul class="swap-list" id="card-swap-list">
-                        <!-- Populated via JS -->
-                      </ul>
-                    </div>
+                    <!-- Cook Trigger Button -->
+                    <button type="button" class="btn-cook" id="btn-cook">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="3" />
+                        <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                        <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" />
+                        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                        <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" />
+                        <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor" />
+                      </svg> COOK SOMETHING!
+                    </button>
+                  </section>
 
-                    <!-- Ingredients Checklist -->
-                    <div class="recipe-section">
-                      <h3 class="section-subtitle">🛒 What You Need:</h3>
-                      <div class="recipe-ingredients-list" id="card-ingredients-list">
-                        <!-- Injected via JS -->
+                  <!-- Roulette Spin Window -->
+                  <section id="roulette-container" aria-hidden="true">
+                    <div class="dice-icon">🎲</div>
+                    <div class="roulette-slot-window">
+                      <div class="roulette-slot-text" id="slot-reel-text">Shuffling Recipes...</div>
+                    </div>
+                    <p class="roulette-subtext">Shinchan is rummaging through the kitchen cabinets...</p>
+                  </section>
+
+                  <!-- Recipe Result Card -->
+                  <section id="recipe-display" aria-live="polite">
+                    <article class="recipe-card">
+                      <div class="recipe-meta-strip">
+                        <div class="recipe-title-row">
+                          <h2 class="recipe-title" id="card-recipe-title">Masala Omelette</h2>
+                          <button type="button" class="btn-favorite-recipe" id="btn-favorite-recipe"
+                            title="Save to Favorites" aria-label="Save recipe to favorites">
+                            <svg class="heart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                              </path>
+                            </svg>
+                          </button>
+                        </div>
+                        <div class="recipe-badges">
+                          <span class="badge-tag badge-source" id="card-recipe-source">🏠 Local Kitchen</span>
+                          <span class="badge-tag badge-time" id="card-recipe-time">⏱️ 5 mins</span>
+                          <span class="badge-tag badge-difficulty" id="card-recipe-diff">⚡ Super Easy</span>
+                          <span class="badge-tag badge-match" id="card-recipe-match">🎯 3 Matched</span>
+                        </div>
                       </div>
-                    </div>
 
-                    <!-- Recipe Steps -->
-                    <div class="recipe-section">
-                      <h3 class="section-subtitle">🔥 Easy Steps:</h3>
-                      <ol class="recipe-steps-list" id="card-steps-list">
-                        <!-- Injected via JS -->
-                      </ol>
-                    </div>
-
-                    <!-- Shinchan Card Quote with Shinchan PFP -->
-                    <div class="shinchan-card-quote" id="card-shinchan-quote-box">
-                      <img src="assets/images/avatars/shinchan-pfp.jpg" alt="Shinchan" class="quote-pfp" />
-                      <div class="quote-content">
-                        <span class="quote-speaker">SHINCHAN SAYS:</span>
-                        <span id="card-shinchan-quote" class="quote-text">"Action Bastard power breakfast! Eggs make you strong like me!"</span>
+                      <!-- Dish Photo (for World Kitchen / rich recipes) -->
+                      <div class="recipe-thumb-container" id="card-image-wrap" style="display:none;">
+                        <img id="card-recipe-image" class="recipe-dish-thumb" src="" alt="Dish Photo" loading="lazy" />
                       </div>
-                    </div>
 
-                    <!-- Shinchan Butt-Wiggle Celebratory Dance -->
-                    <div class="butt-dance-banner" id="card-butt-dance">
-                      <div class="butt-dancer" aria-hidden="true">🍑</div>
-                      <div class="butt-text">
-                        <strong>BURI BURI CELEBRATION!</strong>
-                        <span>Shinchan is doing his victory butt-wiggle dance!</span>
+                      <!-- Grumpy Banner if hated ingredient was selected -->
+                      <div class="grumpy-banner" id="card-grumpy-banner" style="display:none;">
+                        <span>😡</span>
+                        <span id="grumpy-text">Shinchan is staring with intense disappointment because of the green
+                          pepper.</span>
                       </div>
-                    </div>
 
-                    <!-- Mummy's Verdict Seal with Misae PFP -->
-                    <div class="mummy-verdict-stamp" id="card-mummy-verdict">
-                      <img src="assets/images/avatars/misae-pfp.webp" alt="Mummy Misae" class="verdict-pfp" />
-                      <div class="verdict-text-box">
-                        <div class="verdict-label">MUMMY'S VERDICT (10/10)</div>
-                        <div class="verdict-sub">Shiro also approves with 2 paws up! 🐾</div>
+                      <!-- Smart Swaps Banner -->
+                      <div class="smart-swap-box" id="card-swap-box" style="display:none;">
+                        <div class="swap-header">💡 SMART SURVIVAL SWAP!</div>
+                        <ul class="swap-list" id="card-swap-list">
+                          <!-- Populated via JS -->
+                        </ul>
                       </div>
-                    </div>
 
-                    <!-- Card Action Buttons -->
-                    <div class="card-actions">
-                      <button type="button" class="btn-secondary" id="btn-spin-again">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/></svg> Spin Again
-                      </button>
-                      <button type="button" class="btn-secondary" id="btn-copy-recipe">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> <span id="copy-text">Copy Recipe</span>
-                      </button>
-                      <button type="button" class="btn-secondary" id="btn-change-ingredients">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Ingredients
-                      </button>
-                    </div>
-                  </article>
-                </section>
+                      <!-- Ingredients Checklist -->
+                      <div class="recipe-section">
+                        <h3 class="section-subtitle">🛒 What You Need:</h3>
+                        <div class="recipe-ingredients-list" id="card-ingredients-list">
+                          <!-- Injected via JS -->
+                        </div>
+                      </div>
 
-                <!-- Fallback Funny Card with Shinchan PFP -->
-                <section id="fallback-display">
-                  <div class="fallback-pfp-wrap">
-                    <img src="assets/images/avatars/shinchan-pfp.jpg" alt="Shinchan Shocked" class="fallback-shinchan-pfp" />
-                  </div>
-                  <h2 class="fallback-title">THE FRIDGE IS AS EMPTY AS HIROSHI'S WALLET!</h2>
-                  <p class="fallback-text" id="fallback-message">
-                    Pick at least one or two ingredients like eggs, bread, or noodles, or we're eating instant noodles with plain air!
-                  </p>
-                  <button type="button" class="btn-secondary" id="btn-fallback-retry" style="max-width:280px; margin:0 auto;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Pick Some Ingredients!
-                  </button>
-                </section>
-              </main>
+                      <!-- Recipe Steps -->
+                      <div class="recipe-section">
+                        <h3 class="section-subtitle">🔥 Easy Steps:</h3>
+                        <ol class="recipe-steps-list" id="card-steps-list">
+                          <!-- Injected via JS -->
+                        </ol>
+                      </div>
+
+                      <!-- Shinchan Card Quote with Shinchan PFP -->
+                      <div class="shinchan-card-quote" id="card-shinchan-quote-box">
+                        <img src="assets/images/avatars/shinchan-pfp.jpg" alt="Shinchan" class="quote-pfp" />
+                        <div class="quote-content">
+                          <span class="quote-speaker">SHINCHAN SAYS:</span>
+                          <span id="card-shinchan-quote" class="quote-text">"Action Bastard power breakfast! Eggs make
+                            you strong like me!"</span>
+                        </div>
+                      </div>
+
+                      <!-- Shinchan Butt-Wiggle Celebratory Dance -->
+                      <div class="butt-dance-banner" id="card-butt-dance">
+                        <div class="butt-dancer" aria-hidden="true">🍑</div>
+                        <div class="butt-text">
+                          <strong>BURI BURI CELEBRATION!</strong>
+                          <span>Shinchan is doing his victory butt-wiggle dance!</span>
+                        </div>
+                      </div>
+
+                      <!-- Mummy's Verdict Seal with Misae PFP -->
+                      <div class="mummy-verdict-stamp" id="card-mummy-verdict">
+                        <img src="assets/images/avatars/misae-pfp.webp" alt="Mummy Misae" class="verdict-pfp" />
+                        <div class="verdict-text-box">
+                          <div class="verdict-label">MUMMY'S VERDICT (10/10)</div>
+                          <div class="verdict-sub">Shiro also approves with 2 paws up! 🐾</div>
+                        </div>
+                      </div>
+
+                      <!-- Card Action Buttons -->
+                      <div class="card-actions">
+                        <button type="button" class="btn-secondary" id="btn-spin-again">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                            <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" />
+                            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                            <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" />
+                            <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor" />
+                          </svg> Spin Again
+                        </button>
+                        <button type="button" class="btn-secondary" id="btn-copy-recipe">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                          </svg> <span id="copy-text">Copy Recipe</span>
+                        </button>
+                        <button type="button" class="btn-secondary" id="btn-change-ingredients">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg> Edit Ingredients
+                        </button>
+                      </div>
+                    </article>
+                  </section>
+
+                  <!-- Fallback Funny Card with Shinchan PFP -->
+                  <section id="fallback-display">
+                    <div class="fallback-pfp-wrap">
+                      <img src="assets/images/avatars/shinchan-pfp.jpg" alt="Shinchan Shocked"
+                        class="fallback-shinchan-pfp" />
+                    </div>
+                    <h2 class="fallback-title">THE FRIDGE IS AS EMPTY AS HIROSHI'S WALLET!</h2>
+                    <p class="fallback-text" id="fallback-message">
+                      Pick at least one or two ingredients like eggs, bread, or noodles, or we're eating instant noodles
+                      with plain air!
+                    </p>
+                    <button type="button" class="btn-secondary" id="btn-fallback-retry"
+                      style="max-width:280px; margin:0 auto;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                      </svg> Pick Some Ingredients!
+                    </button>
+                  </section>
+                </main>
+              </div>
             </div>
-          </div>
 
-          <!-- ==============================================
+            <!-- ==============================================
                SCREEN 4: ACTION KAMEN TV
                ============================================== -->
-          <div class="phone-screen" id="screen-action-kamen">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">ACTION KAMEN TV</span>
-            </div>
-            <div class="screen-content kamen-tv-content">
-              <div class="tv-casing" id="tv-casing">
-                <div class="tv-screen-bezel" id="tv-screen-bezel">
-                  <div class="tv-screen-glass" id="tv-glass">
-                    <!-- Static Canvas for 250ms Channel Transitions -->
-                    <canvas class="tv-static-canvas" id="tv-static-canvas" width="320" height="200" style="display: none;" aria-hidden="true"></canvas>
+            <div class="phone-screen" id="screen-action-kamen">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">ACTION KAMEN TV</span>
+              </div>
+              <div class="screen-content kamen-tv-content">
+                <div class="tv-casing" id="tv-casing">
+                  <div class="tv-screen-bezel" id="tv-screen-bezel">
+                    <div class="tv-screen-glass" id="tv-glass">
+                      <!-- Static Canvas for 250ms Channel Transitions -->
+                      <canvas class="tv-static-canvas" id="tv-static-canvas" width="320" height="200"
+                        style="display: none;" aria-hidden="true"></canvas>
 
-                    <!-- Channel Banner Overlay (fades after 2s) -->
-                    <div class="tv-channel-banner" id="tv-channel-banner">CH 1 · ACTION KAMEN HOUR</div>
+                      <!-- Channel Banner Overlay (fades after 2s) -->
+                      <div class="tv-channel-banner" id="tv-channel-banner">CH 1 · ACTION KAMEN HOUR</div>
 
-                    <!-- Shared Channel Content Viewport -->
-                    <div class="tv-channel-viewport" id="tv-channel-viewport">
-                      <!-- Active channel renders here -->
+                      <!-- Shared Channel Content Viewport -->
+                      <div class="tv-channel-viewport" id="tv-channel-viewport">
+                        <!-- Active channel renders here -->
+                      </div>
+
+                      <!-- Beam Laser Overlay (Active only on Channel 1) -->
+                      <div class="kamen-beam-laser hidden" id="kamen-beam-laser" aria-hidden="true">⚡⚡⚡⚡⚡⚡</div>
+
+                      <!-- CRT Scanlines Overlay -->
+                      <div class="tv-crt-scanlines" aria-hidden="true"></div>
                     </div>
-
-                    <!-- Beam Laser Overlay (Active only on Channel 1) -->
-                    <div class="kamen-beam-laser hidden" id="kamen-beam-laser" aria-hidden="true">⚡⚡⚡⚡⚡⚡</div>
-
-                    <!-- CRT Scanlines Overlay -->
-                    <div class="tv-crt-scanlines" aria-hidden="true"></div>
                   </div>
                 </div>
-              </div>
 
-              <!-- Desktop TV Info Card (Shown under screen on desktop per reference-remote-desktop.png) -->
-              <div class="tv-desktop-info-card" id="tv-desktop-info-card">
-                <div class="tv-info-line"><strong>Channel:</strong> <span id="tv-info-channel-name">CH 1 Action Kamen Hour</span></div>
-                <div class="tv-info-line"><strong>Status:</strong> <span id="tv-info-status">On air. Use the remote to change channel.</span></div>
-              </div>
+                <!-- Desktop TV Info Card (Shown under screen on desktop per reference-remote-desktop.png) -->
+                <div class="tv-desktop-info-card" id="tv-desktop-info-card">
+                  <div class="tv-info-line"><strong>Channel:</strong> <span id="tv-info-channel-name">CH 1 Action Kamen
+                      Hour</span></div>
+                  <div class="tv-info-line"><strong>Status:</strong> <span id="tv-info-status">On air. Use the remote to
+                      change channel.</span></div>
+                </div>
 
-              <!-- Mobile Remote Dock (Remote moves here when width <= 1100px) -->
-              <div class="tv-remote-mobile-dock" id="tv-remote-mobile-dock"></div>
+                <!-- Mobile Remote Dock (Remote moves here when width <= 1100px) -->
+                <div class="tv-remote-mobile-dock" id="tv-remote-mobile-dock"></div>
 
-              <!-- Mobile Remote Dock Hint Label (per reference-remote-mobile.png) -->
-              <div class="tv-mobile-hint" id="tv-mobile-hint">
-                REMOTE DOCKS UNDER THE SCREEN ON NARROW DEVICES
+                <!-- Mobile Remote Dock Hint Label (per reference-remote-mobile.png) -->
+                <div class="tv-mobile-hint" id="tv-mobile-hint">
+                  REMOTE DOCKS UNDER THE SCREEN ON NARROW DEVICES
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- ==============================================
+            <!-- ==============================================
                SCREEN 5: SHIRO'S ALBUM
                ============================================== -->
-          <div class="phone-screen" id="screen-shiro">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">SHIRO'S CORNER</span>
-            </div>
-            <div class="screen-content shiro-content">
-              <div class="shiro-hero-card">
-                <div class="shiro-status-header">
-                  <span class="shiro-mood-badge" id="shiro-mood-badge">Mood: Happy</span>
-                  <span class="shiro-pets-badge" id="shiro-pets-count">Pets: 0</span>
-                </div>
-
-                <!-- Fluffy Original Vector Shiro Dog Stage -->
-                <div class="shiro-dog-stage" id="shiro-stage">
-                  <svg id="shiro-pet-svg" class="shiro-pet-svg" data-mood="happy" viewBox="0 0 240 200" width="220" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive pet Shiro">
-                    <!-- Interactive Tail -->
-                    <g id="shiro-tail" class="shiro-interactive-part" data-part="tail" role="button" tabindex="0" title="Pet Shiro's Tail" aria-label="Pet Shiro's Tail">
-                      <ellipse class="shiro-tail-puff" cx="195" cy="115" rx="20" ry="16" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-                      <circle cx="198" cy="112" r="14" fill="#FFFFFF" />
-                    </g>
-
-                    <!-- Paws Back -->
-                    <ellipse cx="65" cy="165" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-                    <ellipse cx="165" cy="165" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-
-                    <!-- Interactive Belly & Body -->
-                    <g id="shiro-belly" class="shiro-interactive-part" data-part="belly" role="button" tabindex="0" title="Pet Shiro's Fluffy Belly" aria-label="Pet Shiro's Belly">
-                      <ellipse class="shiro-body-puff" cx="120" cy="130" rx="65" ry="42" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-                      <path d="M 85 145 Q 120 160 155 145" fill="none" stroke="#E2E8F0" stroke-width="2.5" stroke-linecap="round" />
-                    </g>
-
-                    <!-- Paws Front -->
-                    <ellipse cx="95" cy="170" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-                    <ellipse cx="135" cy="170" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-
-                    <!-- Interactive Ears -->
-                    <g id="shiro-ears" class="shiro-interactive-part" data-part="ears" role="button" tabindex="0" title="Pet Shiro's Soft Ears" aria-label="Pet Shiro's Ears">
-                      <!-- Left Ear -->
-                      <path class="shiro-ear-left" d="M 68 75 C 45 65 35 90 55 105 C 65 110 75 95 68 75 Z" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-                      <!-- Right Ear -->
-                      <path class="shiro-ear-right" d="M 132 75 C 155 65 165 90 145 105 C 135 110 125 95 132 75 Z" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-                    </g>
-
-                    <!-- Interactive Head -->
-                    <g id="shiro-head" class="shiro-interactive-part" data-part="head" role="button" tabindex="0" title="Pet Shiro's Head" aria-label="Pet Shiro's Head">
-                      <ellipse class="shiro-head-puff" cx="100" cy="80" rx="46" ry="38" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
-                      
-                      <!-- Normal / Happy Eyes -->
-                      <g class="shiro-eyes-normal">
-                        <circle cx="86" cy="74" r="5" fill="#12122A" />
-                        <circle cx="84.5" cy="72" r="1.8" fill="#FFFFFF" />
-                        <circle cx="114" cy="74" r="5" fill="#12122A" />
-                        <circle cx="112.5" cy="72" r="1.8" fill="#FFFFFF" />
-                      </g>
-
-                      <!-- Sleepy Eyes -->
-                      <g class="shiro-eyes-sleepy">
-                        <path d="M 80 76 Q 86 71 92 76" fill="none" stroke="#12122A" stroke-width="3" stroke-linecap="round" />
-                        <path d="M 108 76 Q 114 71 120 76" fill="none" stroke="#12122A" stroke-width="3" stroke-linecap="round" />
-                      </g>
-
-                      <!-- Cute Black Nose -->
-                      <ellipse cx="100" cy="85" rx="5.5" ry="4" fill="#12122A" />
-
-                      <!-- Mouth Normal -->
-                      <g class="shiro-mouth-normal">
-                        <path d="M 94 90 Q 100 95 106 90" fill="none" stroke="#12122A" stroke-width="2.5" stroke-linecap="round" />
-                      </g>
-
-                      <!-- Mouth Hungry with Tongue -->
-                      <g class="shiro-mouth-hungry">
-                        <path d="M 94 89 Q 100 93 106 89" fill="none" stroke="#12122A" stroke-width="2.5" stroke-linecap="round" />
-                        <path class="shiro-tongue" d="M 97 91 C 97 99 103 99 103 91 Z" fill="#FF7675" stroke="#12122A" stroke-width="1.5" />
-                      </g>
-
-                      <!-- Blush Cheeks -->
-                      <ellipse cx="76" cy="84" rx="6" ry="3.5" fill="#FFB8B8" opacity="0.6" />
-                      <ellipse cx="124" cy="84" rx="6" ry="3.5" fill="#FFB8B8" opacity="0.6" />
-                    </g>
-
-                    <!-- Sleepy Zzz Floating Cloud -->
-                    <g class="shiro-zzz-cloud" aria-hidden="true">
-                      <text x="145" y="45" class="shiro-zzz z1">Z</text>
-                      <text x="158" y="32" class="shiro-zzz z2">z</text>
-                      <text x="168" y="20" class="shiro-zzz z3">z</text>
-                    </g>
-                  </svg>
-                </div>
-
-                <div class="shiro-speech-bubble" id="shiro-speech">
-                  Woof! Shiro is happily wagging his tail! Tap his head, ears, belly, or tail to pet him!
-                </div>
-
-                <!-- Care Status Bars -->
-                <div class="shiro-stats-panel">
-                  <div class="shiro-stat-row">
-                    <span class="shiro-stat-label">Hunger</span>
-                    <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Hunger" aria-valuemin="0" aria-valuemax="100" aria-valuenow="80">
-                      <div class="shiro-meter-fill hunger-fill" id="shiro-bar-hunger" style="width: 80%;"></div>
-                    </div>
-                    <span class="shiro-stat-pct" id="shiro-val-hunger">80%</span>
+            <div class="phone-screen" id="screen-shiro">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">SHIRO'S CORNER</span>
+              </div>
+              <div class="screen-content shiro-content">
+                <div class="shiro-hero-card">
+                  <div class="shiro-status-header">
+                    <span class="shiro-mood-badge" id="shiro-mood-badge">Mood: Happy</span>
+                    <span class="shiro-pets-badge" id="shiro-pets-count">Pets: 0</span>
                   </div>
 
-                  <div class="shiro-stat-row">
-                    <span class="shiro-stat-label">Happiness</span>
-                    <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Happiness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="85">
-                      <div class="shiro-meter-fill happiness-fill" id="shiro-bar-happiness" style="width: 85%;"></div>
-                    </div>
-                    <span class="shiro-stat-pct" id="shiro-val-happiness">85%</span>
+                  <!-- Fluffy Original Vector Shiro Dog Stage -->
+                  <div class="shiro-dog-stage" id="shiro-stage">
+                    <svg id="shiro-pet-svg" class="shiro-pet-svg" data-mood="happy" viewBox="0 0 240 200" width="220"
+                      height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive pet Shiro">
+                      <!-- Interactive Tail -->
+                      <g id="shiro-tail" class="shiro-interactive-part" data-part="tail" role="button" tabindex="0"
+                        title="Pet Shiro's Tail" aria-label="Pet Shiro's Tail">
+                        <ellipse class="shiro-tail-puff" cx="195" cy="115" rx="20" ry="16" fill="#FFFFFF"
+                          stroke="#12122A" stroke-width="3" />
+                        <circle cx="198" cy="112" r="14" fill="#FFFFFF" />
+                      </g>
+
+                      <!-- Paws Back -->
+                      <ellipse cx="65" cy="165" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                      <ellipse cx="165" cy="165" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+
+                      <!-- Interactive Belly & Body -->
+                      <g id="shiro-belly" class="shiro-interactive-part" data-part="belly" role="button" tabindex="0"
+                        title="Pet Shiro's Fluffy Belly" aria-label="Pet Shiro's Belly">
+                        <ellipse class="shiro-body-puff" cx="120" cy="130" rx="65" ry="42" fill="#FFFFFF"
+                          stroke="#12122A" stroke-width="3" />
+                        <path d="M 85 145 Q 120 160 155 145" fill="none" stroke="#E2E8F0" stroke-width="2.5"
+                          stroke-linecap="round" />
+                      </g>
+
+                      <!-- Paws Front -->
+                      <ellipse cx="95" cy="170" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                      <ellipse cx="135" cy="170" rx="14" ry="10" fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+
+                      <!-- Interactive Ears -->
+                      <g id="shiro-ears" class="shiro-interactive-part" data-part="ears" role="button" tabindex="0"
+                        title="Pet Shiro's Soft Ears" aria-label="Pet Shiro's Ears">
+                        <!-- Left Ear -->
+                        <path class="shiro-ear-left" d="M 68 75 C 45 65 35 90 55 105 C 65 110 75 95 68 75 Z"
+                          fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                        <!-- Right Ear -->
+                        <path class="shiro-ear-right" d="M 132 75 C 155 65 165 90 145 105 C 135 110 125 95 132 75 Z"
+                          fill="#FFFFFF" stroke="#12122A" stroke-width="3" />
+                      </g>
+
+                      <!-- Interactive Head -->
+                      <g id="shiro-head" class="shiro-interactive-part" data-part="head" role="button" tabindex="0"
+                        title="Pet Shiro's Head" aria-label="Pet Shiro's Head">
+                        <ellipse class="shiro-head-puff" cx="100" cy="80" rx="46" ry="38" fill="#FFFFFF"
+                          stroke="#12122A" stroke-width="3" />
+
+                        <!-- Normal / Happy Eyes -->
+                        <g class="shiro-eyes-normal">
+                          <circle cx="86" cy="74" r="5" fill="#12122A" />
+                          <circle cx="84.5" cy="72" r="1.8" fill="#FFFFFF" />
+                          <circle cx="114" cy="74" r="5" fill="#12122A" />
+                          <circle cx="112.5" cy="72" r="1.8" fill="#FFFFFF" />
+                        </g>
+
+                        <!-- Sleepy Eyes -->
+                        <g class="shiro-eyes-sleepy">
+                          <path d="M 80 76 Q 86 71 92 76" fill="none" stroke="#12122A" stroke-width="3"
+                            stroke-linecap="round" />
+                          <path d="M 108 76 Q 114 71 120 76" fill="none" stroke="#12122A" stroke-width="3"
+                            stroke-linecap="round" />
+                        </g>
+
+                        <!-- Cute Black Nose -->
+                        <ellipse cx="100" cy="85" rx="5.5" ry="4" fill="#12122A" />
+
+                        <!-- Mouth Normal -->
+                        <g class="shiro-mouth-normal">
+                          <path d="M 94 90 Q 100 95 106 90" fill="none" stroke="#12122A" stroke-width="2.5"
+                            stroke-linecap="round" />
+                        </g>
+
+                        <!-- Mouth Hungry with Tongue -->
+                        <g class="shiro-mouth-hungry">
+                          <path d="M 94 89 Q 100 93 106 89" fill="none" stroke="#12122A" stroke-width="2.5"
+                            stroke-linecap="round" />
+                          <path class="shiro-tongue" d="M 97 91 C 97 99 103 99 103 91 Z" fill="#FF7675" stroke="#12122A"
+                            stroke-width="1.5" />
+                        </g>
+
+                        <!-- Blush Cheeks -->
+                        <ellipse cx="76" cy="84" rx="6" ry="3.5" fill="#FFB8B8" opacity="0.6" />
+                        <ellipse cx="124" cy="84" rx="6" ry="3.5" fill="#FFB8B8" opacity="0.6" />
+                      </g>
+
+                      <!-- Sleepy Zzz Floating Cloud -->
+                      <g class="shiro-zzz-cloud" aria-hidden="true">
+                        <text x="145" y="45" class="shiro-zzz z1">Z</text>
+                        <text x="158" y="32" class="shiro-zzz z2">z</text>
+                        <text x="168" y="20" class="shiro-zzz z3">z</text>
+                      </g>
+                    </svg>
                   </div>
 
-                  <div class="shiro-stat-row">
-                    <span class="shiro-stat-label">Energy</span>
-                    <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
-                      <div class="shiro-meter-fill energy-fill" id="shiro-bar-energy" style="width: 75%;"></div>
+                  <div class="shiro-speech-bubble" id="shiro-speech">
+                    Woof! Shiro is happily wagging his tail! Tap his head, ears, belly, or tail to pet him!
+                  </div>
+
+                  <!-- Care Status Bars -->
+                  <div class="shiro-stats-panel">
+                    <div class="shiro-stat-row">
+                      <span class="shiro-stat-label">Hunger</span>
+                      <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Hunger" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuenow="80">
+                        <div class="shiro-meter-fill hunger-fill" id="shiro-bar-hunger" style="width: 80%;"></div>
+                      </div>
+                      <span class="shiro-stat-pct" id="shiro-val-hunger">80%</span>
                     </div>
-                    <span class="shiro-stat-pct" id="shiro-val-energy">75%</span>
+
+                    <div class="shiro-stat-row">
+                      <span class="shiro-stat-label">Happiness</span>
+                      <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Happiness" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuenow="85">
+                        <div class="shiro-meter-fill happiness-fill" id="shiro-bar-happiness" style="width: 85%;"></div>
+                      </div>
+                      <span class="shiro-stat-pct" id="shiro-val-happiness">85%</span>
+                    </div>
+
+                    <div class="shiro-stat-row">
+                      <span class="shiro-stat-label">Energy</span>
+                      <div class="shiro-meter-track" role="progressbar" aria-label="Shiro Energy" aria-valuemin="0"
+                        aria-valuemax="100" aria-valuenow="75">
+                        <div class="shiro-meter-fill energy-fill" id="shiro-bar-energy" style="width: 75%;"></div>
+                      </div>
+                      <span class="shiro-stat-pct" id="shiro-val-energy">75%</span>
+                    </div>
+                  </div>
+
+                  <!-- Action Button: Give Shiro a Bite (NO EMOJIS on button) -->
+                  <div class="shiro-actions-row">
+                    <button type="button" class="btn-feed-shiro" id="btn-feed-shiro">
+                      Give Shiro a Bite
+                    </button>
+                  </div>
+                  <div class="shiro-feed-hint" id="shiro-feed-hint">
+                    Feeds Shiro a bite of your latest cooked dish from the Cookbook!
                   </div>
                 </div>
 
-                <!-- Action Button: Give Shiro a Bite (NO EMOJIS on button) -->
-                <div class="shiro-actions-row">
-                  <button type="button" class="btn-feed-shiro" id="btn-feed-shiro">
-                    Give Shiro a Bite
-                  </button>
-                </div>
-                <div class="shiro-feed-hint" id="shiro-feed-hint">
-                  Feeds Shiro a bite of your latest cooked dish from the Cookbook!
+                <!-- Shiro Polaroid Memory Grid -->
+                <div class="polaroid-grid">
+                  <div class="polaroid-card">
+                    <div class="polaroid-photo">
+                      <img src="assets/images/shiro/shiro-cotton-candy.jpg" alt="Shiro Cotton Candy"
+                        class="polaroid-img" />
+                    </div>
+                    <div class="polaroid-caption">Shiro Cotton Candy</div>
+                  </div>
+                  <div class="polaroid-card">
+                    <div class="polaroid-photo">
+                      <img src="assets/images/shiro/shiro-bone-guard.jpg" alt="Bone Guardy dog" class="polaroid-img" />
+                    </div>
+                    <div class="polaroid-caption">Bone Guardy dog</div>
+                  </div>
+                  <div class="polaroid-card">
+                    <div class="polaroid-photo">
+                      <img src="assets/images/shiro/shiro-walk.jpg" alt="Walking himself" class="polaroid-img" />
+                    </div>
+                    <div class="polaroid-caption">Walking himself</div>
+                  </div>
+                  <div class="polaroid-card">
+                    <div class="polaroid-photo">
+                      <img src="assets/images/shiro/shiro-nap-time.jpg" alt="Nap time in dog house"
+                        class="polaroid-img" />
+                    </div>
+                    <div class="polaroid-caption">Nap time in dog house</div>
+                  </div>
                 </div>
               </div>
-
-              <!-- Shiro Polaroid Memory Grid -->
-              <div class="polaroid-grid">
-                <div class="polaroid-card">
-                  <div class="polaroid-photo">
-                    <img src="assets/images/shiro/shiro-cotton-candy.jpg" alt="Shiro Cotton Candy" class="polaroid-img" />
-                  </div>
-                  <div class="polaroid-caption">Shiro Cotton Candy</div>
-                </div>
-                <div class="polaroid-card">
-                  <div class="polaroid-photo">
-                    <img src="assets/images/shiro/shiro-bone-guard.jpg" alt="Bone Guardy dog" class="polaroid-img" />
-                  </div>
-                  <div class="polaroid-caption">Bone Guardy dog</div>
-                </div>
-                <div class="polaroid-card">
-                  <div class="polaroid-photo">
-                    <img src="assets/images/shiro/shiro-walk.jpg" alt="Walking himself" class="polaroid-img" />
-                  </div>
-                  <div class="polaroid-caption">Walking himself</div>
-                </div>
-                <div class="polaroid-card">
-                  <div class="polaroid-photo">
-                    <img src="assets/images/shiro/shiro-nap-time.jpg" alt="Nap time in dog house" class="polaroid-img" />
-                  </div>
-                  <div class="polaroid-caption">Nap time in dog house</div>
-                </div>
-              </div>
             </div>
-          </div>
 
-          <!-- ==============================================
+            <!-- ==============================================
                SCREEN 6: NOTES
                ============================================== -->
-          <div class="phone-screen" id="screen-notes">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">📝 SHINCHAN'S NOTES</span>
-            </div>
-            <div class="screen-content notes-content">
-              <div class="notepad-paper">
-                <div class="notepad-header">
-                  <h3>Kasukabe Survival Rules 🖍️</h3>
-                </div>
-                <div class="notepad-input-bar">
-                  <div class="notepad-input-wrapper">
-                    <input type="text" id="note-input" maxlength="200" placeholder="Scribble a secret rule..." autocomplete="off" />
-                    <span id="note-char-count" class="note-char-count">0/200</span>
+            <div class="phone-screen" id="screen-notes">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">📝 SHINCHAN'S NOTES</span>
+              </div>
+              <div class="screen-content notes-content">
+                <div class="notepad-paper">
+                  <div class="notepad-header">
+                    <h3>Kasukabe Survival Rules 🖍️</h3>
                   </div>
-                  <button type="button" class="btn-add-note" id="btn-add-note">Add</button>
+                  <div class="notepad-input-bar">
+                    <div class="notepad-input-wrapper">
+                      <input type="text" id="note-input" maxlength="200" placeholder="Scribble a secret rule..."
+                        autocomplete="off" />
+                      <span id="note-char-count" class="note-char-count">0/200</span>
+                    </div>
+                    <button type="button" class="btn-add-note" id="btn-add-note">Add</button>
+                  </div>
+                  <ol class="notepad-list" id="notepad-list">
+                    <li class="default-rule">Rule 1: Mom's favorite chocolate cake is hidden behind the flour jar.</li>
+                    <li class="default-rule">Rule 2: Never give Mom eggplant or you'll get the knuckle drill of doom!
+                      🌪️</li>
+                    <li class="default-rule">Rule 3: Kazama denies loving magical girl Moe-P, but he has the sticker
+                      album.</li>
+                    <li class="default-rule">Rule 4: Dad's socks are classified as biological weapons by the UN.</li>
+                    <li class="default-rule">Rule 5: When caught doing pranks, immediately drop pants and do Buri Buri
+                      dance! 🍑</li>
+                  </ol>
                 </div>
-                <ol class="notepad-list" id="notepad-list">
-                  <li class="default-rule">Rule 1: Mom's favorite chocolate cake is hidden behind the flour jar.</li>
-                  <li class="default-rule">Rule 2: Never give Mom eggplant or you'll get the knuckle drill of doom! 🌪️</li>
-                  <li class="default-rule">Rule 3: Kazama denies loving magical girl Moe-P, but he has the sticker album.</li>
-                  <li class="default-rule">Rule 4: Dad's socks are classified as biological weapons by the UN.</li>
-                  <li class="default-rule">Rule 5: When caught doing pranks, immediately drop pants and do Buri Buri dance! 🍑</li>
-                </ol>
               </div>
             </div>
-          </div>
 
-          <!-- ==============================================
+            <!-- ==============================================
                SCREEN 7: COOKBOOK (SESSION COOKED DISHES)
                ============================================== -->
-          <div class="phone-screen" id="screen-cookbook">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">📖 SURVIVAL COOKBOOK</span>
+            <div class="phone-screen" id="screen-cookbook">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">📖 SURVIVAL COOKBOOK</span>
+              </div>
+              <div class="screen-content cookbook-content">
+                <div class="cookbook-header-card">
+                  <h3>Kasukabe Survival Cookbook 🍳</h3>
+                  <p>Track everything Shinchan and Mom prepared today!</p>
+                </div>
+                <div class="cookbook-tabs" role="tablist">
+                  <button type="button" class="cookbook-tab active" id="tab-cookbook-history" data-tab="history">
+                    Cooked History (<span id="cookbook-history-count">0</span>)
+                  </button>
+                  <button type="button" class="cookbook-tab" id="tab-cookbook-favorites" data-tab="favorites">
+                    Favorites (<span id="cookbook-favorites-count">0</span>)
+                  </button>
+                </div>
+                <div class="cookbook-list" id="cookbook-list">
+                  <!-- Dynamically populated via script.js -->
+                  <div class="cookbook-empty-state" id="cookbook-empty-state">
+                    <div class="empty-icon">🍳</div>
+                    <h4>No recipes cooked yet!</h4>
+                    <p>Open the Fridge, pick your ingredients, and spin the roulette to log your first delicious
+                      survival dish!</p>
+                    <button type="button" class="btn-secondary" id="btn-goto-fridge" style="margin-top:12px;">
+                      <span>🧊</span> Go to Fridge!
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="screen-content cookbook-content">
-              <div class="cookbook-header-card">
-                <h3>Kasukabe Survival Cookbook 🍳</h3>
-                <p>Track everything Shinchan and Mom prepared today!</p>
+
+            <!-- ==============================================
+               SCREEN 8: WEATHER
+               ============================================== -->
+            <div class="phone-screen" id="screen-weather">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">☀️ KASUKABE WEATHER</span>
               </div>
-              <div class="cookbook-tabs" role="tablist">
-                <button type="button" class="cookbook-tab active" id="tab-cookbook-history" data-tab="history">
-                  Cooked History (<span id="cookbook-history-count">0</span>)
-                </button>
-                <button type="button" class="cookbook-tab" id="tab-cookbook-favorites" data-tab="favorites">
-                  Favorites (<span id="cookbook-favorites-count">0</span>)
+              <div class="screen-content weather-content">
+                <div class="weather-hero-card">
+                  <div class="weather-sun-anim">😎☀️</div>
+                  <div class="weather-temp">32°C</div>
+                  <div class="weather-condition">Partly Cloudy, Mostly Chaotic</div>
+                  <div class="weather-primary-forecast">
+                    ⚡ <strong>"90% chance of Mom yelling, 100% chance of chocobi"</strong> 🍫
+                  </div>
+                </div>
+                <div class="weather-grid">
+                  <div class="weather-stat-box">
+                    <span class="stat-icon">🔥</span>
+                    <span class="stat-label">Mom's Temper</span>
+                    <span class="stat-value">Simmering</span>
+                  </div>
+                  <div class="weather-stat-box">
+                    <span class="stat-icon">💨</span>
+                    <span class="stat-label">Buri Wind</span>
+                    <span class="stat-value">18 km/h S</span>
+                  </div>
+                  <div class="weather-stat-box">
+                    <span class="stat-icon">🍫</span>
+                    <span class="stat-label">Chocobi Rain</span>
+                    <span class="stat-value">Guaranteed</span>
+                  </div>
+                  <div class="weather-stat-box">
+                    <span class="stat-icon">🪫</span>
+                    <span class="stat-label">Phone Battery</span>
+                    <span class="stat-value" id="weather-battery-stat">85%</span>
+                  </div>
+                </div>
+                <div class="weather-advice-box">
+                  <strong>💡 Survival Advice:</strong> Do not leave your toy robot on the living room floor or Mom will
+                  kick it into next Tuesday!
+                </div>
+              </div>
+            </div>
+
+            <!-- ==============================================
+               SCREEN 9: CONTACTS
+               ============================================== -->
+            <div class="phone-screen" id="screen-contacts">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">👥 SPEED DIAL</span>
+              </div>
+              <div class="screen-content contacts-content">
+                <div class="contacts-list" id="contacts-list">
+                  <div class="contact-card" data-caller="Mom">
+                    <div class="contact-avatar-wrap">
+                      <img src="assets/images/avatars/misae-pfp.webp" alt="Mom" class="contact-pfp" />
+                    </div>
+                    <div class="contact-details">
+                      <strong class="contact-name">Mom ❤️ (Misae)</strong>
+                      <span class="contact-sub">WARNING: Do not call if chores are pending!</span>
+                    </div>
+                    <button type="button" class="btn-call">📞</button>
+                  </div>
+
+                  <div class="contact-card" data-caller="Dad">
+                    <div class="contact-avatar-wrap">
+                      <img src="assets/images/avatars/hiroshi-pfp.jpg" alt="Dad (Hiroshi)" class="contact-pfp" />
+                    </div>
+                    <div class="contact-details">
+                      <strong class="contact-name">Dad 👔 (Hiroshi)</strong>
+                      <span class="contact-sub">Office worker · 32-year house loan pending</span>
+                    </div>
+                    <button type="button" class="btn-call">📞</button>
+                  </div>
+
+                  <div class="contact-card" data-caller="Kazama">
+                    <div class="contact-avatar-wrap">
+                      <img src="assets/images/avatars/kazama-pfp.jpg" alt="Kazama-kun" class="contact-pfp" />
+                    </div>
+                    <div class="contact-details">
+                      <strong class="contact-name">Kazama-kun 🎒</strong>
+                      <span class="contact-sub">Top student · Secretly loves Moe-P</span>
+                    </div>
+                    <button type="button" class="btn-call">📞</button>
+                  </div>
+
+                  <div class="contact-card" data-caller="Nanako">
+                    <div class="contact-avatar-wrap">
+                      <img src="assets/images/avatars/nanako-pfp.jpg" alt="Nanako Onee-san" class="contact-pfp" />
+                    </div>
+                    <div class="contact-details">
+                      <strong class="contact-name">Nanako Onee-san 💖</strong>
+                      <span class="contact-sub">Shinchan's future bride (in his mind)</span>
+                    </div>
+                    <button type="button" class="btn-call">📞</button>
+                  </div>
+
+                  <div class="contact-card" data-caller="Shiro">
+                    <div class="contact-avatar-wrap">
+                      <img src="assets/images/avatars/shiro-pfp.jpg" alt="Shiro" class="contact-pfp" />
+                    </div>
+                    <div class="contact-details">
+                      <strong class="contact-name">Shiro 🦴</strong>
+                      <span class="contact-sub">Good boy · Always hungry</span>
+                    </div>
+                    <button type="button" class="btn-call">📞</button>
+                  </div>
+
+                  <div class="contact-card" data-caller="Action Kamen">
+                    <div class="contact-avatar-wrap">
+                      <img src="assets/images/avatars/action-kamen-pfp.jpg" alt="Action Kamen" class="contact-pfp" />
+                    </div>
+                    <div class="contact-details">
+                      <strong class="contact-name">Action Kamen 🦸‍♂️</strong>
+                      <span class="contact-sub">Superhero hotline (Dial 100 for justice)</span>
+                    </div>
+                    <button type="button" class="btn-call">📞</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==============================================
+               SCREEN 10: SETTINGS
+               ============================================== -->
+            <div class="phone-screen" id="screen-settings">
+              <div class="screen-app-bar">
+                <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                  </svg> Back</button>
+                <span class="app-bar-title">⚙️ SETTINGS</span>
+              </div>
+              <div class="screen-content settings-content">
+                <div class="settings-group">
+                  <div class="settings-title">Comic Features</div>
+
+                  <div class="setting-row">
+                    <div class="setting-info">
+                      <strong>🍑 Butt-Wiggle Celebrations</strong>
+                      <span>Victory dance when recipes match</span>
+                    </div>
+                    <input type="checkbox" id="setting-butt-wiggle" checked class="comic-switch" />
+                  </div>
+
+                  <div class="setting-row">
+                    <div class="setting-info">
+                      <strong>🔊 Comic Sound FX</strong>
+                      <span>Web Audio pops, boings, fanfares</span>
+                    </div>
+                    <input type="checkbox" id="setting-sound-fx" checked class="comic-switch" />
+                  </div>
+
+                  <div class="setting-row">
+                    <div class="setting-info">
+                      <strong>😡 Mom Anger Alerts</strong>
+                      <span>Trigger screen shake at 100%</span>
+                    </div>
+                    <input type="checkbox" id="setting-anger-alerts" checked class="comic-switch" />
+                  </div>
+                </div>
+
+                <div class="settings-group">
+                  <div class="settings-title">Emergency Shinchan Tools</div>
+                  <button type="button" class="btn-secondary" id="btn-trigger-puri"
+                    style="width:100%; margin-bottom:8px;">
+                    <span>🍑</span> Test Butt-Wiggle Dance!
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-reset-anger"
+                    style="width:100%; background:#FFEAA7;">
+                    <span>🧊</span> Calm Mom's Anger (To 10%)
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-recharge-battery"
+                    style="width:100%; margin-top:8px; background:#A3E4D7; color:#0B5345;">
+                    <span>🔋</span> Recharge Battery (100%)
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-test-dead-battery"
+                    style="width:100%; margin-top:8px; background:#FADBD8; color:#78281F;">
+                    <span>🪫</span> Drain Battery to 0% (Test Shutdown)
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-settings-restart"
+                    style="width:100%; margin-top:8px; background:#D6EAF8; color:#1B4F72;">
+                    <span>🔄</span> Restart SHIN-TEL
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-settings-power-off"
+                    style="width:100%; margin-top:8px; background:#F2D7D5; color:#78281F;">
+                    <span>🔴</span> Power Off SHIN-TEL
+                  </button>
+                  <button type="button" class="btn-secondary btn-clear-data" id="btn-clear-data"
+                    style="width:100%; margin-top:8px; background:#FF7675; color:#FFF;">
+                    <span>🗑️</span> Clear My Saved Data
+                  </button>
+                </div>
+
+                <div class="settings-footer-info">
+                  <span>Shinchan OS v2.0 · Kasukabe Edition</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phone Out of Battery / Dead Overlay (inside screen) -->
+            <div class="phone-dead-overlay" id="phone-dead-overlay" style="display: none;" role="dialog"
+              aria-modal="true" aria-label="Phone out of battery">
+              <div class="dead-battery-card">
+                <div class="dead-battery-icon-wrap">
+                  <span class="dead-battery-emoji">🪫</span>
+                  <span class="dead-battery-pct">0%</span>
+                </div>
+                <div class="dead-battery-title">SHIN-TEL OUT OF CHARGE!</div>
+                <div class="dead-battery-speech">
+                  <p class="dead-speech-shin">"MOM! THE SCREEN WENT BLACK! Did Action Kamen blast my phone?!"</p>
+                  <p class="dead-speech-mom">"Shinchan! You spun recipes all day without charging! Go plug it in the
+                    wall socket!"</p>
+                </div>
+
+                <!-- Charging animation progress -->
+                <div class="charging-progress-wrap" id="charging-progress-wrap" style="display: none;">
+                  <div class="charging-meter-track" role="progressbar" aria-label="Recharging Battery" aria-valuemin="0"
+                    aria-valuemax="100" aria-valuenow="0">
+                    <div class="charging-meter-fill" id="charging-meter-fill" style="width: 0%;"></div>
+                  </div>
+                  <span class="charging-pct" id="charging-pct">Charging... 0%</span>
+                </div>
+
+                <button type="button" class="btn-plug-charger" id="btn-plug-charger">
+                  🔌 PLUG IN CHARGER
                 </button>
               </div>
-              <div class="cookbook-list" id="cookbook-list">
-                <!-- Dynamically populated via script.js -->
-                <div class="cookbook-empty-state" id="cookbook-empty-state">
-                  <div class="empty-icon">🍳</div>
-                  <h4>No recipes cooked yet!</h4>
-                  <p>Open the Fridge, pick your ingredients, and spin the roulette to log your first delicious survival dish!</p>
-                  <button type="button" class="btn-secondary" id="btn-goto-fridge" style="margin-top:12px;">
-                    <span>🧊</span> Go to Fridge!
+            </div>
+
+            <!-- Power Menu Options Modal (Triggered by side power button or Settings) -->
+            <div class="phone-power-dialog" id="phone-power-dialog" style="display: none;" role="dialog"
+              aria-modal="true" aria-label="Power Options">
+              <div class="power-dialog-card">
+                <div class="power-dialog-header">
+                  <span class="power-dialog-title">⚡ SHIN-TEL POWER</span>
+                </div>
+                <div class="power-dialog-actions">
+                  <button type="button" class="btn-power-opt btn-power-opt-off" id="btn-power-opt-off">
+                    <span class="power-opt-icon">🔴</span>
+                    <span class="power-opt-label">Power Off</span>
+                  </button>
+                  <button type="button" class="btn-power-opt btn-power-opt-restart" id="btn-power-opt-restart">
+                    <span class="power-opt-icon">🔄</span>
+                    <span class="power-opt-label">Restart Phone</span>
+                  </button>
+                  <button type="button" class="btn-power-opt btn-power-opt-cancel" id="btn-power-opt-cancel">
+                    <span class="power-opt-icon">✖</span>
+                    <span class="power-opt-label">Cancel</span>
                   </button>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- ==============================================
-               SCREEN 8: WEATHER
-               ============================================== -->
-          <div class="phone-screen" id="screen-weather">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">☀️ KASUKABE WEATHER</span>
-            </div>
-            <div class="screen-content weather-content">
-              <div class="weather-hero-card">
-                <div class="weather-sun-anim">😎☀️</div>
-                <div class="weather-temp">32°C</div>
-                <div class="weather-condition">Partly Cloudy, Mostly Chaotic</div>
-                <div class="weather-primary-forecast">
-                  ⚡ <strong>"90% chance of Mom yelling, 100% chance of chocobi"</strong> 🍫
-                </div>
-              </div>
-              <div class="weather-grid">
-                <div class="weather-stat-box">
-                  <span class="stat-icon">🔥</span>
-                  <span class="stat-label">Mom's Temper</span>
-                  <span class="stat-value">Simmering</span>
-                </div>
-                <div class="weather-stat-box">
-                  <span class="stat-icon">💨</span>
-                  <span class="stat-label">Buri Wind</span>
-                  <span class="stat-value">18 km/h S</span>
-                </div>
-                <div class="weather-stat-box">
-                  <span class="stat-icon">🍫</span>
-                  <span class="stat-label">Chocobi Rain</span>
-                  <span class="stat-value">Guaranteed</span>
-                </div>
-                <div class="weather-stat-box">
-                  <span class="stat-icon">🪫</span>
-                  <span class="stat-label">Phone Battery</span>
-                  <span class="stat-value" id="weather-battery-stat">85%</span>
-                </div>
-              </div>
-              <div class="weather-advice-box">
-                <strong>💡 Survival Advice:</strong> Do not leave your toy robot on the living room floor or Mom will kick it into next Tuesday!
-              </div>
-            </div>
-          </div>
-
-          <!-- ==============================================
-               SCREEN 9: CONTACTS
-               ============================================== -->
-          <div class="phone-screen" id="screen-contacts">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">👥 SPEED DIAL</span>
-            </div>
-            <div class="screen-content contacts-content">
-              <div class="contacts-list" id="contacts-list">
-                <div class="contact-card" data-caller="Mom">
-                  <div class="contact-avatar-wrap">
-                    <img src="assets/images/avatars/misae-pfp.webp" alt="Mom" class="contact-pfp" />
-                  </div>
-                  <div class="contact-details">
-                    <strong class="contact-name">Mom ❤️ (Misae)</strong>
-                    <span class="contact-sub">WARNING: Do not call if chores are pending!</span>
-                  </div>
-                  <button type="button" class="btn-call">📞</button>
-                </div>
-
-                <div class="contact-card" data-caller="Dad">
-                  <div class="contact-avatar-wrap">
-                    <img src="assets/images/avatars/hiroshi-pfp.jpg" alt="Dad (Hiroshi)" class="contact-pfp" />
-                  </div>
-                  <div class="contact-details">
-                    <strong class="contact-name">Dad 👔 (Hiroshi)</strong>
-                    <span class="contact-sub">Office worker · 32-year house loan pending</span>
-                  </div>
-                  <button type="button" class="btn-call">📞</button>
-                </div>
-
-                <div class="contact-card" data-caller="Kazama">
-                  <div class="contact-avatar-wrap">
-                    <img src="assets/images/avatars/kazama-pfp.jpg" alt="Kazama-kun" class="contact-pfp" />
-                  </div>
-                  <div class="contact-details">
-                    <strong class="contact-name">Kazama-kun 🎒</strong>
-                    <span class="contact-sub">Top student · Secretly loves Moe-P</span>
-                  </div>
-                  <button type="button" class="btn-call">📞</button>
-                </div>
-
-                <div class="contact-card" data-caller="Nanako">
-                  <div class="contact-avatar-wrap">
-                    <img src="assets/images/avatars/nanako-pfp.jpg" alt="Nanako Onee-san" class="contact-pfp" />
-                  </div>
-                  <div class="contact-details">
-                    <strong class="contact-name">Nanako Onee-san 💖</strong>
-                    <span class="contact-sub">Shinchan's future bride (in his mind)</span>
-                  </div>
-                  <button type="button" class="btn-call">📞</button>
-                </div>
-
-                <div class="contact-card" data-caller="Shiro">
-                  <div class="contact-avatar-wrap">
-                    <img src="assets/images/avatars/shiro-pfp.jpg" alt="Shiro" class="contact-pfp" />
-                  </div>
-                  <div class="contact-details">
-                    <strong class="contact-name">Shiro 🦴</strong>
-                    <span class="contact-sub">Good boy · Always hungry</span>
-                  </div>
-                  <button type="button" class="btn-call">📞</button>
-                </div>
-
-                <div class="contact-card" data-caller="Action Kamen">
-                  <div class="contact-avatar-wrap">
-                    <img src="assets/images/avatars/action-kamen-pfp.jpg" alt="Action Kamen" class="contact-pfp" />
-                  </div>
-                  <div class="contact-details">
-                    <strong class="contact-name">Action Kamen 🦸‍♂️</strong>
-                    <span class="contact-sub">Superhero hotline (Dial 100 for justice)</span>
-                  </div>
-                  <button type="button" class="btn-call">📞</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ==============================================
-               SCREEN 10: SETTINGS
-               ============================================== -->
-          <div class="phone-screen" id="screen-settings">
-            <div class="screen-app-bar">
-              <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">⚙️ SETTINGS</span>
-            </div>
-            <div class="screen-content settings-content">
-              <div class="settings-group">
-                <div class="settings-title">Comic Features</div>
-
-                <div class="setting-row">
-                  <div class="setting-info">
-                    <strong>🍑 Butt-Wiggle Celebrations</strong>
-                    <span>Victory dance when recipes match</span>
-                  </div>
-                  <input type="checkbox" id="setting-butt-wiggle" checked class="comic-switch" />
-                </div>
-
-                <div class="setting-row">
-                  <div class="setting-info">
-                    <strong>🔊 Comic Sound FX</strong>
-                    <span>Web Audio pops, boings, fanfares</span>
-                  </div>
-                  <input type="checkbox" id="setting-sound-fx" checked class="comic-switch" />
-                </div>
-
-                <div class="setting-row">
-                  <div class="setting-info">
-                    <strong>😡 Mom Anger Alerts</strong>
-                    <span>Trigger screen shake at 100%</span>
-                  </div>
-                  <input type="checkbox" id="setting-anger-alerts" checked class="comic-switch" />
-                </div>
-              </div>
-
-              <div class="settings-group">
-                <div class="settings-title">Emergency Shinchan Tools</div>
-                <button type="button" class="btn-secondary" id="btn-trigger-puri" style="width:100%; margin-bottom:8px;">
-                  <span>🍑</span> Test Butt-Wiggle Dance!
-                </button>
-                <button type="button" class="btn-secondary" id="btn-reset-anger" style="width:100%; background:#FFEAA7;">
-                  <span>🧊</span> Calm Mom's Anger (To 10%)
-                </button>
-                <button type="button" class="btn-secondary" id="btn-recharge-battery" style="width:100%; margin-top:8px; background:#A3E4D7; color:#0B5345;">
-                  <span>🔋</span> Recharge Battery (100%)
-                </button>
-                <button type="button" class="btn-secondary" id="btn-test-dead-battery" style="width:100%; margin-top:8px; background:#FADBD8; color:#78281F;">
-                  <span>🪫</span> Drain Battery to 0% (Test Shutdown)
-                </button>
-                <button type="button" class="btn-secondary" id="btn-settings-restart" style="width:100%; margin-top:8px; background:#D6EAF8; color:#1B4F72;">
-                  <span>🔄</span> Restart SHIN-TEL
-                </button>
-                <button type="button" class="btn-secondary" id="btn-settings-power-off" style="width:100%; margin-top:8px; background:#F2D7D5; color:#78281F;">
-                  <span>🔴</span> Power Off SHIN-TEL
-                </button>
-                <button type="button" class="btn-secondary btn-clear-data" id="btn-clear-data" style="width:100%; margin-top:8px; background:#FF7675; color:#FFF;">
-                  <span>🗑️</span> Clear My Saved Data
-                </button>
-              </div>
-
-              <div class="settings-footer-info">
-                <span>Shinchan OS v2.0 · Kasukabe Edition</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Phone Out of Battery / Dead Overlay (inside screen) -->
-          <div class="phone-dead-overlay" id="phone-dead-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="Phone out of battery">
-            <div class="dead-battery-card">
-              <div class="dead-battery-icon-wrap">
-                <span class="dead-battery-emoji">🪫</span>
-                <span class="dead-battery-pct">0%</span>
-              </div>
-              <div class="dead-battery-title">SHIN-TEL OUT OF CHARGE!</div>
-              <div class="dead-battery-speech">
-                <p class="dead-speech-shin">"MOM! THE SCREEN WENT BLACK! Did Action Kamen blast my phone?!"</p>
-                <p class="dead-speech-mom">"Shinchan! You spun recipes all day without charging! Go plug it in the wall socket!"</p>
-              </div>
-
-              <!-- Charging animation progress -->
-              <div class="charging-progress-wrap" id="charging-progress-wrap" style="display: none;">
-                <div class="charging-meter-track" role="progressbar" aria-label="Recharging Battery" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                  <div class="charging-meter-fill" id="charging-meter-fill" style="width: 0%;"></div>
-                </div>
-                <span class="charging-pct" id="charging-pct">Charging... 0%</span>
-              </div>
-
-              <button type="button" class="btn-plug-charger" id="btn-plug-charger">
-                🔌 PLUG IN CHARGER
-              </button>
-            </div>
-          </div>
-
-          <!-- Power Menu Options Modal (Triggered by side power button or Settings) -->
-          <div class="phone-power-dialog" id="phone-power-dialog" style="display: none;" role="dialog" aria-modal="true" aria-label="Power Options">
-            <div class="power-dialog-card">
-              <div class="power-dialog-header">
-                <span class="power-dialog-title">⚡ SHIN-TEL POWER</span>
-              </div>
-              <div class="power-dialog-actions">
-                <button type="button" class="btn-power-opt btn-power-opt-off" id="btn-power-opt-off">
-                  <span class="power-opt-icon">🔴</span>
-                  <span class="power-opt-label">Power Off</span>
-                </button>
-                <button type="button" class="btn-power-opt btn-power-opt-restart" id="btn-power-opt-restart">
-                  <span class="power-opt-icon">🔄</span>
-                  <span class="power-opt-label">Restart Phone</span>
-                </button>
-                <button type="button" class="btn-power-opt btn-power-opt-cancel" id="btn-power-opt-cancel">
-                  <span class="power-opt-icon">✖</span>
-                  <span class="power-opt-label">Cancel</span>
+            <!-- Powered Off Screen Overlay -->
+            <div class="phone-power-off-overlay" id="phone-power-off-overlay" style="display: none;" role="dialog"
+              aria-modal="true" aria-label="Phone powered off">
+              <div class="power-off-content">
+                <div class="power-off-icon">🔴</div>
+                <div class="power-off-title">SHIN-TEL IS POWERED OFF</div>
+                <p class="power-off-sub">Press the red side button or tap below to turn on</p>
+                <button type="button" class="btn-power-on" id="btn-power-on">
+                  ⚡ POWER ON
                 </button>
               </div>
             </div>
-          </div>
 
-          <!-- Powered Off Screen Overlay -->
-          <div class="phone-power-off-overlay" id="phone-power-off-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="Phone powered off">
-            <div class="power-off-content">
-              <div class="power-off-icon">🔴</div>
-              <div class="power-off-title">SHIN-TEL IS POWERED OFF</div>
-              <p class="power-off-sub">Press the red side button or tap below to turn on</p>
-              <button type="button" class="btn-power-on" id="btn-power-on">
-                ⚡ POWER ON
-              </button>
-            </div>
-          </div>
-
-          <!-- Retro 90s Boot / Restart Screen -->
-          <div class="phone-boot-overlay" id="phone-boot-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="Rebooting">
-            <div class="boot-screen-content">
-              <div class="boot-logo">SHIN-TEL BIOS v2.0</div>
-              <div class="boot-console" id="boot-console">
-                <p>> RAM CHECK: 640KB OK</p>
-                <p>> KASUKABE CHIPSET DETECTED</p>
-                <p>> ACTION BASTARD ROM LOADED</p>
-                <p class="boot-cursor">> BOOTING KASUKABE OS_</p>
+            <!-- Retro 90s Boot / Restart Screen -->
+            <div class="phone-boot-overlay" id="phone-boot-overlay" style="display: none;" role="dialog"
+              aria-modal="true" aria-label="Rebooting">
+              <div class="boot-screen-content">
+                <div class="boot-logo">SHIN-TEL BIOS v2.0</div>
+                <div class="boot-console" id="boot-console">
+                  <p>> RAM CHECK: 640KB OK</p>
+                  <p>> KASUKABE CHIPSET DETECTED</p>
+                  <p>> ACTION BASTARD ROM LOADED</p>
+                  <p class="boot-cursor">> BOOTING KASUKABE OS_</p>
+                </div>
               </div>
             </div>
-          </div>
 
-        </div> <!-- /phone-screens-viewport -->
-      </div> <!-- /gadget-screen-container -->
+          </div> <!-- /phone-screens-viewport -->
+        </div> <!-- /gadget-screen-container -->
 
-      <!-- Bottom Navigation Bar: Chunky Physical Controls -->
-      <nav class="phone-nav-bar" id="phone-nav-bar" aria-label="Gadget Physical Buttons">
-        <button type="button" class="nav-item" data-nav="home" title="Home Screen">
-          <span class="nav-label">HOME</span>
-        </button>
-        <button type="button" class="nav-item" data-nav="fridge" title="Fridge Roulette">
-          <span class="nav-label">FRIDGE</span>
-        </button>
-        <button type="button" class="nav-item" data-nav="cookbook" title="Cookbook History">
-          <span class="nav-label">COOKBOOK</span>
-        </button>
-        <button type="button" class="nav-item" data-nav="notes" title="Shinchan's Notes">
-          <span class="nav-label">NOTES</span>
-        </button>
-      </nav>
+        <!-- Bottom Navigation Bar: Chunky Physical Controls -->
+        <nav class="phone-nav-bar" id="phone-nav-bar" aria-label="Gadget Physical Buttons">
+          <button type="button" class="nav-item" data-nav="home" title="Home Screen">
+            <span class="nav-label">HOME</span>
+          </button>
+          <button type="button" class="nav-item" data-nav="fridge" title="Fridge Roulette">
+            <span class="nav-label">FRIDGE</span>
+          </button>
+          <button type="button" class="nav-item" data-nav="cookbook" title="Cookbook History">
+            <span class="nav-label">COOKBOOK</span>
+          </button>
+          <button type="button" class="nav-item" data-nav="notes" title="Shinchan's Notes">
+            <span class="nav-label">NOTES</span>
+          </button>
+        </nav>
 
-      <!-- Chunky Handheld Brand Label -->
-      <div class="gadget-brand-bar" aria-hidden="true">
-        <span class="gadget-brand-text">SHIN-TEL</span>
-      </div>
+        <!-- Chunky Handheld Brand Label -->
+        <div class="gadget-brand-bar" aria-hidden="true">
+          <span class="gadget-brand-text">SHIN-TEL</span>
+        </div>
 
         <!-- Mom's 100% Rage Explosion Modal -->
         <div class="mom-rage-modal hidden" id="mom-rage-modal">
@@ -1087,20 +1227,31 @@
             <div class="remote-ir-bar" aria-hidden="true"></div>
             <div class="remote-keypad">
               <div class="remote-grid-top">
-                <button type="button" class="remote-key remote-key-power" id="remote-btn-power" aria-label="TV Power On or Off">POWER</button>
-                <button type="button" class="remote-key remote-key-ch remote-key-ch-prev" id="remote-btn-ch-prev" aria-label="Previous Channel">CH -</button>
-                <button type="button" class="remote-key remote-key-ch remote-key-ch-next" id="remote-btn-ch-next" aria-label="Next Channel">CH +</button>
-                <button type="button" class="remote-key remote-key-mute" id="remote-btn-mute" aria-label="Mute Audio">MUTE</button>
+                <button type="button" class="remote-key remote-key-power" id="remote-btn-power"
+                  aria-label="TV Power On or Off">POWER</button>
+                <button type="button" class="remote-key remote-key-ch remote-key-ch-prev" id="remote-btn-ch-prev"
+                  aria-label="Previous Channel">CH -</button>
+                <button type="button" class="remote-key remote-key-ch remote-key-ch-next" id="remote-btn-ch-next"
+                  aria-label="Next Channel">CH +</button>
+                <button type="button" class="remote-key remote-key-mute" id="remote-btn-mute"
+                  aria-label="Mute Audio">MUTE</button>
               </div>
               <div class="remote-grid-numbers">
-                <button type="button" class="remote-key remote-key-num" data-ch="1" aria-label="Channel 1 Action Kamen Hour">1</button>
-                <button type="button" class="remote-key remote-key-num" data-ch="2" aria-label="Channel 2 Kasukabe Kitchen">2</button>
-                <button type="button" class="remote-key remote-key-num" data-ch="3" aria-label="Channel 3 Breaking News">3</button>
-                <button type="button" class="remote-key remote-key-num" data-ch="4" aria-label="Channel 4 Commercial Break">4</button>
-                <button type="button" class="remote-key remote-key-num" data-ch="5" aria-label="Channel 5 Test Pattern">5</button>
-                <button type="button" class="remote-key remote-key-num remote-key-dash" disabled aria-label="Hyphen">-</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="1"
+                  aria-label="Channel 1 Action Kamen Hour">1</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="2"
+                  aria-label="Channel 2 Kasukabe Kitchen">2</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="3"
+                  aria-label="Channel 3 Breaking News">3</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="4"
+                  aria-label="Channel 4 Commercial Break">4</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="5"
+                  aria-label="Channel 5 Test Pattern">5</button>
+                <button type="button" class="remote-key remote-key-num remote-key-dash" disabled
+                  aria-label="Hyphen">-</button>
               </div>
-              <button type="button" class="remote-key remote-key-beam" id="remote-btn-beam" aria-label="Fire Action Beam">BEAM</button>
+              <button type="button" class="remote-key remote-key-beam" id="remote-btn-beam"
+                aria-label="Fire Action Beam">BEAM</button>
             </div>
             <div class="remote-brand-label" aria-hidden="true">SHIN-TEL</div>
           </div>
@@ -1111,4 +1262,5 @@
 
   <script src="js/script.js"></script>
 </body>
+
 </html>

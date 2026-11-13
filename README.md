@@ -161,6 +161,10 @@ Now open your browser and navigate to:
 |:---:|:---:|
 | ![Recipe Roulette Fridge](docs/screenshots/fridge.png) | ![World Kitchen Mode](docs/screenshots/world.png) |
 
+| Action Kamen TV (Desktop & Remote) | Action Kamen TV (Mobile Docked) |
+|:---:|:---:|
+| ![Action Kamen TV Desktop](docs/screenshots/tv_desktop.png) | ![Action Kamen TV Mobile](docs/screenshots/tv_mobile.png) |
+
 | Shiro's Pet Care & Gallery | Kasukabe Contacts (Speed Dial) |
 |:---:|:---:|
 | ![Shiro Pet Care and Gallery](docs/screenshots/shiro.png) | ![Kasukabe Contacts Directory](docs/screenshots/contacts.png) |
