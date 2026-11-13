@@ -28,15 +28,31 @@
 
   <!-- Main Phone Wrapper Section -->
   <section id="landing-screen">
-    <!-- Retro Side Panel (Left): HOW IT WORKS -->
-    <aside class="retro-side-panel side-panel-left" aria-label="How it works">
-      <div class="side-panel-tag">ROGUEHACK 1.0</div>
-      <h2 class="side-panel-title">HOW IT WORKS</h2>
-      <ol class="side-panel-list">
-        <li><span class="step-num">1.</span> Pick what is left in the fridge.</li>
-        <li><span class="step-num">2.</span> Spin the roulette.</li>
-        <li><span class="step-num">3.</span> Cook it. No grocery run.</li>
-      </ol>
+    <!-- Retro Side Panel (Left): HOW IT WORKS / TV GUIDE -->
+    <aside class="retro-side-panel side-panel-left" id="side-panel-left" aria-label="How it works and TV Guide">
+      <!-- Default How It Works -->
+      <div class="side-content-how" id="side-content-how">
+        <div class="side-panel-tag">ROGUEHACK 1.0</div>
+        <h2 class="side-panel-title">HOW IT WORKS</h2>
+        <ol class="side-panel-list">
+          <li><span class="step-num">1.</span> Pick what is left in the fridge.</li>
+          <li><span class="step-num">2.</span> Spin the roulette.</li>
+          <li><span class="step-num">3.</span> Cook it. No grocery run.</li>
+        </ol>
+      </div>
+
+      <!-- TV Guide (Visible when Action Kamen TV is open) -->
+      <div class="side-content-tv-guide" id="side-content-tv-guide" style="display: none;">
+        <div class="side-panel-tag">NOW WATCHING</div>
+        <h2 class="side-panel-title">TV GUIDE</h2>
+        <ul class="tv-guide-list" id="tv-guide-list">
+          <li class="tv-guide-item active" data-ch="1">CH 1 Action Kamen Hour</li>
+          <li class="tv-guide-item" data-ch="2">CH 2 Kasukabe Kitchen</li>
+          <li class="tv-guide-item" data-ch="3">CH 3 Breaking News</li>
+          <li class="tv-guide-item" data-ch="4">CH 4 Commercial Break</li>
+          <li class="tv-guide-item" data-ch="5">CH 5 Test Pattern</li>
+        </ul>
+      </div>
     </aside>
 
     <!-- Chunky 90s Handheld Gadget (Shinchan's SHIN-TEL) -->
@@ -472,31 +488,44 @@
           <div class="phone-screen" id="screen-action-kamen">
             <div class="screen-app-bar">
               <button type="button" class="btn-screen-back" data-back="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-              <span class="app-bar-title">⚡ ACTION KAMEN TV</span>
+              <span class="app-bar-title">ACTION KAMEN TV</span>
             </div>
             <div class="screen-content kamen-tv-content">
-              <div class="tv-casing">
-                <div class="tv-antenna">📡</div>
-                <div class="tv-screen-bezel">
+              <div class="tv-casing" id="tv-casing">
+                <div class="tv-screen-bezel" id="tv-screen-bezel">
                   <div class="tv-screen-glass" id="tv-glass">
-                    <div class="kamen-character-anim" id="kamen-character">⭐ 🦸‍♂️ ⭐</div>
-                    <div class="kamen-quote" id="kamen-quote">"WA-HA-HA-HA! Action Beam charged 100%! Evil villains, prepare to be defeated!"</div>
-                    <div class="kamen-beam-laser hidden" id="kamen-beam-laser">⚡⚡⚡⚡⚡⚡</div>
+                    <!-- Static Canvas for 250ms Channel Transitions -->
+                    <canvas class="tv-static-canvas" id="tv-static-canvas" width="320" height="200" style="display: none;" aria-hidden="true"></canvas>
+
+                    <!-- Channel Banner Overlay (fades after 2s) -->
+                    <div class="tv-channel-banner" id="tv-channel-banner">CH 1 · ACTION KAMEN HOUR</div>
+
+                    <!-- Shared Channel Content Viewport -->
+                    <div class="tv-channel-viewport" id="tv-channel-viewport">
+                      <!-- Active channel renders here -->
+                    </div>
+
+                    <!-- Beam Laser Overlay (Active only on Channel 1) -->
+                    <div class="kamen-beam-laser hidden" id="kamen-beam-laser" aria-hidden="true">⚡⚡⚡⚡⚡⚡</div>
+
+                    <!-- CRT Scanlines Overlay -->
+                    <div class="tv-crt-scanlines" aria-hidden="true"></div>
                   </div>
                 </div>
-                <div class="tv-controls">
-                  <button type="button" class="btn-kamen-beam" id="btn-kamen-beam">
-                    FIRE ACTION BEAM!
-                  </button>
-                </div>
               </div>
-              <div class="kamen-stats">
-                <div class="kamen-stat-item">
-                  <strong>Channel:</strong> Ch. 7 Kasukabe Action TV
-                </div>
-                <div class="kamen-stat-item">
-                  <strong>Status:</strong> Defeating Dr. Black Mask & his minions!
-                </div>
+
+              <!-- Desktop TV Info Card (Shown under screen on desktop per reference-remote-desktop.png) -->
+              <div class="tv-desktop-info-card" id="tv-desktop-info-card">
+                <div class="tv-info-line"><strong>Channel:</strong> <span id="tv-info-channel-name">CH 1 Action Kamen Hour</span></div>
+                <div class="tv-info-line"><strong>Status:</strong> <span id="tv-info-status">On air. Use the remote to change channel.</span></div>
+              </div>
+
+              <!-- Mobile Remote Dock (Remote moves here when width <= 1100px) -->
+              <div class="tv-remote-mobile-dock" id="tv-remote-mobile-dock"></div>
+
+              <!-- Mobile Remote Dock Hint Label (per reference-remote-mobile.png) -->
+              <div class="tv-mobile-hint" id="tv-mobile-hint">
+                REMOTE DOCKS UNDER THE SCREEN ON NARROW DEVICES
               </div>
             </div>
           </div>
@@ -1038,13 +1067,45 @@
       </div> <!-- /comic-phone -->
     </div> <!-- /phone-wrapper -->
 
-    <!-- Retro Side Panel (Right): RECIPE OF THE DAY -->
-    <aside class="retro-side-panel side-panel-right" aria-label="Recipe of the day">
-      <div class="side-panel-tag">TODAY</div>
-      <h2 class="side-panel-title">RECIPE OF THE DAY</h2>
-      <div class="side-panel-recipe-name" id="side-recipe-name">Curd Rice Tadka</div>
-      <div class="side-panel-recipe-meta" id="side-recipe-meta">8 min · Easy · Rice, curd, chilli</div>
-      <button type="button" class="btn-side-try" id="btn-side-try">TRY IT</button>
+    <!-- Retro Side Panel (Right): RECIPE OF THE DAY / REMOTE CONTROL DOCK -->
+    <aside class="retro-side-panel side-panel-right" id="side-panel-right" aria-label="Recipe of the day and TV remote">
+      <!-- Default Recipe of the Day -->
+      <div class="side-content-recipe" id="side-content-recipe">
+        <div class="side-panel-tag">TODAY</div>
+        <h2 class="side-panel-title">RECIPE OF THE DAY</h2>
+        <div class="side-panel-recipe-name" id="side-recipe-name">Curd Rice Tadka</div>
+        <div class="side-panel-recipe-meta" id="side-recipe-meta">8 min · Easy · Rice, curd, chilli</div>
+        <button type="button" class="btn-side-try" id="btn-side-try">TRY IT</button>
+      </div>
+
+      <!-- Desktop Remote Dock (Visible on desktop when TV app is open) -->
+      <div class="side-content-remote" id="side-content-remote" style="display: none;">
+        <div class="remote-hint-label">SLIDES IN WHEN<br>THE TV APP OPENS</div>
+        <div class="tv-remote-desktop-dock" id="tv-remote-desktop-dock">
+          <!-- The single remote control element -->
+          <div class="kamen-remote is-desktop" id="kamen-tv-remote" role="region" aria-label="Action Kamen TV Remote">
+            <div class="remote-ir-bar" aria-hidden="true"></div>
+            <div class="remote-keypad">
+              <div class="remote-grid-top">
+                <button type="button" class="remote-key remote-key-power" id="remote-btn-power" aria-label="TV Power On or Off">POWER</button>
+                <button type="button" class="remote-key remote-key-ch remote-key-ch-prev" id="remote-btn-ch-prev" aria-label="Previous Channel">CH -</button>
+                <button type="button" class="remote-key remote-key-ch remote-key-ch-next" id="remote-btn-ch-next" aria-label="Next Channel">CH +</button>
+                <button type="button" class="remote-key remote-key-mute" id="remote-btn-mute" aria-label="Mute Audio">MUTE</button>
+              </div>
+              <div class="remote-grid-numbers">
+                <button type="button" class="remote-key remote-key-num" data-ch="1" aria-label="Channel 1 Action Kamen Hour">1</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="2" aria-label="Channel 2 Kasukabe Kitchen">2</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="3" aria-label="Channel 3 Breaking News">3</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="4" aria-label="Channel 4 Commercial Break">4</button>
+                <button type="button" class="remote-key remote-key-num" data-ch="5" aria-label="Channel 5 Test Pattern">5</button>
+                <button type="button" class="remote-key remote-key-num remote-key-dash" disabled aria-label="Hyphen">-</button>
+              </div>
+              <button type="button" class="remote-key remote-key-beam" id="remote-btn-beam" aria-label="Fire Action Beam">BEAM</button>
+            </div>
+            <div class="remote-brand-label" aria-hidden="true">SHIN-TEL</div>
+          </div>
+        </div>
+      </div>
     </aside>
   </section>
 

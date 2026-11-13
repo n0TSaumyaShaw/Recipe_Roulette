@@ -11,7 +11,7 @@ Thumbs.db
 __pycache__/
 *.pyc
 *.pyo
-tests/*.png
+tests/
 /screenshots/
 !docs/screenshots/
 

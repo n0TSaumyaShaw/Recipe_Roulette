@@ -1342,7 +1342,7 @@ body.angry-shake {
   box-shadow: 1px 1px 0 var(--red);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   #landing-screen {
     flex-direction: column;
     gap: 0;
@@ -2569,96 +2569,934 @@ body.angry-shake {
 /* =========================================
    MINI APP SCREENS STYLING
    ========================================= */
-/* Action Kamen TV */
-.tv-casing {
-  background: #2D3436;
-  border: var(--border-heavy);
-  box-shadow: 5px 5px 0 var(--black);
-  border-radius: 20px;
-  padding: 14px;
-  text-align: center;
-  margin-bottom: 12px;
+/* =========================================
+   ACTION KAMEN RETRO TV & REMOTE CONTROL
+   ========================================= */
+.kamen-tv-content {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px 14px;
+  gap: 8px;
 }
 
-.tv-antenna {
-  font-size: 1.8rem;
-  margin-top: -24px;
-  margin-bottom: 4px;
+/* TV Bezel and Chassis */
+.tv-casing {
+  background: #14141e;
+  border: 3px solid #000;
+  border-radius: 16px;
+  padding: 8px;
+  position: relative;
+  box-shadow: 0 4px 0 var(--red, #E63946), 0 6px 0 #000, 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.tv-screen-bezel {
+  background: #0d0d14;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 6px;
 }
 
 .tv-screen-glass {
-  background: #00B894;
-  border: var(--border-thick);
-  border-radius: 12px;
-  padding: 20px 12px;
-  color: #FFF;
+  background: #259D88;
+  height: 200px;
+  border-radius: 8px;
+  border: 2px solid #000;
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 0 12px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(0, 0, 0, 0.7);
+  transition: transform 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
+}
+
+/* TV Powered Off CRT state */
+.tv-screen-glass.tv-off {
+  background: #050508 !important;
+  box-shadow: inset 0 0 20px #000 !important;
+}
+
+.tv-screen-glass.tv-off * {
+  display: none !important;
+}
+
+.tv-screen-glass.tv-off::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: #E63946;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #E63946;
+  animation: tvOffBlink 1.5s infinite alternate;
+}
+
+@keyframes tvOffBlink {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.9; }
+}
+
+/* CRT Screen Collapse / Expand Animation */
+.tv-screen-glass.tv-collapsing {
+  animation: crtDotOff 0.35s cubic-bezier(0.2, 1, 0.2, 1) forwards;
+}
+
+@keyframes crtDotOff {
+  0% { transform: scale(1); filter: brightness(1.2); }
+  40% { transform: scale(1, 0.02); filter: brightness(2.5); }
+  80% { transform: scale(0.02, 0.02); filter: brightness(3); }
+  100% { transform: scale(0, 0); filter: brightness(0); opacity: 0; }
+}
+
+.tv-screen-glass.tv-expanding {
+  animation: crtDotOn 0.35s cubic-bezier(0.2, 1, 0.2, 1) forwards;
+}
+
+@keyframes crtDotOn {
+  0% { transform: scale(0.02, 0.02); filter: brightness(3); opacity: 1; }
+  50% { transform: scale(1, 0.02); filter: brightness(2.2); }
+  100% { transform: scale(1, 1); filter: brightness(1); opacity: 1; }
+}
+
+/* Channel Banner Overlay */
+.tv-channel-banner {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 15;
+  background: #000;
+  color: var(--yellow, #FFD400);
+  font-family: var(--font-pixel, monospace);
+  font-size: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 212, 0, 0.5);
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.tv-channel-banner.fade-out {
+  opacity: 0;
+}
+
+/* Static Canvas overlay */
+.tv-static-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* CRT Scanlines */
+.tv-crt-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(rgba(0, 0, 0, 0.16) 0px, rgba(0, 0, 0, 0.16) 1px, transparent 1px, transparent 4px);
+  pointer-events: none;
+  z-index: 12;
+}
+
+/* Shared Channel Viewport */
+.tv-channel-viewport {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+/* =========================================
+   CHANNEL 1: ACTION KAMEN HOUR
+   ========================================= */
+.channel-1-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 8px;
 }
 
 .kamen-character-anim {
-  font-size: 3rem;
+  font-size: 2.2rem;
   animation: buttWiggle 0.8s infinite alternate;
 }
 
 .kamen-quote {
-  font-family: 'Bangers', cursive;
-  font-size: 1.25rem;
-  letter-spacing: 0.8px;
-  color: #FFEAA7;
-  text-shadow: 2px 2px 0 var(--black);
-  margin-top: 10px;
+  font-family: var(--font-heading, cursive);
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  color: #FFF;
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  line-height: 1.25;
+  margin: 0;
+  max-width: 280px;
 }
 
 .kamen-beam-laser {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 2.5rem;
   color: #FFDE00;
-  animation: laserPulse 0.3s infinite;
-  margin: 10px 0;
+  text-shadow: 0 0 16px #FFF, 0 0 24px #FFD400;
+  background: rgba(255, 212, 0, 0.25);
+  animation: laserPulse 0.18s infinite;
+  z-index: 8;
+}
+
+.kamen-beam-laser.hidden {
+  display: none;
 }
 
 @keyframes laserPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.2); opacity: 1; color: #FFF; }
-  100% { transform: scale(1); opacity: 0.8; }
+  0% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.15); opacity: 1; color: #FFF; }
+  100% { transform: scale(1); opacity: 0.85; }
 }
 
-.btn-kamen-beam {
-  font-family: 'Bangers', cursive;
-  font-size: 1.35rem;
-  letter-spacing: 1px;
-  background: #E17055;
-  color: #FFF;
-  border: var(--border-thick);
-  box-shadow: 3px 3px 0 var(--black);
-  border-radius: 12px;
-  padding: 10px 16px;
+/* =========================================
+   CHANNEL 2: KASUKABE KITCHEN
+   ========================================= */
+.channel-2-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 18px;
+  box-sizing: border-box;
+}
+
+.kitchen-dish-badge {
+  font-family: var(--font-heading, cursive);
+  font-size: 0.95rem;
+  color: var(--yellow, #FFD400);
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid var(--yellow, #FFD400);
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin-bottom: 6px;
+  max-width: 270px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kitchen-step-card {
+  background: var(--cream, #FFF6DC);
+  border: 2px solid #000;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 #000;
+  padding: 8px 12px;
+  width: 100%;
+  max-width: 280px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.kitchen-step-meta {
+  font-family: var(--font-pixel, monospace);
+  font-size: 7.5px;
+  color: var(--red, #E63946);
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.kitchen-step-text {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--card-ink, #1a1a1a);
+  line-height: 1.35;
+  margin: 0;
+  min-height: 38px;
+}
+
+.kitchen-progress-track {
+  width: 100%;
+  max-width: 280px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #000;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.kitchen-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--yellow, #FFD400);
+  transition: width 0.1s linear;
+}
+
+.kitchen-controls {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.btn-kitchen-ctrl {
+  background: var(--key, #34343f);
+  color: var(--text, #F4EEDC);
+  border: 1.5px solid #000;
+  border-radius: 4px;
+  font-family: var(--font-heading, cursive);
+  font-size: 11px;
+  padding: 3px 10px;
   cursor: pointer;
-  margin-top: 10px;
+  box-shadow: 0 2px 0 #000;
+  transition: transform 0.08s ease;
+}
+
+.btn-kitchen-ctrl:active {
+  transform: translateY(1.5px);
+  box-shadow: 0 0.5px 0 #000;
+}
+
+.kitchen-empty-card {
+  background: var(--cream, #FFF6DC);
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--card-ink, #1a1a1a);
+  max-width: 260px;
+}
+
+.kitchen-empty-card h4 {
+  margin: 0 0 4px;
+  font-family: var(--font-heading, cursive);
+  font-size: 1rem;
+  color: var(--red, #E63946);
+}
+
+.kitchen-empty-card p {
+  margin: 0 0 8px;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.btn-kitchen-cook-now {
+  background: var(--yellow, #FFD400);
+  color: var(--ink, #12122a);
+  font-family: var(--font-heading, cursive);
+  font-size: 12px;
+  border: 1.5px solid #000;
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 #000;
+}
+
+/* =========================================
+   CHANNEL 3: BREAKING NEWS
+   ========================================= */
+.channel-3-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  padding: 18px 0 0;
+  box-sizing: border-box;
+}
+
+.news-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.news-live-tag {
+  background: var(--red, #E63946);
+  color: #FFF;
+  font-family: var(--font-pixel, monospace);
+  font-size: 7px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  animation: pulseDeadBattery 1s infinite alternate;
+}
+
+.news-header-title {
+  font-family: var(--font-pixel, monospace);
+  font-size: 7.5px;
+  color: var(--yellow, #FFD400);
+  letter-spacing: 0.5px;
+}
+
+.news-stage-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 10px;
+}
+
+.news-anchor-icon {
+  width: 60px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.news-headline-bubble {
+  background: var(--cream, #FFF6DC);
+  border: 2px solid #000;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 #000;
+  padding: 6px 8px;
+  font-family: var(--font-heading, cursive);
+  font-size: 0.95rem;
+  color: var(--card-ink, #1a1a1a);
+  line-height: 1.25;
+  text-align: left;
+  flex: 1;
+}
+
+.news-ticker-container {
+  display: flex;
+  align-items: center;
+  background: #000;
+  border-top: 1.5px solid var(--yellow, #FFD400);
+  height: 24px;
+  overflow: hidden;
+  position: relative;
   width: 100%;
 }
 
-.btn-kamen-beam:hover {
-  background: #D63031;
-  transform: translateY(-2px);
+.news-ticker-label {
+  background: var(--red, #E63946);
+  color: #FFF;
+  font-family: var(--font-pixel, monospace);
+  font-size: 7px;
+  padding: 0 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 2;
 }
 
-.kamen-stats {
-  background: #FFF;
-  border: var(--border-thick);
+.news-ticker-track {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+.news-ticker-text {
+  font-family: var(--font-pixel, monospace);
+  font-size: 7.5px;
+  color: #FFF;
+  display: inline-block;
+  padding-left: 100%;
+  animation: newsTicker 14s linear infinite;
+}
+
+@keyframes newsTicker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* =========================================
+   CHANNEL 4: COMMERCIAL BREAK
+   ========================================= */
+.channel-4-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  padding: 16px 8px 6px;
+  box-sizing: border-box;
+}
+
+.commercial-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.commercial-badge {
+  font-family: var(--font-pixel, monospace);
+  font-size: 7px;
+  color: #000;
+  background: var(--yellow, #FFD400);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.commercial-countdown {
+  font-family: var(--font-pixel, monospace);
+  font-size: 7.5px;
+  color: #FFF;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.commercial-card {
+  background: var(--cream, #FFF6DC);
+  border: 2px solid #000;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 var(--red, #E63946);
+  padding: 8px 10px;
+  margin: auto 0;
+  text-align: center;
+}
+
+.commercial-title {
+  font-family: var(--font-heading, cursive);
+  font-size: 1.15rem;
+  color: var(--red, #E63946);
+  letter-spacing: 0.5px;
+  margin: 0 0 4px;
+}
+
+.commercial-icon {
+  font-size: 1.6rem;
+  margin: 2px 0;
+}
+
+.commercial-slogan {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--card-ink, #1a1a1a);
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* =========================================
+   CHANNEL 5: TEST PATTERN
+   ========================================= */
+.channel-5-view {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.smpte-bars-top {
+  display: flex;
+  height: 65%;
+  width: 100%;
+}
+
+.smpte-bar {
+  flex: 1;
+  height: 100%;
+}
+
+.smpte-white { background: #FFFFFF; }
+.smpte-yellow { background: #FFD400; }
+.smpte-cyan { background: #00FFFF; }
+.smpte-green { background: #00B894; }
+.smpte-magenta { background: #FF00FF; }
+.smpte-red { background: #E63946; }
+.smpte-blue { background: #0984E3; }
+
+.smpte-bars-bottom {
+  display: flex;
+  height: 35%;
+  width: 100%;
+}
+
+.smpte-bottom-bar {
+  flex: 1;
+  height: 100%;
+}
+
+.smpte-dark-blue { background: #001f3f; }
+.smpte-bright-white { background: #FFFFFF; }
+.smpte-purple { background: #6c5ce7; }
+.smpte-dark-gray { background: #1a1a1a; }
+
+.smpte-center-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.85);
+  border: 1.5px solid var(--yellow, #FFD400);
+  border-radius: 6px;
+  padding: 6px 14px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.smpte-title {
+  font-family: var(--font-pixel, monospace);
+  font-size: 8px;
+  color: var(--yellow, #FFD400);
+  margin-bottom: 3px;
+  letter-spacing: 0.5px;
+}
+
+.smpte-sub {
+  font-family: var(--font-pixel, monospace);
+  font-size: 7px;
+  color: #FFF;
+}
+
+/* =========================================
+   DESKTOP TV INFO CARD
+   ========================================= */
+.tv-desktop-info-card {
+  background: var(--cream, #FFF6DC);
+  border: 2px solid var(--outline, #000);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--red, #E63946);
+  padding: 10px 14px;
+  color: var(--card-ink, #1a1a1a);
+  font-family: var(--font-body, sans-serif);
+  font-size: 13px;
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.tv-desktop-info-card strong {
+  color: #000;
+  font-weight: 700;
+}
+
+.tv-mobile-hint {
+  font-family: var(--font-pixel, monospace);
+  font-size: 7.5px;
+  color: var(--yellow, #FFD400);
+  text-align: center;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.retro-side-panel.side-panel-right.tv-remote-mode {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 1100px) {
+  .tv-desktop-info-card {
+    display: none !important;
+  }
+  .tv-screen-glass {
+    height: 155px !important;
+  }
+  .tv-casing {
+    padding: 6px !important;
+  }
+  .kamen-tv-content {
+    padding: 4px 8px 6px !important;
+    gap: 4px !important;
+    overflow-y: hidden !important;
+  }
+  .kamen-remote.is-mobile {
+    padding: 6px 8px !important;
+    gap: 5px !important;
+  }
+  .kamen-remote.is-mobile .remote-key {
+    min-height: 38px !important;
+  }
+  .tv-mobile-hint {
+    margin-top: 4px !important;
+    font-size: 7px !important;
+  }
+}
+
+@media (min-width: 1101px) {
+  .tv-mobile-hint {
+    display: none !important;
+  }
+}
+
+/* =========================================
+   TV GUIDE LIST (LEFT PANEL ON DESKTOP)
+   ========================================= */
+.tv-guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tv-guide-item {
+  font-family: var(--font-pixel, monospace);
+  font-size: 8px;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  color: var(--yellow, #FFD400);
+  background: transparent;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  text-align: left;
+}
+
+.tv-guide-item:hover {
+  color: #FFF;
+  text-shadow: 0 0 6px var(--yellow, #FFD400);
+}
+
+.tv-guide-item.active {
+  color: #FFF !important;
+  text-shadow: 0 0 8px var(--yellow, #FFD400), 0 0 2px #FFF !important;
+  font-weight: bold;
+}
+
+/* =========================================
+   REMOTE CONTROL STYLING (SINGLE ELEMENT)
+   ========================================= */
+.kamen-remote {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+/* When docked in Desktop Right Side Panel */
+.tv-remote-desktop-dock .kamen-remote {
+  width: 200px;
+  background: #232332;
+  border: 3px solid #000;
+  border-radius: 18px;
+  box-shadow: 4px 4px 0 #000, 0 10px 25px rgba(0, 0, 0, 0.45);
+  padding: 12px 10px 14px;
+  align-items: center;
+  gap: 8px;
+  transform: rotate(5deg);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.tv-remote-desktop-dock .kamen-remote:hover {
+  transform: rotate(3deg) scale(1.02);
+}
+
+.tv-remote-desktop-dock .remote-ir-bar {
+  width: 44px;
+  height: 6px;
+  background: #E63946;
+  border: 1.5px solid #000;
+  border-radius: 3px;
+  margin-bottom: 2px;
+}
+
+.tv-remote-desktop-dock .remote-keypad {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.tv-remote-desktop-dock .remote-grid-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.tv-remote-desktop-dock .remote-key-power { order: 1; }
+.tv-remote-desktop-dock .remote-key-mute { order: 2; }
+.tv-remote-desktop-dock .remote-key-ch-next { order: 3; }
+.tv-remote-desktop-dock .remote-key-ch-prev { order: 4; }
+
+.tv-remote-desktop-dock .remote-grid-numbers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.tv-remote-desktop-dock .remote-key-dash {
+  display: flex !important;
+}
+
+.tv-remote-desktop-dock .remote-brand-label {
+  font-family: var(--font-pixel, monospace);
+  font-size: 10px;
+  color: #777;
+  letter-spacing: 1px;
+  margin-top: 2px;
+  display: block !important;
+}
+
+/* When docked in Mobile Phone Viewport */
+.tv-remote-mobile-dock .kamen-remote {
+  width: 100%;
+  background: #1e1e28;
+  border: 2px solid #000;
   border-radius: 12px;
-  padding: 10px;
-  box-shadow: 3px 3px 0 var(--black);
-  font-size: 0.85rem;
+  box-shadow: 0 3px 0 #000;
+  padding: 8px 8px 10px;
+  gap: 6px;
+  transform: none !important;
+}
+
+.tv-remote-mobile-dock .remote-ir-bar {
+  display: none !important;
+}
+
+.tv-remote-mobile-dock .remote-brand-label {
+  display: none !important;
+}
+
+.tv-remote-mobile-dock .remote-keypad {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  color: var(--card-ink, #1a1a1a);
+  width: 100%;
 }
 
-.kamen-stats strong {
-  color: var(--card-ink, #1a1a1a);
+.tv-remote-mobile-dock .remote-grid-top {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  width: 100%;
+}
+
+.tv-remote-mobile-dock .remote-key-power { order: 1; }
+.tv-remote-mobile-dock .remote-key-ch-prev { order: 2; }
+.tv-remote-mobile-dock .remote-key-ch-next { order: 3; }
+.tv-remote-mobile-dock .remote-key-mute { order: 4; }
+
+.tv-remote-mobile-dock .remote-grid-numbers {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+  width: 100%;
+}
+
+.tv-remote-mobile-dock .remote-key-dash {
+  display: none !important;
+}
+
+/* Common Key Styling */
+.remote-key {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading, cursive);
+  font-size: 15px;
+  border-radius: 8px;
+  border: 2px solid #000;
+  box-shadow: 0 3px 0 #000;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.08s ease;
+  user-select: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.remote-key:focus-visible {
+  outline: 2px solid var(--yellow, #FFD400);
+  outline-offset: 2px;
+}
+
+.remote-key:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.remote-key:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #000;
+}
+
+.remote-key-power {
+  background: #E63946;
+  color: #FFF;
+  text-shadow: 1px 1px 0 #000;
+  font-size: 13.5px;
+}
+
+.remote-key-mute {
+  background: #474758;
+  color: #FFF;
+  font-size: 13px;
+}
+
+.remote-key-ch {
+  background: #FFD400;
+  color: #12122a;
+  font-size: 14px;
+}
+
+.remote-key-num {
+  background: #383849;
+  color: #FFF;
+  font-size: 16px;
+}
+
+.remote-key-dash {
+  background: #2b2b3a;
+  color: #777;
+  cursor: default;
+}
+
+.remote-key-beam {
+  background: #E63946;
+  color: #FFF;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 #000;
+  height: 46px;
+  width: 100%;
+}
+
+.remote-key:disabled {
+  opacity: 0.35 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.7) !important;
+  transform: none !important;
+  box-shadow: 0 2px 0 #000 !important;
+}
+
+.remote-hint-label {
+  font-family: var(--font-pixel, monospace);
+  font-size: 8px;
+  color: var(--yellow, #FFD400);
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-static-canvas,
+  .kamen-character-anim,
+  .kamen-beam-laser,
+  .news-live-tag,
+  .tv-screen-glass.tv-collapsing,
+  .tv-screen-glass.tv-expanding {
+    animation: none !important;
+    transition: none !important;
+  }
+  .news-ticker-text {
+    animation-duration: 40s !important;
+  }
 }
 
 /* Shiro Pet Care System */

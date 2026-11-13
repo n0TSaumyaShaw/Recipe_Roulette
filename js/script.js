@@ -79,6 +79,7 @@ const QUIPS = {
 
 // Sound Effects using Web Audio API (No external assets required)
 let soundEnabled = true;
+window.soundEnabled = true;
 let audioCtx = null;
 
 function getAudioContext() {
@@ -155,6 +156,7 @@ function playSound(type) {
 
 function setSoundEnabled(enabled, clientX, clientY, persist = true) {
   soundEnabled = !!enabled;
+  window.soundEnabled = soundEnabled;
   if (persist) {
     try {
       const state = getState();
@@ -1018,6 +1020,13 @@ function showPhoneScreen(screenId) {
     }
   });
 
+  // Action Kamen TV lifecycle hooks
+  if (screenId === 'action-kamen') {
+    if (typeof onEnterTvScreen === 'function') onEnterTvScreen();
+  } else {
+    if (typeof onLeaveTvScreen === 'function') onLeaveTvScreen();
+  }
+
   if (screenId === 'cookbook') {
     renderCookbook();
   } else if (screenId === 'weather') {
@@ -1296,6 +1305,9 @@ function updateAngerMeterUI() {
     else if (momAnger >= 50) face.textContent = "😡";
     else if (momAnger >= 25) face.textContent = "😤";
     else face.textContent = "🙂";
+  }
+  if (typeof checkMomAngerTvCutIn === 'function') {
+    checkMomAngerTvCutIn();
   }
 }
 
@@ -1870,26 +1882,948 @@ function initPhoneOS() {
     });
   }
 
-  // Action Kamen TV Beam
-  const btnBeam = document.getElementById('btn-kamen-beam');
-  const laser = document.getElementById('kamen-beam-laser');
-  const kamenQuote = document.getElementById('kamen-quote');
-  if (btnBeam) {
-    btnBeam.addEventListener('click', (e) => {
-      triggerComicPopup(e.clientX, e.clientY, "ACTION BEAM!");
-      playSound('fanfare');
-      if (laser) {
-        laser.classList.remove('hidden');
-        setTimeout(() => laser.classList.add('hidden'), 1500);
+
+
+// =========================================
+// ACTION KAMEN RETRO TV & REMOTE CONTROL
+// =========================================
+  const TV_CHANNEL_STORAGE_KEY = 'recipeRoulette.tvChannel';
+  let inMemoryTvChannel = 0;
+  let currentChannelIndex = 0;
+  let isTvPoweredOn = true;
+  let previousChannelBeforeCommercial = 0;
+  let momAngerCutInTriggered = false;
+  let isTvTabPaused = false;
+  let channelStaticTimeout = null;
+  let channelStaticRaf = null;
+  let channelBannerTimeout = null;
+  let currentChannelCleanup = null;
+
+  function isSoundMuted() {
+    try {
+      const s = getState();
+      return !!(s && s.prefs && s.prefs.muted) || !soundEnabled;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function synthRemoteClick() {
+    if (isSoundMuted()) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(650, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.035);
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.045);
+    } catch (e) {}
+  }
+
+  function synthTvStatic() {
+    if (isSoundMuted()) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const bufferSize = Math.floor(ctx.sampleRate * 0.25);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
       }
-      if (kamenQuote) {
-        kamenQuote.textContent = "💥 ACTION BEAM FIRED! EVIL HAS BEEN PURGED!";
-        setTimeout(() => {
-          kamenQuote.textContent = '"WA-HA-HA-HA! Action Beam charged 100%! Evil villains, prepare to be defeated!"';
-        }, 3000);
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(950, ctx.currentTime);
+      filter.Q.setValueAtTime(1.8, ctx.currentTime);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+      noise.stop(ctx.currentTime + 0.25);
+    } catch (e) {}
+  }
+
+  function synthTvBeam() {
+    if (isSoundMuted()) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc1.type = 'sawtooth';
+      osc2.type = 'square';
+      osc1.frequency.setValueAtTime(950, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(160, ctx.currentTime + 0.45);
+      osc2.frequency.setValueAtTime(1200, ctx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.45);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+      osc1.start();
+      osc2.start();
+      osc1.stop(ctx.currentTime + 0.5);
+      osc2.stop(ctx.currentTime + 0.5);
+    } catch (e) {}
+  }
+
+  function synthTvPower(isTurningOn) {
+    if (isSoundMuted()) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      if (isTurningOn) {
+        osc.frequency.setValueAtTime(90, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(520, ctx.currentTime + 0.25);
+      } else {
+        osc.frequency.setValueAtTime(460, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.25);
+      }
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    } catch (e) {}
+  }
+
+  function loadSavedTvChannel() {
+    try {
+      const val = localStorage.getItem(TV_CHANNEL_STORAGE_KEY);
+      if (val !== null) {
+        const parsed = parseInt(val, 10);
+        if (!isNaN(parsed) && parsed >= 0 && parsed <= 4) {
+          inMemoryTvChannel = parsed;
+          return inMemoryTvChannel;
+        }
+      }
+    } catch (e) {}
+    return inMemoryTvChannel;
+  }
+
+  function saveTvChannel(chIdx) {
+    inMemoryTvChannel = chIdx;
+    try {
+      localStorage.setItem(TV_CHANNEL_STORAGE_KEY, String(chIdx));
+    } catch (e) {}
+  }
+
+  function stopCurrentChannel() {
+    if (typeof currentChannelCleanup === 'function') {
+      try {
+        currentChannelCleanup();
+      } catch (e) {}
+      currentChannelCleanup = null;
+    }
+    if (channelStaticTimeout) {
+      clearTimeout(channelStaticTimeout);
+      channelStaticTimeout = null;
+    }
+    if (channelStaticRaf) {
+      cancelAnimationFrame(channelStaticRaf);
+      channelStaticRaf = null;
+    }
+    const canvas = document.getElementById('tv-static-canvas');
+    if (canvas) canvas.style.display = 'none';
+  }
+
+  // --- CHANNEL 1: ACTION KAMEN HOUR ---
+  function renderChannel1(container) {
+    let quoteTimer = null;
+    const quotes = [
+      '"ACTION BEAM CHARGED 100%! EVIL VILLAINS, PREPARE TO BE DEFEATED!"',
+      '"WA-HA-HA-HA! Justice always prevails in Kasukabe!"',
+      '"Action Kamen is here! Have no fear, citizens!"',
+      '"Dr. Black Mask, your villainous scheme ends today!"',
+      '"Ha-ha-ha! True heroes never skip their afternoon snacks!"'
+    ];
+    let quoteIdx = 0;
+
+    const view = document.createElement('div');
+    view.className = 'channel-1-view';
+
+    const quoteEl = document.createElement('div');
+    quoteEl.className = 'kamen-quote';
+    quoteEl.id = 'kamen-quote';
+    quoteEl.textContent = quotes[0];
+
+    view.appendChild(quoteEl);
+    container.appendChild(view);
+
+    function rotateQuote() {
+      if (isTvTabPaused) return;
+      quoteIdx = (quoteIdx + 1) % quotes.length;
+      quoteEl.textContent = quotes[quoteIdx];
+    }
+    quoteTimer = setInterval(rotateQuote, 5000);
+
+    return function cleanup() {
+      if (quoteTimer) clearInterval(quoteTimer);
+    };
+  }
+
+  // --- CHANNEL 2: KASUKABE KITCHEN ---
+  function renderChannel2(container) {
+    const state = getState();
+    const history = state.history || sessionCookbook || [];
+
+    const view = document.createElement('div');
+    view.className = 'channel-2-view';
+
+    if (!history || history.length === 0) {
+      const emptyCard = document.createElement('div');
+      emptyCard.className = 'kitchen-empty-card';
+      const h4 = document.createElement('h4');
+      h4.textContent = "Kasukabe Kitchen Offline!";
+      const p = document.createElement('p');
+      p.textContent = "Cook something in the Fridge first so chef Shinchan can demonstrate the recipe steps!";
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-kitchen-cook-now';
+      btn.textContent = "Open Fridge App";
+      btn.addEventListener('click', () => showPhoneScreen('fridge'));
+      emptyCard.appendChild(h4);
+      emptyCard.appendChild(p);
+      emptyCard.appendChild(btn);
+      view.appendChild(emptyCard);
+      container.appendChild(view);
+      return function cleanup() {};
+    }
+
+    const latest = history[0];
+    const dishName = latest.name || "Mystery Stir-Fry";
+    let steps = [];
+
+    if (Array.isArray(allRecipes) && allRecipes.length > 0) {
+      const found = allRecipes.find(r => r.name.toLowerCase() === dishName.toLowerCase());
+      if (found && Array.isArray(found.steps) && found.steps.length > 0) {
+        steps = found.steps;
+      }
+    }
+    if (steps.length === 0) {
+      steps = [
+        "Inspect leftovers in the fridge with caution.",
+        "Heat the cooking pan and grease lightly with butter or oil.",
+        "Toss in everything together and stir with excessive flair.",
+        "Serve piping hot before Mom inspects the kitchen counters!"
+      ];
+    }
+
+    let currentStepIdx = 0;
+    let progressInterval = null;
+    let progressPct = 0;
+
+    const dishBadge = document.createElement('div');
+    dishBadge.className = 'kitchen-dish-badge';
+    dishBadge.textContent = `CHEF: ${dishName}`;
+
+    const stepCard = document.createElement('div');
+    stepCard.className = 'kitchen-step-card';
+
+    const stepMeta = document.createElement('div');
+    stepMeta.className = 'kitchen-step-meta';
+
+    const stepText = document.createElement('p');
+    stepText.className = 'kitchen-step-text';
+
+    stepCard.appendChild(stepMeta);
+    stepCard.appendChild(stepText);
+
+    const progTrack = document.createElement('div');
+    progTrack.className = 'kitchen-progress-track';
+    const progBar = document.createElement('div');
+    progBar.className = 'kitchen-progress-bar';
+    progTrack.appendChild(progBar);
+
+    const controls = document.createElement('div');
+    controls.className = 'kitchen-controls';
+
+    const btnPrev = document.createElement('button');
+    btnPrev.type = 'button';
+    btnPrev.className = 'btn-kitchen-ctrl';
+    btnPrev.textContent = 'Prev';
+
+    const btnReplay = document.createElement('button');
+    btnReplay.type = 'button';
+    btnReplay.className = 'btn-kitchen-ctrl';
+    btnReplay.textContent = 'Replay';
+
+    const btnNext = document.createElement('button');
+    btnNext.type = 'button';
+    btnNext.className = 'btn-kitchen-ctrl';
+    btnNext.textContent = 'Next';
+
+    controls.appendChild(btnPrev);
+    controls.appendChild(btnReplay);
+    controls.appendChild(btnNext);
+
+    view.appendChild(dishBadge);
+    view.appendChild(stepCard);
+    view.appendChild(progTrack);
+    view.appendChild(controls);
+    container.appendChild(view);
+
+    function showStep(idx) {
+      currentStepIdx = Math.max(0, Math.min(steps.length - 1, idx));
+      stepMeta.textContent = `STEP ${currentStepIdx + 1} OF ${steps.length}`;
+      stepText.textContent = steps[currentStepIdx];
+      progressPct = 0;
+      progBar.style.width = '0%';
+    }
+
+    function advanceStep() {
+      if (isTvTabPaused) return;
+      if (currentStepIdx < steps.length - 1) {
+        showStep(currentStepIdx + 1);
+      } else {
+        showStep(0);
+      }
+    }
+
+    function startAutoAdvance() {
+      if (progressInterval) clearInterval(progressInterval);
+      progressInterval = setInterval(() => {
+        if (isTvTabPaused) return;
+        progressPct += 2.5; // 40 ticks * 100ms = 4000ms
+        progBar.style.width = `${Math.min(100, progressPct)}%`;
+        if (progressPct >= 100) {
+          advanceStep();
+        }
+      }, 100);
+    }
+
+    btnPrev.addEventListener('click', () => {
+      synthRemoteClick();
+      showStep(currentStepIdx - 1);
+    });
+    btnNext.addEventListener('click', () => {
+      synthRemoteClick();
+      advanceStep();
+    });
+    btnReplay.addEventListener('click', () => {
+      synthRemoteClick();
+      showStep(0);
+    });
+
+    showStep(0);
+    startAutoAdvance();
+
+    return function cleanup() {
+      if (progressInterval) clearInterval(progressInterval);
+    };
+  }
+
+  // --- CHANNEL 3: BREAKING NEWS ---
+  function renderChannel3(container, customHeadline) {
+    let tickerTimer = null;
+    const headlines = [
+      "Local 5-year-old attempts to pay for grocery run with Chocobi stickers",
+      "Mysterious white fluffy dog spotted walking himself around Kasukabe park",
+      "Department store beauty counter on high alert for flirtatious preschooler",
+      "Scientists confirm green peppers are 100% evil, Shinchan claims",
+      "Father's 32-year home loan remains at 31 years and 11 months",
+      "Action Kamen defeats Dr. Black Mask with newly patented triple beam blast",
+      "Breaking: Missing Chocobi packet found hidden inside toy chest",
+      "Futaba Kindergarten principal insists he is not a mafia boss",
+      "Emergency alert: Mother's anger levels approaching critical mass across neighborhood",
+      "Kazama-kun denies secret obsession with Magical Girl Moe-P merchandise",
+      "Local pet dog balances empty food bowl on head in peaceful protest",
+      "Shinchan attempts to propose to college student Nanako for 47th time this week",
+      "Neighborhood barbecue smoke attracts Nohara family like homing beacons",
+      "Action Kamen movie tickets sold out in 0.4 seconds across Kasukabe",
+      "Massive discount sale at Sato Kokonoe department store causes neighborhood stampede"
+    ];
+    const shuffled = headlines.slice().sort(() => Math.random() - 0.5);
+
+    const view = document.createElement('div');
+    view.className = 'channel-3-view';
+
+    const header = document.createElement('div');
+    header.className = 'news-header-bar';
+    const liveTag = document.createElement('span');
+    liveTag.className = 'news-live-tag';
+    liveTag.textContent = '● LIVE';
+    const headerTitle = document.createElement('span');
+    headerTitle.className = 'news-header-title';
+    headerTitle.textContent = 'KASUKABE NEWS DESK';
+    header.appendChild(liveTag);
+    header.appendChild(headerTitle);
+
+    const stage = document.createElement('div');
+    stage.className = 'news-stage-area';
+
+    const anchorSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    anchorSvg.setAttribute('class', 'news-anchor-icon');
+    anchorSvg.setAttribute('viewBox', '0 0 70 60');
+    anchorSvg.innerHTML = `
+      <rect x="5" y="42" width="60" height="16" rx="3" fill="#141424" stroke="#000" stroke-width="2"/>
+      <rect x="25" y="44" width="20" height="6" rx="2" fill="#E63946"/>
+      <line x1="35" y1="42" x2="35" y2="34" stroke="#FFD400" stroke-width="2"/>
+      <circle cx="35" cy="32" r="3" fill="#000"/>
+      <circle cx="35" cy="18" r="11" fill="#FFEAA7" stroke="#000" stroke-width="2"/>
+      <path d="M26 15 Q35 9 44 15 Q40 6 28 8 Z" fill="#2D3436"/>
+      <circle cx="31" cy="18" r="1.5" fill="#000"/>
+      <circle cx="39" cy="18" r="1.5" fill="#000"/>
+      <path d="M32 23 Q35 25 38 23" stroke="#000" stroke-width="1.5" fill="none"/>
+      <path d="M20 42 L25 30 L45 30 L50 42 Z" fill="#0984E3" stroke="#000" stroke-width="2"/>
+      <polygon points="32,30 35,36 38,30" fill="#E63946"/>
+    `;
+
+    const headlineBubble = document.createElement('div');
+    headlineBubble.className = 'news-headline-bubble';
+    headlineBubble.textContent = customHeadline || `"${shuffled[0]}"`;
+
+    stage.appendChild(anchorSvg);
+    stage.appendChild(headlineBubble);
+
+    const tickerContainer = document.createElement('div');
+    tickerContainer.className = 'news-ticker-container';
+    const tickerLabel = document.createElement('span');
+    tickerLabel.className = 'news-ticker-label';
+    tickerLabel.textContent = 'NEWS';
+    const tickerTrack = document.createElement('div');
+    tickerTrack.className = 'news-ticker-track';
+    const tickerText = document.createElement('span');
+    tickerText.className = 'news-ticker-text';
+    tickerText.textContent = customHeadline ? (customHeadline + '   +++   ' + shuffled.join('   +++   ')) : shuffled.join('   +++   ');
+    tickerTrack.appendChild(tickerText);
+    tickerContainer.appendChild(tickerLabel);
+    tickerContainer.appendChild(tickerTrack);
+
+    view.appendChild(header);
+    view.appendChild(stage);
+    view.appendChild(tickerContainer);
+    container.appendChild(view);
+
+    let curHlIdx = 0;
+    if (!customHeadline) {
+      tickerTimer = setInterval(() => {
+        if (isTvTabPaused) return;
+        curHlIdx = (curHlIdx + 1) % shuffled.length;
+        headlineBubble.textContent = `"${shuffled[curHlIdx]}"`;
+      }, 4500);
+    }
+
+    return function cleanup() {
+      if (tickerTimer) clearInterval(tickerTimer);
+    };
+  }
+
+  // --- CHANNEL 4: COMMERCIAL BREAK ---
+  function renderChannel4(container) {
+    let adInterval = null;
+    let countdownInterval = null;
+    const ads = [
+      {
+        title: "ROYAL CHOCOBI CRISPS",
+        icon: "🍫 ⭐ 🍫",
+        slogan: "Now with 200% more crunch! Win a golden Action Kamen card in every box! Collect all 100!"
+      },
+      {
+        title: "KASUKABE SUPER SODA",
+        icon: "🍈 🥤 💥",
+        slogan: "Sparkling melon soda that turns your burps into musical notes! Don't let Mom catch you!"
+      },
+      {
+        title: "ACTION BASTARD CURRY",
+        icon: "🍛 ⚡ 🦸‍♂️",
+        slogan: "The spicy instant ramen approved by superheroes! Zero green peppers guaranteed!"
+      },
+      {
+        title: "PIMAN-AWAY MAGIC SPRAY",
+        icon: "✨ 🫑 🐶",
+        slogan: "One spritz and your vegetables vanish straight into Shiro's bowl! (Warning: Dogs may protest)"
+      }
+    ];
+
+    let currentAdIdx = 0;
+    let remainingSeconds = ads.length * 5; // 20 seconds total
+
+    const view = document.createElement('div');
+    view.className = 'channel-4-view';
+
+    const metaBar = document.createElement('div');
+    metaBar.className = 'commercial-meta-bar';
+    const adBadge = document.createElement('span');
+    adBadge.className = 'commercial-badge';
+    const timerBadge = document.createElement('span');
+    timerBadge.className = 'commercial-countdown';
+    metaBar.appendChild(adBadge);
+    metaBar.appendChild(timerBadge);
+
+    const card = document.createElement('div');
+    card.className = 'commercial-card';
+    const title = document.createElement('h4');
+    title.className = 'commercial-title';
+    const icon = document.createElement('div');
+    icon.className = 'commercial-icon';
+    const slogan = document.createElement('p');
+    slogan.className = 'commercial-slogan';
+    card.appendChild(title);
+    card.appendChild(icon);
+    card.appendChild(slogan);
+
+    view.appendChild(metaBar);
+    view.appendChild(card);
+    container.appendChild(view);
+
+    function updateAdDisplay() {
+      const ad = ads[currentAdIdx];
+      adBadge.textContent = `AD ${currentAdIdx + 1} OF ${ads.length}`;
+      title.textContent = ad.title;
+      icon.textContent = ad.icon;
+      slogan.textContent = `"${ad.slogan}"`;
+    }
+
+    function updateCountdownDisplay() {
+      timerBadge.textContent = `Back in: ${remainingSeconds}s`;
+    }
+
+    updateAdDisplay();
+    updateCountdownDisplay();
+
+    countdownInterval = setInterval(() => {
+      if (isTvTabPaused) return;
+      remainingSeconds = Math.max(0, remainingSeconds - 1);
+      updateCountdownDisplay();
+      if (remainingSeconds <= 0) {
+        clearInterval(countdownInterval);
+        clearInterval(adInterval);
+        const returnCh = (previousChannelBeforeCommercial === 3) ? 0 : previousChannelBeforeCommercial;
+        tuneTo(returnCh);
+      }
+    }, 1000);
+
+    adInterval = setInterval(() => {
+      if (isTvTabPaused) return;
+      if (currentAdIdx < ads.length - 1) {
+        currentAdIdx++;
+        updateAdDisplay();
+      }
+    }, 5000);
+
+    return function cleanup() {
+      if (adInterval) clearInterval(adInterval);
+      if (countdownInterval) clearInterval(countdownInterval);
+    };
+  }
+
+  // --- CHANNEL 5: TEST PATTERN ---
+  function renderChannel5(container) {
+    const view = document.createElement('div');
+    view.className = 'channel-5-view';
+
+    const topBars = document.createElement('div');
+    topBars.className = 'smpte-bars-top';
+    ['white', 'yellow', 'cyan', 'green', 'magenta', 'red', 'blue'].forEach(col => {
+      const b = document.createElement('div');
+      b.className = `smpte-bar smpte-${col}`;
+      topBars.appendChild(b);
+    });
+
+    const bottomBars = document.createElement('div');
+    bottomBars.className = 'smpte-bars-bottom';
+    ['dark-blue', 'bright-white', 'purple', 'dark-gray'].forEach(col => {
+      const b = document.createElement('div');
+      b.className = `smpte-bottom-bar smpte-${col}`;
+      bottomBars.appendChild(b);
+    });
+
+    const centerCard = document.createElement('div');
+    centerCard.className = 'smpte-center-card';
+    const title = document.createElement('div');
+    title.className = 'smpte-title';
+    title.textContent = 'PLEASE STAND BY';
+    const sub = document.createElement('div');
+    sub.className = 'smpte-sub';
+    sub.textContent = 'SHIN-TEL BROADCASTING CO.';
+    centerCard.appendChild(title);
+    centerCard.appendChild(sub);
+
+    view.appendChild(topBars);
+    view.appendChild(bottomBars);
+    view.appendChild(centerCard);
+    container.appendChild(view);
+
+    return function cleanup() {};
+  }
+
+  const CHANNELS = [
+    { num: 1, name: "Action Kamen Hour", render: renderChannel1 },
+    { num: 2, name: "Kasukabe Kitchen", render: renderChannel2 },
+    { num: 3, name: "Breaking News", render: renderChannel3 },
+    { num: 4, name: "Commercial Break", render: renderChannel4 },
+    { num: 5, name: "Test Pattern", render: renderChannel5 }
+  ];
+
+  function tuneTo(index, isCutIn, customHeadline) {
+    stopCurrentChannel();
+    const nextIdx = ((index % 5) + 5) % 5;
+    if (nextIdx === 3 && currentChannelIndex !== 3) {
+      previousChannelBeforeCommercial = currentChannelIndex;
+    }
+    currentChannelIndex = nextIdx;
+    saveTvChannel(currentChannelIndex);
+
+    // Update Left TV Guide active item
+    const guideItems = document.querySelectorAll('.tv-guide-item');
+    guideItems.forEach(item => {
+      const chNum = parseInt(item.dataset.ch, 10);
+      if (chNum === (currentChannelIndex + 1)) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
       }
     });
+
+    // Update Desktop TV Info Card
+    const infoName = document.getElementById('tv-info-channel-name');
+    const infoStatus = document.getElementById('tv-info-status');
+    if (infoName) infoName.textContent = `CH ${CHANNELS[currentChannelIndex].num} ${CHANNELS[currentChannelIndex].name}`;
+    if (infoStatus) {
+      if (currentChannelIndex === 0) infoStatus.textContent = "On air. Press BEAM on the remote to attack!";
+      else if (currentChannelIndex === 1) infoStatus.textContent = "Live cooking tutorial. Step-by-step survival!";
+      else if (currentChannelIndex === 2) infoStatus.textContent = "Breaking report live from Kasukabe City.";
+      else if (currentChannelIndex === 3) infoStatus.textContent = "Sponsor messages. Back to your show shortly!";
+      else infoStatus.textContent = "Channel alignment. 1000Hz calibration tone.";
+    }
+
+    // Update Remote BEAM button: ONLY enabled on Channel 1
+    const btnBeam = document.getElementById('remote-btn-beam');
+    if (btnBeam) {
+      if (currentChannelIndex === 0 && isTvPoweredOn) {
+        btnBeam.removeAttribute('disabled');
+        btnBeam.style.opacity = '1';
+      } else {
+        btnBeam.setAttribute('disabled', 'true');
+        btnBeam.style.opacity = '0.35';
+      }
+    }
+
+    // Update TV Channel Banner
+    const banner = document.getElementById('tv-channel-banner');
+    if (banner) {
+      banner.textContent = `CH ${CHANNELS[currentChannelIndex].num} · ${CHANNELS[currentChannelIndex].name.toUpperCase()}`;
+      banner.classList.remove('fade-out');
+      banner.style.opacity = '1';
+      if (channelBannerTimeout) clearTimeout(channelBannerTimeout);
+      channelBannerTimeout = setTimeout(() => {
+        banner.classList.add('fade-out');
+      }, 2000);
+    }
+
+    const container = document.getElementById('tv-channel-viewport');
+    if (container) {
+      container.innerHTML = '';
+    }
+
+    // Canvas static transition (250ms)
+    const canvas = document.getElementById('tv-static-canvas');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (canvas && !prefersReduced && isTvPoweredOn) {
+      canvas.style.display = 'block';
+      synthTvStatic();
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      const imgData = ctx.createImageData(w, h);
+      const buf = new Uint32Array(imgData.data.buffer);
+      let staticActive = true;
+
+      function renderStaticNoise() {
+        if (!staticActive) return;
+        for (let i = 0; i < buf.length; i++) {
+          const val = (Math.random() * 255) | 0;
+          buf[i] = (255 << 24) | (val << 16) | (val << 8) | val;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        channelStaticRaf = requestAnimationFrame(renderStaticNoise);
+      }
+      renderStaticNoise();
+
+      channelStaticTimeout = setTimeout(() => {
+        staticActive = false;
+        if (channelStaticRaf) cancelAnimationFrame(channelStaticRaf);
+        canvas.style.display = 'none';
+        if (container && isTvPoweredOn) {
+          currentChannelCleanup = CHANNELS[currentChannelIndex].render(container, customHeadline);
+        }
+      }, 250);
+    } else {
+      synthRemoteClick();
+      if (canvas) canvas.style.display = 'none';
+      if (container && isTvPoweredOn) {
+        currentChannelCleanup = CHANNELS[currentChannelIndex].render(container, customHeadline);
+      }
+    }
   }
+
+  function fireActionBeam() {
+    if (!isTvPoweredOn || currentChannelIndex !== 0) return;
+    synthTvBeam();
+    const laser = document.getElementById('kamen-beam-laser');
+    const quote = document.getElementById('kamen-quote');
+    if (laser) {
+      laser.classList.remove('hidden');
+      setTimeout(() => laser.classList.add('hidden'), 1500);
+    }
+    if (quote) {
+      quote.textContent = "💥 ACTION BEAM FIRED! EVIL HAS BEEN PURGED!";
+      setTimeout(() => {
+        quote.textContent = '"ACTION BEAM CHARGED 100%! EVIL VILLAINS, PREPARE TO BE DEFEATED!"';
+      }, 3000);
+    }
+  }
+
+  function toggleTvPower() {
+    synthRemoteClick();
+    const glass = document.getElementById('tv-glass');
+    const allKeys = document.querySelectorAll('.remote-key:not(.remote-key-power)');
+    if (isTvPoweredOn) {
+      // Power OFF
+      isTvPoweredOn = false;
+      stopCurrentChannel();
+      synthTvPower(false);
+      if (glass) {
+        glass.classList.remove('tv-expanding');
+        glass.classList.add('tv-collapsing');
+        setTimeout(() => {
+          glass.classList.remove('tv-collapsing');
+          glass.classList.add('tv-off');
+        }, 350);
+      }
+      allKeys.forEach(k => k.setAttribute('disabled', 'true'));
+    } else {
+      // Power ON
+      isTvPoweredOn = true;
+      synthTvPower(true);
+      if (glass) {
+        glass.classList.remove('tv-off');
+        glass.classList.add('tv-expanding');
+        setTimeout(() => {
+          glass.classList.remove('tv-expanding');
+        }, 350);
+      }
+      allKeys.forEach(k => {
+        if (k.id === 'remote-btn-beam') {
+          if (currentChannelIndex === 0) k.removeAttribute('disabled');
+        } else if (!k.classList.contains('remote-key-dash')) {
+          k.removeAttribute('disabled');
+        }
+      });
+      tuneTo(currentChannelIndex, false);
+    }
+  }
+
+  function setupRemoteResponsiveDock() {
+    const remote = document.getElementById('kamen-tv-remote');
+    const desktopDock = document.getElementById('tv-remote-desktop-dock');
+    const mobileDock = document.getElementById('tv-remote-mobile-dock');
+    if (!remote || !desktopDock || !mobileDock) return;
+
+    const mql = window.matchMedia('(max-width: 1100px)');
+
+    function updateDock(e) {
+      if (e.matches) {
+        if (remote.parentElement !== mobileDock) {
+          mobileDock.appendChild(remote);
+          remote.classList.remove('is-desktop');
+          remote.classList.add('is-mobile');
+        }
+      } else {
+        if (remote.parentElement !== desktopDock) {
+          desktopDock.appendChild(remote);
+          remote.classList.remove('is-mobile');
+          remote.classList.add('is-desktop');
+        }
+      }
+    }
+
+    mql.addEventListener('change', updateDock);
+    updateDock(mql);
+  }
+
+  function onEnterTvScreen() {
+    const howPanel = document.getElementById('side-content-how');
+    const tvGuidePanel = document.getElementById('side-content-tv-guide');
+    if (howPanel) howPanel.style.display = 'none';
+    if (tvGuidePanel) tvGuidePanel.style.display = 'block';
+
+    const recipePanel = document.getElementById('side-content-recipe');
+    const remotePanel = document.getElementById('side-content-remote');
+    const rightSidePanel = document.getElementById('side-panel-right');
+    if (recipePanel) recipePanel.style.display = 'none';
+    if (remotePanel) remotePanel.style.display = 'block';
+    if (rightSidePanel) rightSidePanel.classList.add('tv-remote-mode');
+
+    currentChannelIndex = loadSavedTvChannel();
+    if (isTvPoweredOn) {
+      tuneTo(currentChannelIndex, false);
+    }
+  }
+
+  function onLeaveTvScreen() {
+    stopCurrentChannel();
+
+    const howPanel = document.getElementById('side-content-how');
+    const tvGuidePanel = document.getElementById('side-content-tv-guide');
+    if (howPanel) howPanel.style.display = 'block';
+    if (tvGuidePanel) tvGuidePanel.style.display = 'none';
+
+    const recipePanel = document.getElementById('side-content-recipe');
+    const remotePanel = document.getElementById('side-content-remote');
+    const rightSidePanel = document.getElementById('side-panel-right');
+    if (recipePanel) recipePanel.style.display = 'block';
+    if (remotePanel) remotePanel.style.display = 'none';
+    if (rightSidePanel) rightSidePanel.classList.remove('tv-remote-mode');
+  }
+
+  function checkMomAngerTvCutIn() {
+    if (momAnger < 80) {
+      momAngerCutInTriggered = false;
+      return;
+    }
+    if (momAnger >= 80 && !momAngerCutInTriggered) {
+      if (currentPhoneScreen === 'action-kamen' && isTvPoweredOn && currentChannelIndex !== 3) {
+        momAngerCutInTriggered = true;
+        tuneTo(2, true, "🚨 BREAKING ALERT: MOM IS COMING! PRETEND TO STUDY! 🚨");
+      }
+    }
+  }
+
+  let tvControlsInitialized = false;
+
+  function initKamenTvControls() {
+    setupRemoteResponsiveDock();
+    if (tvControlsInitialized) return;
+    tvControlsInitialized = true;
+
+    const btnPower = document.getElementById('remote-btn-power');
+    if (btnPower) {
+      btnPower.addEventListener('click', toggleTvPower);
+    }
+
+    const btnMute = document.getElementById('remote-btn-mute');
+    if (btnMute) {
+      btnMute.addEventListener('click', () => {
+        synthRemoteClick();
+        setSoundEnabled(!soundEnabled);
+      });
+    }
+
+    const btnChPrev = document.getElementById('remote-btn-ch-prev');
+    if (btnChPrev) {
+      btnChPrev.addEventListener('click', () => {
+        if (!isTvPoweredOn) return;
+        synthRemoteClick();
+        tuneTo(currentChannelIndex - 1);
+      });
+    }
+
+    const btnChNext = document.getElementById('remote-btn-ch-next');
+    if (btnChNext) {
+      btnChNext.addEventListener('click', () => {
+        if (!isTvPoweredOn) return;
+        synthRemoteClick();
+        tuneTo(currentChannelIndex + 1);
+      });
+    }
+
+    const numBtns = document.querySelectorAll('.remote-key-num');
+    numBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!isTvPoweredOn) return;
+        const targetCh = parseInt(btn.dataset.ch, 10);
+        if (!isNaN(targetCh) && targetCh >= 1 && targetCh <= 5) {
+          synthRemoteClick();
+          tuneTo(targetCh - 1);
+        }
+      });
+    });
+
+    const btnBeam = document.getElementById('remote-btn-beam');
+    if (btnBeam) {
+      btnBeam.addEventListener('click', () => {
+        if (!isTvPoweredOn || currentChannelIndex !== 0) return;
+        fireActionBeam();
+      });
+    }
+
+    const guideItems = document.querySelectorAll('.tv-guide-item');
+    guideItems.forEach(item => {
+      item.addEventListener('click', () => {
+        if (!isTvPoweredOn) return;
+        const chNum = parseInt(item.dataset.ch, 10);
+        if (!isNaN(chNum) && chNum >= 1 && chNum <= 5) {
+          synthRemoteClick();
+          tuneTo(chNum - 1);
+        }
+      });
+    });
+  }
+
+  // Keyboard Navigation for TV Remote (only active when TV app open & not editing text)
+  window.addEventListener('keydown', (e) => {
+    if (currentPhoneScreen !== 'action-kamen' || !isTvPoweredOn) return;
+    const active = document.activeElement;
+    if (active) {
+      const tag = active.tagName.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || active.isContentEditable) return;
+    }
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      synthRemoteClick();
+      tuneTo(currentChannelIndex - 1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      synthRemoteClick();
+      tuneTo(currentChannelIndex + 1);
+    } else if (e.key === 'b' || e.key === 'B') {
+      if (currentChannelIndex === 0) {
+        e.preventDefault();
+        fireActionBeam();
+      }
+    }
+  });
+
+  // Page Visibility API Hook
+  document.addEventListener('visibilitychange', () => {
+    isTvTabPaused = document.hidden;
+  });
+
+  // Global window exposure for test automation
+  window.tuneTo = tuneTo;
+  window.stopCurrentChannel = stopCurrentChannel;
+  window.toggleTvPower = toggleTvPower;
+  window.fireActionBeam = fireActionBeam;
+  window.getTvCurrentChannel = () => currentChannelIndex;
+  window.isTvPoweredOn = () => isTvPoweredOn;
+  window.onEnterTvScreen = onEnterTvScreen;
+  window.onLeaveTvScreen = onLeaveTvScreen;
+  window.checkMomAngerTvCutIn = checkMomAngerTvCutIn;
+  window.initKamenTvControls = initKamenTvControls;
+
+  // Initialize TV controls
+  initKamenTvControls();
 
   // =========================================
   // SHIRO'S CORNER - PET CARE SYSTEM
@@ -3534,6 +4468,11 @@ function attachEvents() {
         cookSomething();
       }
     });
+  }
+
+  // Initialize Action Kamen Retro TV Controls & Responsive Dock
+  if (typeof initKamenTvControls === 'function') {
+    initKamenTvControls();
   }
 }
 
