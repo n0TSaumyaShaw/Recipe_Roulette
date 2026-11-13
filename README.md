@@ -31,7 +31,7 @@ An interactive, dark retro 90s handheld gadget ("SHIN-TEL") and comic-styled sur
 ### 2. 📱 Interactive Phone Home Screen (9-App Grid)
 - 🧊 **Fridge**: Recipe Roulette with slot machine reel spinner, smart ingredient chips, and dish cards.
 - 👩 **Mom (Misae)**: Replayable chat messenger where Shinchan begs for Chocobi and Mom orders him to cook leftovers.
-- ⚡ **Kamen TV**: Interactive Action Kamen TV with a clickable Action Beam blaster and hero sound effects.
+- 📺 **Kamen TV**: 90s CRT Retro Television featuring 5 broadcast channels, channel surfing, static canvas transitions, and a responsive remote control.
 - 🐶 **Shiro**: Interactive pet simulator and polaroid memory photo gallery.
 - 📝 **Notes**: Shinchan's personal notepad with handwriting font, quick notes, and a doodle scribble generator.
 - 📖 **Cookbook**: Persistent log recording all cooked dishes, timestamps, custom notes, and Mummy's verdicts.
@@ -39,7 +39,29 @@ An interactive, dark retro 90s handheld gadget ("SHIN-TEL") and comic-styled sur
 - 👥 **Contacts (Speed Dial)**: Phonebook with custom character avatars for Mom, Dad (Hiroshi), Kazama, Nanako-san, Shiro, and Action Kamen.
 - ⚙️ **Settings**: Web Audio toggle, Anger meter controls, Power Off/Restart triggers, test tools, and storage clearing.
 
-### 3. 🐶 Shiro's Pet Care Loop & Memory Gallery
+### 3. 📺 Retro 90s CRT TV & Responsive Remote Control ("SHIN-TEL")
+- **Single Responsive Remote Element**: Built using a single DOM element moved dynamically via `window.matchMedia('(max-width: 1100px)')` between the desktop side dock and phone dock without duplicate state:
+  - **Desktop Mode (> 1100px)**: Docks in the right side panel tilted $\approx 5^\circ$ with a red IR blaster bar, `SHIN-TEL` label, and `SLIDES IN WHEN / THE TV APP OPENS` hint, while the left side panel transforms into **NOW WATCHING: TV GUIDE** highlighting the active channel.
+  - **Mobile Mode (≤ 1100px)**: Docks seamlessly directly under the TV screen inside the phone with the indicator `REMOTE DOCKS UNDER THE SCREEN ON NARROW DEVICES`.
+- **Chunky Retro Tactile Keypad**:
+  - `POWER` (red), `MUTE` (dark gray), `CH -` and `CH +` (yellow), numeric keypad `1` through `5`, and a wide `BEAM` trigger button.
+  - Full WCAG AA accessibility with real `<button>` elements, visible focus outlines, $\ge 44\text{px}$ touch targets, and tactile press-down states. Zero emojis on buttons.
+- **Realistic CRT Power Simulation**:
+  - Pressing `POWER` collapses the screen to a glowing center dot (`crtDotOff`) and reverses it on power-up (`crtDotOn`), with an authentic blinking red standby LED when powered down. All keys are disabled and dimmed while the TV is powered off.
+- **5 Complete Broadcast Channels**:
+  - **CH 1 · Action Kamen Hour**: Authentic turquoise CRT scanlines, comic quote rotation, and laser beam blast effects (`BEAM` key works exclusively on Channel 1; disabled and dimmed on other channels).
+  - **CH 2 · Kasukabe Kitchen**: Cooking show that reads the latest cooked dish from your persistent Cookbook history (`recipeRoulette.v1`) and auto-advances through recipe steps every 4 seconds with a live progress bar, step counter, speech bubble, and replay button (shows a friendly prompt if nothing has been cooked yet).
+  - **CH 3 · Breaking News**: Custom SVG news anchor, flashing `LIVE` broadcast tag, and a 15+ headline marquee ticker.
+  - **CH 4 · Commercial Break**: 4 original hilarious retro snack commercials rotating every 5 seconds with a "Back to the show" countdown; automatically returns to the channel you were previously watching when the break finishes!
+  - **CH 5 · Test Pattern**: Authentic SMPTE CSS color bars with a retro *"PLEASE STAND BY"* broadcast card.
+- **Intelligent Guards & Safety Integrations**:
+  - **Mom Rage Cut-In**: When Mom's Anger Meter hits $\ge 80\%$, the TV cuts to Channel 3 with *"🚨 BREAKING ALERT: MOM IS COMING! PRETEND TO STUDY! 🚨"* (triggers at most once per anger spike, re-arms only after dropping below $80\%$, and never interrupts a commercial break).
+  - **Page Visibility API**: Automatically pauses step auto-advance, ads, and news marquee when the browser tab is hidden and resumes when visible.
+  - **Keyboard Navigation**: `ArrowLeft` and `ArrowRight` change channels, and `B` fires the Action Beam. Keystrokes are ignored when typing in `<input>`, `<textarea>`, or `contenteditable` elements.
+  - **Clean Background Tear-Down**: Navigating away from the TV app (`Back`, `Home`, etc.) or powering off halts all canvas animation loops, intervals, and audio synthesis immediately.
+  - **Channel Memory**: Remembers your last-tuned channel across page refreshes via `localStorage` with in-memory fallback.
+
+### 4. 🐶 Shiro's Pet Care Loop & Memory Gallery
 - **Original Fluffy Dog SVG**: Fully interactive custom SVG pet with distinct clickable body parts (head, ears, belly, tail).
 - **Petting Reactions**: Petting any area triggers unique bouncing animations, sound effects, and 15+ hilarious Shinchan voice bubbles.
 - **Care Stats & Decay**: Tracks **Hunger**, **Happiness**, and **Energy** (0-100) with realistic time decay (capped at 4 hours offline) and live updates every 15 seconds.
@@ -47,13 +69,13 @@ An interactive, dark retro 90s handheld gadget ("SHIN-TEL") and comic-styled sur
 - **"Give Shiro a Bite"**: Feeds Shiro leftovers from the latest cooked dish in your Cookbook. Ingredients trigger authentic reactions (spicy ingredients prompt "too spicy!", sweet dishes delight him, and overfeeding makes him sleepy).
 - **Polaroid Memory Gallery**: Features polaroid photos of Shiro's iconic moments (*Shiro Cotton Candy*, *Bone Guardy dog*, *Walking himself*, *Nap time in dog house*).
 
-### 4. ⚡ Power Management, 0% Battery & Retro BIOS Boot
+### 5. ⚡ Power Management, 0% Battery & Retro BIOS Boot
 - **Hardware Power Menu**: Pressing the red chassis button opens the SHIN-TEL Power Menu modal with **Power Off**, **Restart Phone**, and **Cancel**.
 - **Power Off Sequence**: Shuts down the screen with a retro CRT monitor animation, darkens the gadget LED, and displays the powered-off standby state.
 - **Retro 90s BIOS Boot Screen**: Initiates a green phosphor terminal boot sequence checking 640KB RAM, Kasukabe chipset, and Action Bastard ROM before launching Kasukabe OS with a boot fanfare.
 - **0% Battery Shutdown & Interactive Charger**: Repeated roulette spins drain the battery. At 0%, the phone shuts down completely with a dead battery alert, requiring the user to plug in the interactive charger to reboot.
 
-### 5. 🍲 Smart Recipe Roulette & World Kitchen Engine
+### 6. 🍲 Smart Recipe Roulette & World Kitchen Engine
 - **50 Handcrafted Local Recipes**: Curated in `data/recipes.json`, including 15 Indian & Desi hostel survival staples (*Masala Omelette*, *Anda Bhurji*, *Dahi Tadka*, *Paneer Tikka*, *Curd Rice Tadka*, etc.).
 - **World Kitchen 🌍 Mode**: Hybrid integration with TheMealDB API (`filter.php` multi-ingredient frequency ranking + `lookup.php` full dish details) with in-memory caching and offline fallback.
 - **Tappable Ingredient Chips & Custom Additions**: Quickly select leftovers from your fridge or type custom ingredients.
@@ -61,11 +83,11 @@ An interactive, dark retro 90s handheld gadget ("SHIN-TEL") and comic-styled sur
 - **Mom's 100% Rage Event**: Intense screen shaking with the iconic *"SHIN-CHAN!!!!!"* modal when Mom's patience runs out.
 - **Periodic Slide-down Notifications**: Interactive slide-in notification banners every ~15 seconds with quips and custom avatars from Hiroshi, Kazama, Nanako-san, Shiro, and Action Kamen.
 
-### 6. 🔊 Pure Web Audio API Synthesis
+### 7. 🔊 Pure Web Audio API Synthesis
 - **Zero External Audio Files**: All sound effects (button clicks, roulette reels, fanfare, alarm, Action Kamen beam, and Shiro's bark, pant, yawn, and happy blips) are synthesized in real-time via the Web Audio API.
 - **Audio Toggle Compliance**: Synchronized mute/unmute toggles in the status bar and Settings app.
 
-### 7. 💾 Full Persistent Storage (`localStorage`)
+### 8. 💾 Full Persistent Storage (`localStorage`)
 - Remembers visitor history, cooked recipes, Shiro pet state, favorites, and settings across browser sessions.
 - Wrapped in resilient `try/catch` handlers with seamless in-memory fallbacks if storage is restricted.
 
@@ -91,6 +113,10 @@ yeahHTBHackathon/
 ├── .vercelignore                    <- Deployment exclusions
 ├── .gitignore                       <- Git ignore rules
 ├── README.md                        <- Project documentation
+├── design/                          <- Responsive design references & retro color tokens
+│   ├── dark-retro-tokens.css        <- Shared retro color palette & CSS design tokens
+│   ├── reference-remote-desktop.png <- Desktop TV & tilted remote layout specification
+│   └── reference-remote-mobile.png  <- Mobile TV & docked remote layout specification
 ├── css/
 │   └── style.css                    <- Complete 90s handheld gadget styling & CRT animations
 ├── js/
@@ -105,7 +131,8 @@ yeahHTBHackathon/
 ├── docs/
 │   └── screenshots/                 <- High-resolution project screenshots for documentation
 └── tests/
-    └── test_app.py                  <- Automated end-to-end browser verification suite (Playwright/CDP)
+    ├── test_app.py                  <- Automated end-to-end browser verification suite (Playwright/CDP)
+    └── tv_shots/                    <- Captured desktop & mobile verification screenshots
 ```
 
 ---
